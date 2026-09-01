@@ -42,7 +42,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           </button>
         </div>
 
-        <div className="p-6 overflow-y-auto">
+        <div className="p-6 overflow-y-auto custom-scrollbar">
           <div className="mb-6 flex items-start gap-3 p-4 bg-zinc-900/50 rounded-xl border border-zinc-800/50">
             <Info className="w-5 h-5 text-zinc-400 shrink-0 mt-0.5" />
             <div className="text-sm text-zinc-400 space-y-2">
@@ -83,20 +83,20 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           </form>
         </div>
 
-        <div className="p-6 border-t border-zinc-800 bg-zinc-900/30 flex justify-end gap-3">
+        <div className="p-4 sm:p-6 border-t border-zinc-800 bg-zinc-900/30 flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="px-6 py-3 rounded-xl font-semibold text-zinc-300 hover:text-white hover:bg-zinc-800 transition-colors"
+            className="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold text-zinc-300 hover:text-white hover:bg-zinc-800 transition-colors"
           >
             Cancel
           </button>
           <button
             form="settings-form"
             type="submit"
-            className="px-6 py-3 rounded-xl font-semibold bg-white text-black hover:bg-zinc-200 transition-colors flex items-center gap-2"
+            className="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold bg-white text-black hover:bg-zinc-200 transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
           >
-            <Save className="w-4 h-4" />
+            <Save className="w-4 h-4 shrink-0" />
             Save Settings
           </button>
         </div>

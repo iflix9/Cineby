@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Icons } from '@/components/ui/icons';
-import { Link2, Trash2, Edit2, PlayCircle, Info } from 'lucide-react';
+import { Settings, Trash2, Save, Info } from 'lucide-react';
 import { useHistory } from '@/hooks/use-history';
 import { useCustomSources } from '@/hooks/use-custom-sources';
 import { isBlockedMedia } from '@/lib/tmdb';
@@ -24,36 +23,35 @@ export function Player({
   onEpisodeChange
 }: PlayerProps) {
   const router = useRouter();
-  const { sources, movieTemplate, tvTemplate, setSource, removeSource } = useCustomSources();
+  const { movieTemplate, tvTemplate, setMovieTemplate, setTvTemplate } = useCustomSources();
   const [isVisible, setIsVisible] = useState(true);
   const timeoutRef = useRef<number | null>(null);
 
-  const sourceKey = type === 'tv' ? `${type}-${mediaId}-${season}-${episode}` : `${type}-${mediaId}`;
-  
-  // Custom URL takes precedence if it exists in individual sources
-  let customUrl = sources[sourceKey];
-  let isFromTemplate = false;
+  const [localMovie, setLocalMovie] = useState(movieTemplate);
+  const [localTv, setLocalTv] = useState(tvTemplate);
 
-  if (!customUrl) {
-    if (type === 'movie' && movieTemplate) {
-      customUrl = movieTemplate
-        .replace(/{id}/g, mediaId)
-        .replace(/{tmdb_id}/g, mediaId);
-      isFromTemplate = true;
-    } else if (type === 'tv' && tvTemplate) {
-      customUrl = tvTemplate
-        .replace(/{id}/g, mediaId)
-        .replace(/{tmdb_id}/g, mediaId)
-        .replace(/{season}/g, String(season || 1))
-        .replace(/{episode}/g, String(episode || 1));
-      isFromTemplate = true;
-    }
+  const startEditing = () => {
+    setLocalMovie(movieTemplate);
+    setLocalTv(tvTemplate);
+    setIsEditing(true);
+  };
+
+  let customUrl = '';
+  if (type === 'movie' && movieTemplate) {
+    customUrl = movieTemplate
+      .replace(/{id}/g, mediaId)
+      .replace(/{tmdb_id}/g, mediaId);
+  } else if (type === 'tv' && tvTemplate) {
+    customUrl = tvTemplate
+      .replace(/{id}/g, mediaId)
+      .replace(/{tmdb_id}/g, mediaId)
+      .replace(/{season}/g, String(season || 1))
+      .replace(/{episode}/g, String(episode || 1));
   }
   
-  const [inputUrl, setInputUrl] = useState('');
   const [isEditing, setIsEditing] = useState(false);
+  const hasTemplate = type === 'movie' ? !!movieTemplate : !!tvTemplate;
 
-  // Handle auto-hiding UI on inactivity
   const handleInteraction = useCallback(() => {
     setIsVisible(true);
     if (timeoutRef.current) {
@@ -79,31 +77,32 @@ export function Player({
     };
   }, [handleInteraction]);
 
-  const handleSaveSource = (e: React.FormEvent) => {
+  const handleSaveGlobal = (e: React.FormEvent) => {
     e.preventDefault();
-    if (inputUrl.trim()) {
-      setSource(sourceKey, inputUrl.trim());
-      setIsEditing(false);
-      setInputUrl('');
-    }
-  };
-
-  const handleRemoveSource = () => {
-    removeSource(sourceKey);
+    setMovieTemplate(localMovie.trim());
+    setTvTemplate(localTv.trim());
     setIsEditing(false);
   };
 
-  // Ref to track last time-tracking playback event timestamp for 30-second throttling
+  const handleClearTemplates = () => {
+    if (type === 'movie') {
+       setMovieTemplate('');
+       setLocalMovie('');
+    } else {
+       setTvTemplate('');
+       setLocalTv('');
+    }
+    setIsEditing(true);
+  };
+
   const lastTrackedTimeRef = useRef<number>(0);
 
-  // Handle message events for iframe embed players
   useEffect(() => {
     const handleMessage = (e: MessageEvent) => {
       try {
         const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
         if (!data) return;
 
-        // Apply a 30-second throttle to time-tracking playback events
         const isTimeTrackingEvent =
           data.event === 'timeupdate' ||
           data.type === 'progress' ||
@@ -172,7 +171,7 @@ export function Player({
     return null;
   }
 
-  const showInputForm = !customUrl || isEditing;
+  const showInputForm = !hasTemplate || isEditing;
 
   return (
     <div className="relative w-full h-full bg-[#050505] overflow-hidden flex flex-col items-center justify-center">
@@ -186,62 +185,71 @@ export function Player({
       )}
       
       {showInputForm && (
-        <div className="z-10 w-full max-w-xl mx-auto p-8 bg-[#111111] rounded-2xl border border-zinc-800 shadow-2xl">
+        <div className="z-10 w-full max-w-xl mx-auto p-8 bg-[#111111] rounded-2xl border border-zinc-800 shadow-2xl mt-16 md:mt-0 max-h-[90vh] overflow-y-auto custom-scrollbar">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center">
-              <Link2 className="w-6 h-6 text-red-500" />
+              <Settings className="w-6 h-6 text-red-500" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-white">Bring Your Own Content</h2>
+              <h2 className="text-xl font-bold text-white">Player Settings</h2>
               <p className="text-sm text-zinc-400">
-                Provide an embed URL or video link to play this {type === 'tv' ? 'episode' : 'movie'}.
+                Configure global templates to automatically play media.
               </p>
             </div>
           </div>
 
-          <form onSubmit={handleSaveSource} className="space-y-4">
+          <form onSubmit={handleSaveGlobal} className="space-y-4">
             <div>
-              <label htmlFor="source-url" className="block text-sm font-medium text-zinc-300 mb-2">
-                Media Source URL
-              </label>
+              <label className="block text-sm font-medium text-zinc-300 mb-2">Movie Template URL</label>
               <input
-                id="source-url"
-                type="url"
-                required
-                placeholder="https://example.com/embed/..."
-                value={inputUrl}
-                onChange={(e) => setInputUrl(e.target.value)}
-                className="w-full bg-[#0a0a0a] border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500 transition-all"
+                type="text"
+                value={localMovie}
+                onChange={(e) => setLocalMovie(e.target.value)}
+                placeholder="https://example.com/player/movie/{id}?autoplay=true"
+                className="w-full bg-[#0a0a0a] border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500 transition-all font-mono text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-zinc-300 mb-2">TV Show Template URL</label>
+              <input
+                type="text"
+                value={localTv}
+                onChange={(e) => setLocalTv(e.target.value)}
+                placeholder="https://example.com/player/tv/{id}/{season}/{episode}?autoplay=true"
+                className="w-full bg-[#0a0a0a] border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500 transition-all font-mono text-sm"
               />
             </div>
             
-            <div className="flex gap-3 pt-2">
-              <button
-                type="submit"
-                className="flex-1 bg-white text-black hover:bg-zinc-200 font-semibold py-3 px-4 rounded-xl transition-colors flex items-center justify-center gap-2"
-              >
-                <PlayCircle className="w-5 h-5" />
-                {customUrl ? 'Update Source' : 'Set Source & Play'}
-              </button>
-              
-              {customUrl && (
+            <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 pt-2">
+              {hasTemplate && (
                 <button
                   type="button"
                   onClick={() => setIsEditing(false)}
-                  className="bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-3 px-6 rounded-xl transition-colors"
+                  className="w-full sm:w-auto bg-zinc-800 text-white hover:bg-zinc-700 font-semibold py-3 px-6 rounded-xl transition-colors"
                 >
                   Cancel
                 </button>
               )}
+
+              <button
+                type="submit"
+                className="flex-1 w-full bg-white text-black hover:bg-zinc-200 font-semibold py-3 px-4 rounded-xl transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+              >
+                <Save className="w-5 h-5 shrink-0" />
+                {hasTemplate ? 'Update Settings' : 'Save & Play'}
+              </button>
             </div>
           </form>
 
           <div className="mt-6 flex items-start gap-3 p-4 bg-zinc-900/50 rounded-xl border border-zinc-800/50">
             <Info className="w-5 h-5 text-zinc-400 shrink-0 mt-0.5" />
             <div className="text-xs text-zinc-400 space-y-1">
-              <p>For DMCA compliance, this platform operates as a metadata search engine only and does not host or proxy streaming media.</p>
-              <p>Your provided source URL is stored securely in your browser&apos;s local storage and is never sent to our servers.</p>
-              <p className="mt-2 text-red-400">Tip: Click the user icon in the top navigation bar to configure global templates for all movies and shows.</p>
+              <p>Available placeholders:</p>
+              <ul className="list-disc list-inside space-y-1 ml-1 text-zinc-500">
+                <li><code className="text-red-400 bg-red-500/10 px-1 py-0.5 rounded">{'{id}'}</code> - TMDB ID</li>
+                <li><code className="text-red-400 bg-red-500/10 px-1 py-0.5 rounded">{'{season}'}</code> - TV Season number</li>
+                <li><code className="text-red-400 bg-red-500/10 px-1 py-0.5 rounded">{'{episode}'}</code> - TV Episode number</li>
+              </ul>
             </div>
           </div>
         </div>
@@ -256,26 +264,21 @@ export function Player({
         >
           <button
             type="button"
-            onClick={() => {
-              setInputUrl(customUrl || '');
-              setIsEditing(true);
-            }}
+            onClick={startEditing}
             className="w-11 h-11 rounded-full flex items-center justify-center bg-zinc-900/80 hover:bg-zinc-800/90 text-white backdrop-blur-md border border-zinc-800/80 shadow-2xl transition-all hover:scale-105 active:scale-95 group"
-            title={isFromTemplate ? "Override Template Source" : "Edit Source"}
+            title="Edit Player Settings"
           >
-            <Edit2 className="w-4 h-4 text-zinc-300 group-hover:text-white transition-colors" />
+            <Settings className="w-5 h-5 text-zinc-300 group-hover:text-white transition-colors" />
           </button>
           
-          {!isFromTemplate && (
-            <button
-              type="button"
-              onClick={handleRemoveSource}
-              className="w-11 h-11 rounded-full flex items-center justify-center bg-zinc-900/80 hover:bg-zinc-800/90 text-white backdrop-blur-md border border-zinc-800/80 shadow-2xl transition-all hover:scale-105 active:scale-95 group hover:border-red-500/50"
-              title="Remove Source"
-            >
-              <Trash2 className="w-4 h-4 text-zinc-300 group-hover:text-red-500 transition-colors" />
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={handleClearTemplates}
+            className="w-11 h-11 rounded-full flex items-center justify-center bg-zinc-900/80 hover:bg-zinc-800/90 text-white backdrop-blur-md border border-zinc-800/80 shadow-2xl transition-all hover:scale-105 active:scale-95 group hover:border-red-500/50"
+            title="Clear Current Template"
+          >
+            <Trash2 className="w-5 h-5 text-zinc-300 group-hover:text-red-500 transition-colors" />
+          </button>
         </div>
       )}
     </div>

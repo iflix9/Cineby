@@ -18,7 +18,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: 'Cineby | Discover Movies & TV Shows',
-  description: 'A fully functional streaming and discovery web application for movies and TV shows.',
+  description: 'A comprehensive metadata discovery web application for movies and TV shows.',
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {

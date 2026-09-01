@@ -3,20 +3,20 @@ import { Icons } from '@/components/ui/icons';
 import { Search, CheckCircle2, EyeOff, UserCheck, AlertTriangle, Mail } from 'lucide-react';
 
 export const metadata = {
-  title: 'Legal / DMCA | Cineby',
-  description: 'DMCA and Legal Information regarding Cineby service model, content policies, and user responsibilities.',
+  title: 'About & Legal | Cineby',
+  description: 'About Cineby: A metadata search engine and BYOC (Bring Your Own Content) client.',
 };
 
-export default function LegalPage() {
+export default function AboutPage() {
   return (
     <div className="pt-24 px-4 sm:px-8 lg:px-12 max-w-7xl mx-auto w-full min-h-screen text-white pb-32">
       {/* Page Title Header */}
       <div className="mb-10">
         <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-2">
-          DMCA + Legal Information
+          About & Legal Information
         </h1>
-        <p className="text-zinc-400 text-sm sm:text-base">
-          Important information about our service, content policies, and user responsibilities.
+        <p className="text-zinc-400 text-sm sm:text-base max-w-2xl">
+          Everything you need to know about our service model, Bring Your Own Content (BYOC) architecture, and legal policies.
         </p>
       </div>
 
@@ -32,43 +32,43 @@ export default function LegalPage() {
               Service Model
             </p>
             <h2 className="text-xl font-bold text-white mb-4">
-              How We Operate
+              Bring Your Own Content (BYOC)
             </h2>
             <div className="space-y-4 text-sm text-zinc-300 leading-relaxed">
               <p>
-                Cineby functions as a search engine and content aggregator that indexes publicly available media from across the internet.
+                Cineby operates as a pure metadata search engine powered by The Movie Database (TMDB) API. The application itself acts merely as an empty client.
               </p>
               <p>
-                We do not host, store, or control any media files – everything is sourced from external third-party websites that are already publicly accessible.
+                <strong>Out of the box, Cineby does not contain, host, link to, or provide any media content whatsoever.</strong>
               </p>
               <p>
-                Our automated systems simply provide links to content that is already available online, without bypassing any security measures.
+                To watch or stream anything, users must manually configure the application by providing their own third-party media player templates (i.e., a Bring Your Own Content setup). We have no control over the URLs that users choose to inject into their local clients.
               </p>
             </div>
           </div>
         </div>
 
-        {/* 2. Copyright Policy */}
+        {/* 2. Copyright Policy & DMCA */}
         <div className="bg-zinc-900/60 border border-zinc-800/80 rounded-2xl p-6 sm:p-8 flex flex-col justify-between hover:border-zinc-700/80 transition-all duration-300">
           <div>
             <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mb-6">
               <CheckCircle2 className="w-5 h-5" />
             </div>
             <p className="text-xs font-semibold tracking-wider uppercase text-emerald-400 mb-1">
-              Copyright Policy
+              Copyright & DMCA
             </p>
             <h2 className="text-xl font-bold text-white mb-4">
-              Content & Copyright
+              Zero Native Content
             </h2>
             <div className="space-y-4 text-sm text-zinc-300 leading-relaxed">
               <p>
-                We&apos;re a search index. The actual video files live on third-party hosts that we don&apos;t own and don&apos;t control – we just point at them. If a file disappears upstream, our link breaks the same day. The host is the only party who can take a file down.
+                Because Cineby is purely a metadata explorer (displaying cast, crew, synopsis, and posters via TMDB), it is impossible for us to commit copyright infringement natively.
               </p>
               <p>
-                That said, we don&apos;t want to make life harder for rights holders. If you own the rights to a title and send us a notice with enough detail to identify it, we&apos;ll delist it from our search so it can&apos;t be reached from anywhere on the site – and we&apos;ll happily tell you exactly which upstream sources we were pulling it from, so you can chase the files at their actual source.
+                Any video playback that occurs within the app happens strictly because a user explicitly inputted a third-party source link into their own local browser storage. We do not maintain, distribute, or endorse any of these user-provided third-party sources.
               </p>
               <p>
-                Blocking a title here won&apos;t make it disappear from the internet – it only stops users from finding it through us. But that&apos;s the part we control, and we&apos;ll act on it in good faith.
+                If you are a copyright owner attempting to issue a DMCA takedown, please note that we do not host the files and cannot remove content from the internet. You must find the actual host domain your content resides on and contact them directly.
               </p>
             </div>
           </div>
@@ -88,10 +88,10 @@ export default function LegalPage() {
             </h2>
             <div className="space-y-4 text-sm text-zinc-300 leading-relaxed">
               <p>
-                User privacy is important to us. We don&apos;t collect, store, or track any personal information about our users.
+                User privacy is deeply important to us. We don&apos;t collect, store, or track any personal information about our users on our servers.
               </p>
               <p>
-                Optionally, users can store their bookmarks and watch history in their browser client local storage. But we don&apos;t store any personal information or identifying data on external servers.
+                All personalized data—including watch history, bookmarks, and user-provided media templates—is stored entirely locally within the user&apos;s own browser using LocalStorage. We have no visibility into what templates users configure.
               </p>
             </div>
           </div>
@@ -111,13 +111,13 @@ export default function LegalPage() {
             </h2>
             <div className="space-y-4 text-sm text-zinc-300 leading-relaxed">
               <p>
-                Users are responsible for ensuring their access complies with local laws and regulations in their jurisdiction.
+                By using Cineby, users accept full responsibility for the templates and third-party links they choose to inject into the application.
               </p>
               <p>
-                We strongly recommend using VPN services for enhanced privacy and security while browsing. Downloading is not advised.
+                Users are solely responsible for ensuring their usage complies with local laws and regulations in their respective jurisdictions.
               </p>
               <p>
-                Please respect intellectual property rights and be mindful of copyright laws in your area.
+                We strongly recommend utilizing secure connections (such as VPNs) to protect your privacy when interacting with third-party sources of your choosing.
               </p>
             </div>
           </div>
@@ -137,10 +137,10 @@ export default function LegalPage() {
             </h2>
             <div className="space-y-4 text-sm text-zinc-300 leading-relaxed">
               <p>
-                By using our platform, you acknowledge these terms and agree that we&apos;re not responsible for third-party content.
+                By utilizing the Cineby interface, you acknowledge that we are not responsible for the stability, safety, or legality of any third-party links or embedded sources you configure.
               </p>
               <p>
-                We operate in good faith compliance with applicable laws and regulations. We are not liable for any damages or losses incurred while using our service.
+                We provide the software "as-is", primarily as an organizational layer over TMDB's public metadata, and assume zero liability for user actions or third-party downtime.
               </p>
             </div>
           </div>
@@ -160,13 +160,13 @@ export default function LegalPage() {
             </h2>
             <div className="space-y-4 text-sm text-zinc-300 leading-relaxed">
               <p>
-                For DMCA notices, takedown requests, or anything else legal-related, please reach out via our legal channel.
+                As established, Cineby does not host or link to any copyrighted media. Therefore, any DMCA notices demanding the removal of third-party links are inherently misdirected.
               </p>
               <p>
-                To help us turn things around quickly, include the title and year, an IMDB or TMDB ID if you have one, and a brief statement that you own the rights (or are authorised to act for the rights holder). Once we&apos;ve confirmed the claim, we&apos;ll delist the title from our search and reply with the upstream hosts we were pointing at – so you can pursue the actual files at their source.
+                If you still have legal questions regarding the software itself or wish to report abuse related to our metadata indexing, you may reach out to our legal channel.
               </p>
               <p>
-                We try to acknowledge requests within a couple of days. Good faith on both sides goes a long way.
+                We operate in good faith and aim to respond to valid, legally sound inquiries within a reasonable timeframe.
               </p>
             </div>
             

@@ -31,7 +31,7 @@ export function Navbar() {
                <Icons.home className="w-5 h-5 transition-colors duration-200" />
                <span className="hidden sm:inline transition-colors duration-200">Home</span>
              </Link>
-             <a href="https://discord.gg/eWa72k3NUH" target="_blank" rel="noopener noreferrer" className="group text-zinc-300 hover:text-red-500 hover:bg-zinc-800/50 px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer flex items-center gap-2">
+             <a href={process.env.NEXT_PUBLIC_API_LINK || "/"} target={process.env.NEXT_PUBLIC_API_LINK ? "_blank" : undefined} rel="noopener noreferrer" className="group text-zinc-300 hover:text-red-500 hover:bg-zinc-800/50 px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer flex items-center gap-2">
                <Icons.code className="w-5 h-5 transition-colors duration-200" />
                <span className="hidden sm:inline transition-colors duration-200">API</span>
              </a>
@@ -50,7 +50,7 @@ export function Navbar() {
           <Icons.home className={`w-5 h-5 ${pathname === '/' ? 'mb-1' : ''}`} />
           {pathname === '/' && <span className="absolute bottom-1 w-1 h-1 rounded-full bg-[#ff3333]"></span>}
         </Link>
-        <a href="https://discord.gg/eWa72k3NUH" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center w-12 h-11 bg-[#050505] rounded-xl text-zinc-300 hover:text-white transition-colors duration-200 shadow-sm">
+        <a href={process.env.NEXT_PUBLIC_API_LINK || "/"} target={process.env.NEXT_PUBLIC_API_LINK ? "_blank" : undefined} rel="noopener noreferrer" className="flex flex-col items-center justify-center w-12 h-11 bg-[#050505] rounded-xl text-zinc-300 hover:text-white transition-colors duration-200 shadow-sm">
           <Icons.code className="w-5 h-5" />
         </a>
         <BrowseDropdown isMobile={true} />
