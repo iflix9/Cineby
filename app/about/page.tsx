@@ -48,27 +48,27 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* 2. Copyright Policy & DMCA */}
+        {/* 2. Fair Use & Informational Content */}
         <div className="bg-zinc-900/60 border border-zinc-800/80 rounded-2xl p-6 sm:p-8 flex flex-col justify-between hover:border-zinc-700/80 transition-all duration-300">
           <div>
             <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mb-6">
               <CheckCircle2 className="w-5 h-5" />
             </div>
             <p className="text-xs font-semibold tracking-wider uppercase text-emerald-400 mb-1">
-              Copyright & DMCA
+              Fair Use & Educational
             </p>
             <h2 className="text-xl font-bold text-white mb-4">
-              Zero Native Content
+              Informational Content
             </h2>
             <div className="space-y-4 text-sm text-zinc-300 leading-relaxed">
               <p>
-                Because Cineby is purely a metadata explorer (displaying cast, crew, synopsis, and posters via TMDB), it is impossible for us to commit copyright infringement natively.
+                Cineby serves as an educational and informational tool, providing rich data about cinema including synopses, cast details, release dates, and general movie knowledge.
               </p>
               <p>
-                Any video playback that occurs within the app happens strictly because a user explicitly inputted a third-party source link into their own local browser storage. We do not maintain, distribute, or endorse any of these user-provided third-party sources.
+                The display of posters and metadata falls under Fair Use, as our platform functions strictly as an index and discovery engine for cinematic research. We do not host, distribute, or pirate any copyrighted media.
               </p>
               <p>
-                If you are a copyright owner attempting to issue a DMCA takedown, please note that we do not host the files and cannot remove content from the internet. You must find the actual host domain your content resides on and contact them directly.
+                As an informational database, any DMCA notices regarding media files are inherently misdirected, as no such files exist on our infrastructure. All video playback capabilities are provided locally by the user via their own Bring Your Own Content (BYOC) setup.
               </p>
             </div>
           </div>
