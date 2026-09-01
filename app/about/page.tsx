@@ -176,10 +176,10 @@ export default function AboutPage() {
               </div>
               <span className="font-semibold text-zinc-400">Email:</span>
               <a 
-                href="mailto:contact@cineby.im" 
+                href="mailto:contact@cinebyfree.co" 
                 className="text-cyan-400 hover:text-cyan-300 font-medium transition-colors"
               >
-                contact@cineby.im
+                contact@cinebyfree.co
               </a>
             </div>
           </div>
