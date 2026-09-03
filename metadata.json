@@ -1,6 +1,6 @@
 {
-  "name": "Remix Cineby",
-  "description": "A movie and TV shows tracker application.",
+  "name": "Cineby",
+  "description": "Cineby - Discover and explore movies and TV shows. Your ultimate cinematic metadata database.",
   "requestFramePermissions": [
     "fullscreen"
   ],

@@ -126,6 +126,7 @@ export default async function Home() {
 
   return (
     <div>
+      <h1 className="sr-only">Cineby - Free Movies and TV Shows Database</h1>
       <HeroBanner movies={trendingMovies.slice(0, 5)} logos={heroLogos} />
       <div className="-mt-2 md:-mt-4 relative z-10 space-y-8 md:space-y-10">
         <ContinueWatchingRow />

@@ -17,8 +17,41 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'Cineby | Discover Movies & TV Shows',
-  description: 'A comprehensive metadata discovery web application for movies and TV shows.',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://cinebyfree.co'),
+  title: {
+    default: 'Cineby | Free Movies and TV Shows Database',
+    template: '%s | Cineby'
+  },
+  description: 'Cineby is your ultimate cinematic database. Discover, explore, and track your favorite movies, TV shows, cast details, and more.',
+  keywords: ['Cineby', 'movies', 'TV shows', 'cinema', 'database', 'streaming', 'film', 'metadata', 'actors', 'series'],
+  authors: [{ name: 'Cineby' }],
+  creator: 'Cineby',
+  publisher: 'Cineby',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: '/',
+    title: 'Cineby | Free Movies and TV Shows Database',
+    description: 'Cineby is your ultimate cinematic database. Discover, explore, and track your favorite movies, TV shows, and cast details.',
+    siteName: 'Cineby',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Cineby | Free Movies and TV Shows Database',
+    description: 'Discover and explore movies, TV shows, and cast details on Cineby.',
+    creator: '@cineby',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
