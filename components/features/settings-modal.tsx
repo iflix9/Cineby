@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Settings, X, Save, Info } from 'lucide-react';
 import { useCustomSources } from '@/hooks/use-custom-sources';
+import { Icons } from '@/components/ui/icons';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -27,19 +28,31 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="bg-[#111111] border border-zinc-800 rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-        <div className="flex items-center justify-between p-6 border-b border-zinc-800">
+        <div className="flex items-center justify-between p-6 border-b border-zinc-800 gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center shrink-0">
               <Settings className="w-5 h-5 text-red-500" />
             </div>
             <h2 className="text-xl font-bold text-white">Player Settings</h2>
           </div>
-          <button
-            onClick={onClose}
-            className="w-10 h-10 flex items-center justify-center rounded-full bg-zinc-900/80 hover:bg-zinc-800 text-zinc-400 hover:text-white transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <a 
+              href={process.env.NEXT_PUBLIC_API_LINK} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 bg-[#5865F2]/10 hover:bg-[#5865F2]/20 text-[#5865F2] border border-[#5865F2]/20 px-3 py-2 rounded-xl text-sm font-medium transition-colors"
+              title="Join our community Discord"
+            >
+              <Icons.discord className="w-4 h-4" />
+              <span className="hidden sm:inline">Join Discord</span>
+            </a>
+            <button
+              onClick={onClose}
+              className="w-10 h-10 flex items-center justify-center rounded-xl bg-zinc-900/80 hover:bg-zinc-800 text-zinc-400 hover:text-white transition-colors shrink-0"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         <div className="p-6 overflow-y-auto custom-scrollbar">

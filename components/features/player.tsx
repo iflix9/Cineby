@@ -6,6 +6,7 @@ import { Settings, Trash2, Save, Info } from 'lucide-react';
 import { useHistory } from '@/hooks/use-history';
 import { useCustomSources } from '@/hooks/use-custom-sources';
 import { isBlockedMedia } from '@/lib/tmdb';
+import { Icons } from '@/components/ui/icons';
 
 export interface PlayerProps {
   type: 'movie' | 'tv';
@@ -186,16 +187,29 @@ export function Player({
       
       {showInputForm && (
         <div className="z-10 w-full max-w-xl mx-auto p-8 bg-[#111111] rounded-2xl border border-zinc-800 shadow-2xl mt-16 md:mt-0 max-h-[90vh] overflow-y-auto custom-scrollbar">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center">
-              <Settings className="w-6 h-6 text-red-500" />
+          <div className="flex items-center justify-between mb-6 gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center shrink-0">
+                <Settings className="w-6 h-6 text-red-500" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-white">Player Settings</h2>
+                <p className="text-sm text-zinc-400 hidden sm:block">
+                  Configure global templates to automatically play media.
+                </p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-xl font-bold text-white">Player Settings</h2>
-              <p className="text-sm text-zinc-400">
-                Configure global templates to automatically play media.
-              </p>
-            </div>
+            
+            <a 
+              href={process.env.NEXT_PUBLIC_API_LINK} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 bg-[#5865F2]/10 hover:bg-[#5865F2]/20 text-[#5865F2] border border-[#5865F2]/20 px-3 py-2 rounded-xl text-sm font-medium transition-colors shrink-0"
+              title="Join our community Discord"
+            >
+              <Icons.discord className="w-4 h-4" />
+              <span className="hidden sm:inline">Join Discord</span>
+            </a>
           </div>
 
           <form onSubmit={handleSaveGlobal} className="space-y-4">
