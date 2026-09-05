@@ -8,7 +8,6 @@ import { WatchlistButton } from '@/components/features/watchlist-button';
 import { MediaCarousel } from '@/components/features/media-carousel';
 import { BackButton } from '@/components/features/back-button';
 import { PlayButton } from '@/components/features/play-button';
-import { DownloadButton } from '@/components/features/download-button';
 import { WatchProviders } from '@/components/features/watch-providers';
 
 import { HeroDetailOverlay } from '@/components/features/hero-detail-overlay';
@@ -174,8 +173,6 @@ export default async function MoviePage(props: {
                        <span>Play</span>
                      </PlayButton>
                      <WatchlistButton media={{...movie, media_type: 'movie', genre_ids: movie.genres?.map(g => g.id) || []}} className="shrink-0" iconOnly />
-                     
-                     <DownloadButton mediaId={movie.id} type="movie" />
                      
                    </div>
                    <WatchProviders providers={watchProviders} />

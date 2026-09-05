@@ -140,7 +140,7 @@ export default function AboutPage() {
                 By utilizing the Cineby interface, you acknowledge that we are not responsible for the stability, safety, or legality of any third-party links or embedded sources you configure.
               </p>
               <p>
-                We provide the software "as-is", primarily as an organizational layer over TMDB's public metadata, and assume zero liability for user actions or third-party downtime.
+                We provide the software &quot;as-is&quot;, primarily as an organizational layer over TMDB&apos;s public metadata, and assume zero liability for user actions or third-party downtime.
               </p>
             </div>
           </div>

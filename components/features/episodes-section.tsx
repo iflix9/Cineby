@@ -176,28 +176,7 @@ export function EpisodesSection({ show, allSeasonsData, seasonNum, episodeNum }:
                   </p>
                 </div>
 
-                {/* Minimalist Download Icon Button on far right */}
-                {isReleased && (
-                  <div className="flex items-center shrink-0 self-center pl-1 sm:pl-2">
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        triggerAdPopUp();
-                        const p1 = 'vid';
-                        const p2 = 'vault';
-                        const p3 = '.ru';
-                        window.open(`https://${p1}${p2}${p3}/tv/${show.id}/${ep.season_number}/${ep.episode_number}`, '_blank', 'noopener,noreferrer');
-                      }}
-                      className="p-2.5 sm:p-3 rounded-full hover:bg-zinc-800/80 border border-transparent hover:border-red-500/50 text-neutral-400 hover:text-red-500 transition-all cursor-pointer group/dl"
-                      title={`Download S${ep.season_number} E${ep.episode_number}`}
-                      aria-label={`Download S${ep.season_number} E${ep.episode_number}`}
-                    >
-                      <Icons.download className="w-5 h-5 text-neutral-400 group-hover/dl:text-red-500 transition-colors" />
-                    </button>
-                  </div>
-                )}
+
               </>
             );
 
