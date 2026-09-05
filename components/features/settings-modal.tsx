@@ -59,7 +59,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           <div className="mb-6 flex items-start gap-3 p-4 bg-zinc-900/50 rounded-xl border border-zinc-800/50">
             <Info className="w-5 h-5 text-zinc-400 shrink-0 mt-0.5" />
             <div className="text-sm text-zinc-400 space-y-2">
-              <p>Configure global templates for media playback. Use placeholders to dynamically inject media data.</p>
+              <p>Configure global templates for media playback. You can add <strong>multiple players</strong> by separating URLs with a comma (<code className="text-zinc-300 bg-zinc-800 px-1 py-0.5 rounded">,</code>).</p>
               <p>Available placeholders:</p>
               <ul className="list-disc list-inside text-zinc-500 space-y-1 ml-1">
                 <li><code className="text-red-400 bg-red-500/10 px-1.5 py-0.5 rounded text-xs">{'{id}'}</code> - TMDB ID</li>

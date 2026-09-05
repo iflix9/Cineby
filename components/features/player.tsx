@@ -37,17 +37,27 @@ export function Player({
     setIsEditing(true);
   };
 
+  const [activePlayerIndex, setActivePlayerIndex] = useState(0);
+  const [isSourceListOpen, setIsSourceListOpen] = useState(false);
+
+  const templates = (type === 'movie' ? movieTemplate : tvTemplate)
+    ?.split(',')
+    .map(t => t.trim())
+    .filter(Boolean) || [];
+
+  const currentTemplate = templates[activePlayerIndex] || templates[0] || '';
+
   let customUrl = '';
-  if (type === 'movie' && movieTemplate) {
-    customUrl = movieTemplate
+  if (currentTemplate) {
+    customUrl = currentTemplate
       .replace(/{id}/g, mediaId)
       .replace(/{tmdb_id}/g, mediaId);
-  } else if (type === 'tv' && tvTemplate) {
-    customUrl = tvTemplate
-      .replace(/{id}/g, mediaId)
-      .replace(/{tmdb_id}/g, mediaId)
-      .replace(/{season}/g, String(season || 1))
-      .replace(/{episode}/g, String(episode || 1));
+    
+    if (type === 'tv') {
+      customUrl = customUrl
+        .replace(/{season}/g, String(season || 1))
+        .replace(/{episode}/g, String(episode || 1));
+    }
   }
   
   const [isEditing, setIsEditing] = useState(false);
@@ -83,6 +93,8 @@ export function Player({
     setMovieTemplate(localMovie.trim());
     setTvTemplate(localTv.trim());
     setIsEditing(false);
+    setActivePlayerIndex(0);
+    setIsSourceListOpen(false);
   };
 
   const handleClearTemplates = () => {
@@ -257,7 +269,8 @@ export function Player({
 
           <div className="mt-6 flex items-start gap-3 p-4 bg-zinc-900/50 rounded-xl border border-zinc-800/50">
             <Info className="w-5 h-5 text-zinc-400 shrink-0 mt-0.5" />
-            <div className="text-xs text-zinc-400 space-y-1">
+            <div className="text-xs text-zinc-400 space-y-2">
+              <p>You can add <strong>multiple players</strong> by separating URLs with a comma (<code className="text-zinc-300 bg-zinc-800 px-1 py-0.5 rounded">,</code>).</p>
               <p>Available placeholders:</p>
               <ul className="list-disc list-inside space-y-1 ml-1 text-zinc-500">
                 <li><code className="text-red-400 bg-red-500/10 px-1 py-0.5 rounded">{'{id}'}</code> - TMDB ID</li>
@@ -272,27 +285,53 @@ export function Player({
       {/* Player Source Controls (when playing) */}
       {customUrl && !isEditing && (
         <div 
-          className={`fixed top-6 right-6 md:top-10 md:right-12 z-[110] transition-all duration-500 ease-in-out flex gap-2 ${
+          className={`fixed top-6 right-6 md:top-10 md:right-12 z-[110] transition-all duration-500 ease-in-out flex flex-col items-end gap-2 ${
             isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
           }`}
         >
-          <button
-            type="button"
-            onClick={startEditing}
-            className="w-11 h-11 rounded-full flex items-center justify-center bg-zinc-900/80 hover:bg-zinc-800/90 text-white backdrop-blur-md border border-zinc-800/80 shadow-2xl transition-all hover:scale-105 active:scale-95 group"
-            title="Edit Player Settings"
-          >
-            <Settings className="w-5 h-5 text-zinc-300 group-hover:text-white transition-colors" />
-          </button>
-          
-          <button
-            type="button"
-            onClick={handleClearTemplates}
-            className="w-11 h-11 rounded-full flex items-center justify-center bg-zinc-900/80 hover:bg-zinc-800/90 text-white backdrop-blur-md border border-zinc-800/80 shadow-2xl transition-all hover:scale-105 active:scale-95 group hover:border-red-500/50"
-            title="Clear Current Template"
-          >
-            <Trash2 className="w-5 h-5 text-zinc-300 group-hover:text-red-500 transition-colors" />
-          </button>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={startEditing}
+              className="w-11 h-11 rounded-full flex items-center justify-center bg-zinc-900/80 hover:bg-zinc-800/90 text-white backdrop-blur-md border border-zinc-800/80 shadow-2xl transition-all hover:scale-105 active:scale-95 group"
+              title="Edit Player Settings"
+            >
+              <Settings className="w-5 h-5 text-zinc-300 group-hover:text-white transition-colors" />
+            </button>
+            
+            {templates.length > 1 && (
+              <button
+                type="button"
+                onClick={() => setIsSourceListOpen(!isSourceListOpen)}
+                className={`w-11 h-11 rounded-full flex items-center justify-center backdrop-blur-md border border-zinc-800/80 shadow-2xl transition-all hover:scale-105 active:scale-95 group ${isSourceListOpen ? 'bg-white text-black' : 'bg-zinc-900/80 hover:bg-zinc-800/90 text-white'}`}
+                title="Change Player"
+              >
+                <Icons.list className={`w-5 h-5 transition-colors ${isSourceListOpen ? 'text-black' : 'text-zinc-300 group-hover:text-white'}`} />
+              </button>
+            )}
+          </div>
+
+          {isSourceListOpen && templates.length > 1 && (
+            <div className="bg-zinc-900/90 backdrop-blur-md border border-zinc-800/80 rounded-2xl p-2 w-48 flex flex-col gap-1 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+              {templates.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    setActivePlayerIndex(index);
+                    setIsSourceListOpen(false);
+                  }}
+                  className={`px-4 py-2.5 rounded-xl text-sm font-medium text-left transition-colors flex items-center justify-between ${
+                    activePlayerIndex === index 
+                      ? 'bg-red-500/10 text-red-500' 
+                      : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
+                  }`}
+                >
+                  <span>Player {index + 1}</span>
+                  {activePlayerIndex === index && <Icons.check className="w-4 h-4" />}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>
