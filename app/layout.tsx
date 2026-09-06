@@ -19,8 +19,8 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://cinebyfree.co'),
   title: {
-    default: 'Cineby | Free Movies and TV Shows Database',
-    template: '%s | Cineby'
+    default: 'Cineby - Free Movies and TV Shows Database',
+    template: '%s - Cineby'
   },
   description: 'Cineby is your ultimate cinematic database. Discover, explore, and track your favorite movies, TV shows, cast details, and more.',
   keywords: ['Cineby', 'movies', 'TV shows', 'cinema', 'database', 'streaming', 'film', 'metadata', 'actors', 'series'],
@@ -31,13 +31,19 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: '/',
-    title: 'Cineby | Free Movies and TV Shows Database',
+    title: {
+      default: 'Cineby - Free Movies and TV Shows Database',
+      template: '%s - Cineby'
+    },
     description: 'Cineby is your ultimate cinematic database. Discover, explore, and track your favorite movies, TV shows, and cast details.',
     siteName: 'Cineby',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Cineby | Free Movies and TV Shows Database',
+    title: {
+      default: 'Cineby - Free Movies and TV Shows Database',
+      template: '%s - Cineby'
+    },
     description: 'Discover and explore movies, TV shows, and cast details on Cineby.',
     creator: '@cineby',
   },

@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { HistoryClient } from './history-client';
 
 export const metadata: Metadata = {
-  title: 'Watch History - Cineby',
+  title: 'Watch History',
   description: 'View your watch history and continue watching movies and TV shows from where you left off.',
 };
 

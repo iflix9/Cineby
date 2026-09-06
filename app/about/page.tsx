@@ -3,7 +3,7 @@ import { Icons } from '@/components/ui/icons';
 import { Search, CheckCircle2, EyeOff, UserCheck, AlertTriangle, Mail } from 'lucide-react';
 
 export const metadata = {
-  title: 'About & Legal | Cineby',
+  title: 'About & Legal',
   description: 'About Cineby: A metadata search engine and BYOC (Bring Your Own Content) client.',
 };
 

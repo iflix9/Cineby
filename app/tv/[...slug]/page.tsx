@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   try {
     const show = await fetchTMDB<TVShowDetails>(`/tv/${id}`);
     return {
-      title: `${show.name} - Cineby`,
+      title: show.name,
       description: show.overview,
     };
   } catch {

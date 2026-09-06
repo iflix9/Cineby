@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: BrowsePageProps): Promise<Met
   const { type } = await params;
   const title = type === 'movie' ? 'Movies' : type === 'tv' ? 'TV Shows' : type === 'anime' ? 'Anime' : 'Browse';
   return {
-    title: `${title} - Cineby`,
+    title: title,
   };
 }
 

@@ -10,12 +10,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   try {
     const person = await fetchTMDB<PersonDetails>(`/person/${id}`);
     return {
-      title: `${person.name} - Cineby`,
+      title: person.name,
       description: person.biography || `Details about ${person.name}`,
     };
   } catch (e) {
     return {
-      title: 'Person Not Found - Cineby',
+      title: 'Person Not Found',
     };
   }
 }
