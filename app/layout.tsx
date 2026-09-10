@@ -18,6 +18,12 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://cinebyfree.co'),
+  applicationName: 'Cineby',
+  appleWebApp: {
+    title: 'Cineby',
+    statusBarStyle: 'default',
+    capable: true,
+  },
   title: {
     default: 'Cineby - Free Movies and TV Shows Database',
     template: '%s - Cineby'
