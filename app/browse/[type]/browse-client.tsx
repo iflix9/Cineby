@@ -232,7 +232,6 @@ export function BrowseClient({ initialData, type, endpoint, queryParams }: Brows
           value={selectedCategory} 
           onChange={setSelectedCategory}
           options={categories}
-          buttonClassName="font-medium bg-[#1a1a1a]"
         />
         
         <FilterDropdown 

@@ -167,13 +167,13 @@ export function EmbeddedVideoPlayer({
       {videoKey && !isPlayerActive && (
         <button
           onClick={toggleMute}
-          className="absolute top-6 right-6 md:top-10 md:right-12 z-50 w-11 h-11 rounded-full flex items-center justify-center bg-zinc-900/60 hover:bg-zinc-800/80 backdrop-blur-md border border-zinc-800/60 hover:border-red-500/50 text-zinc-300 hover:text-red-500 hover:scale-105 transition-all group/mute shadow-lg"
+          className="absolute top-6 right-6 md:top-10 md:right-12 z-50 w-11 h-11 rounded-full flex items-center justify-center bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-2xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),_0_2px_6px_rgba(0,0,0,0.3)] text-white hover:from-white/15 hover:to-white/10 active:scale-[0.97] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-all duration-200 group/mute"
           aria-label={isMuted ? "Unmute" : "Mute"}
         >
           {isMuted ? (
-            <VolumeX className="w-5 h-5 text-zinc-300 group-hover/mute:text-red-500 transition-colors" />
+            <VolumeX className="w-5 h-5 text-white transition-colors" />
           ) : (
-            <Volume2 className="w-5 h-5 text-zinc-300 group-hover/mute:text-red-500 transition-colors" />
+            <Volume2 className="w-5 h-5 text-white transition-colors" />
           )}
         </button>
       )}
