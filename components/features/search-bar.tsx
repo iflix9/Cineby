@@ -212,7 +212,7 @@ export function SearchBar({ isMobile }: { isMobile?: boolean }) {
                 <div className="relative" ref={dropdownRef}>
                   <button 
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className="flex items-center gap-2 bg-[#0a0a0a] border border-zinc-800/60 rounded-xl px-3 py-1.5 text-sm text-zinc-300 hover:text-white transition-colors"
+                    className="flex items-center gap-2 bg-gradient-to-b from-zinc-800/80 to-zinc-900/80 backdrop-blur-xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),_0_2px_6px_rgba(0,0,0,0.2)] rounded-xl px-3 py-1.5 text-sm text-zinc-300 hover:text-white hover:from-zinc-700/80 hover:to-zinc-800/80 active:scale-95 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-all duration-200"
                   >
                     {searchType === 'multi' && 'Movies & TV Shows'}
                     {searchType === 'movie' && 'Movies'}
@@ -221,29 +221,29 @@ export function SearchBar({ isMobile }: { isMobile?: boolean }) {
                     <Icons.chevronDown className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
                   </button>
                   {isDropdownOpen && (
-                    <div className="absolute top-full right-0 mt-2 w-48 bg-[#0a0a0a] border border-zinc-800/60 rounded-xl shadow-2xl overflow-hidden z-50">
+                    <div className="absolute top-full right-0 mt-2 w-48 bg-zinc-900/90 backdrop-blur-2xl ring-1 ring-white/10 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.5)] overflow-hidden z-50 p-1">
                       <div className="flex flex-col">
                         <button 
                           onClick={() => { setSearchType('multi'); setIsDropdownOpen(false); }}
-                          className={`text-left px-4 py-2.5 text-sm transition-colors hover:bg-zinc-800/50 ${searchType === 'multi' ? 'text-white font-medium bg-zinc-800/30' : 'text-zinc-400'}`}
+                          className={`text-left px-3 py-2 text-sm rounded-lg transition-colors hover:bg-white/10 ${searchType === 'multi' ? 'text-white font-medium bg-white/10' : 'text-zinc-300'}`}
                         >
                           Movies & TV Shows
                         </button>
                         <button 
                           onClick={() => { setSearchType('movie'); setIsDropdownOpen(false); }}
-                          className={`text-left px-4 py-2.5 text-sm transition-colors hover:bg-zinc-800/50 ${searchType === 'movie' ? 'text-white font-medium bg-zinc-800/30' : 'text-zinc-400'}`}
+                          className={`text-left px-3 py-2 text-sm rounded-lg transition-colors hover:bg-white/10 ${searchType === 'movie' ? 'text-white font-medium bg-white/10' : 'text-zinc-300'}`}
                         >
                           Movies
                         </button>
                         <button 
                           onClick={() => { setSearchType('tv'); setIsDropdownOpen(false); }}
-                          className={`text-left px-4 py-2.5 text-sm transition-colors hover:bg-zinc-800/50 ${searchType === 'tv' ? 'text-white font-medium bg-zinc-800/30' : 'text-zinc-400'}`}
+                          className={`text-left px-3 py-2 text-sm rounded-lg transition-colors hover:bg-white/10 ${searchType === 'tv' ? 'text-white font-medium bg-white/10' : 'text-zinc-300'}`}
                         >
                           TV Shows
                         </button>
                         <button 
                           onClick={() => { setSearchType('anime'); setIsDropdownOpen(false); }}
-                          className={`text-left px-4 py-2.5 text-sm transition-colors hover:bg-zinc-800/50 ${searchType === 'anime' ? 'text-white font-medium bg-zinc-800/30' : 'text-zinc-400'}`}
+                          className={`text-left px-3 py-2 text-sm rounded-lg transition-colors hover:bg-white/10 ${searchType === 'anime' ? 'text-white font-medium bg-white/10' : 'text-zinc-300'}`}
                         >
                           Animes
                         </button>
@@ -253,7 +253,7 @@ export function SearchBar({ isMobile }: { isMobile?: boolean }) {
                 </div>
                 <button 
                   onClick={closeSearch}
-                  className="bg-[#0a0a0a] border border-zinc-800/60 rounded-xl p-1.5 text-zinc-400 hover:text-white transition-colors"
+                  className="bg-gradient-to-b from-zinc-800/80 to-zinc-900/80 backdrop-blur-xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),_0_2px_6px_rgba(0,0,0,0.2)] rounded-xl p-1.5 text-zinc-300 hover:text-white hover:from-zinc-700/80 hover:to-zinc-800/80 active:scale-95 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-all duration-200"
                 >
                   <Icons.x className="w-5 h-5" />
                 </button>
@@ -270,7 +270,7 @@ export function SearchBar({ isMobile }: { isMobile?: boolean }) {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDownInput}
                 placeholder="Type here to search..."
-                className="w-full bg-[#0a0a0a] border border-zinc-800/60 rounded-2xl py-4 pl-12 pr-12 text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-700 text-lg transition-colors"
+                className="w-full bg-gradient-to-b from-zinc-800/80 to-zinc-900/80 backdrop-blur-xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),_0_2px_6px_rgba(0,0,0,0.2)] rounded-2xl py-4 pl-12 pr-12 text-white placeholder-zinc-500 focus:outline-none focus:ring-red-500/50 text-lg transition-all duration-200 focus:from-zinc-800 focus:to-zinc-900"
               />
               {query && !isLoading && (
                 <button 
@@ -289,7 +289,7 @@ export function SearchBar({ isMobile }: { isMobile?: boolean }) {
 
             {/* Search Results */}
             {query.trim() !== '' && !isLoading && results.length > 0 && (
-              <div className="bg-[#0a0a0a] border border-zinc-800/60 rounded-2xl overflow-hidden shadow-2xl mt-2">
+              <div className="bg-zinc-900/90 backdrop-blur-3xl ring-1 ring-white/10 rounded-2xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.5)] mt-2">
                 <div className="max-h-[60vh] overflow-y-auto scrollbar-hide p-2 space-y-1">
                   {results.map((item, index) => {
                     const media = item as any;
@@ -375,7 +375,7 @@ export function SearchBar({ isMobile }: { isMobile?: boolean }) {
                                     playMedia(media.media_type || (media.title ? 'movie' : 'tv'), media.id.toString(), 1, 1);
                                   });
                                 }}
-                                className="flex items-center justify-center gap-2 bg-white text-black px-4 py-2 rounded-full text-sm font-semibold hover:bg-zinc-200 transition-colors"
+                                className="flex items-center justify-center gap-2 bg-gradient-to-b from-white to-zinc-200 text-black ring-1 ring-black/10 shadow-[inset_0_1px_1px_rgba(255,255,255,1),_0_2px_6px_rgba(0,0,0,0.3)] px-4 py-2 rounded-full text-sm font-semibold hover:from-white hover:to-zinc-100 active:scale-[0.97] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)] transition-all duration-200"
                               >
                                 <Icons.play className="w-4 h-4 fill-current" /> Play
                               </button>
@@ -383,7 +383,7 @@ export function SearchBar({ isMobile }: { isMobile?: boolean }) {
                                 href={href} 
                                 prefetch={false}
                                 onClick={handleLinkClick} 
-                                className="flex items-center justify-center gap-2 bg-zinc-800 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-zinc-700 transition-colors"
+                                className="flex items-center justify-center gap-2 bg-gradient-to-b from-white/15 to-white/5 backdrop-blur-2xl text-white ring-1 ring-white/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25),_0_2px_6px_rgba(0,0,0,0.3)] px-4 py-2 rounded-full text-sm font-semibold hover:from-white/20 hover:to-white/10 active:scale-[0.97] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-all duration-200"
                               >
                                 <Icons.info className="w-4 h-4" /> See more
                               </Link>
@@ -408,14 +408,14 @@ export function SearchBar({ isMobile }: { isMobile?: boolean }) {
             )}
             
             {query.trim() !== '' && !isLoading && results.length === 0 && (
-              <div className="bg-[#0a0a0a] border border-zinc-800/60 rounded-2xl p-8 text-center mt-2">
+              <div className="bg-zinc-900/90 backdrop-blur-3xl ring-1 ring-white/10 rounded-2xl p-8 text-center mt-2 shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
                 <p className="text-zinc-400">No results found for &quot;{query}&quot;</p>
               </div>
             )}
 
             {/* Recent Searches Placeholder */}
             {query.trim() === '' && !isLoading && recentSearches.length > 0 && (
-              <div className="bg-[#0a0a0a] border border-zinc-800/60 rounded-2xl overflow-hidden shadow-2xl mt-2 p-4">
+              <div className="bg-zinc-900/90 backdrop-blur-3xl ring-1 ring-white/10 rounded-2xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.5)] mt-2 p-4">
                 <div className="flex items-center justify-between mb-4 px-2">
                   <h3 className="text-xs font-semibold text-zinc-500 tracking-wider uppercase">Recent</h3>
                   <button onClick={clearRecent} className="text-xs text-zinc-400 hover:text-white transition-colors">Clear</button>

@@ -18,13 +18,18 @@ export function ContinueWatchingRow() {
   const router = useRouter();
   const { items } = useHistory();
   const mounted = useHasMounted();
+  
+  const activeItems = items.filter(item => 
+    (item.currentTime && item.currentTime > 0) || 
+    (item.progress && item.progress > 0)
+  );
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isDown, setIsDown] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeftPos, setScrollLeftPos] = useState(0);
 
-  if (!mounted || items.length === 0) return null;
+  if (!mounted || activeItems.length === 0) return null;
 
   const handlePlay = (item: HistoryItem) => {
     if (item.type === 'movie') {
@@ -115,7 +120,7 @@ export function ContinueWatchingRow() {
             !isDown && "scroll-smooth"
           )}
         >
-          {items.slice(0, 10).map((item) => {
+          {activeItems.slice(0, 10).map((item) => {
             const imagePath = item.backdrop_path || item.poster_path;
             const progressPct = item.progress && item.progress > 0
               ? item.progress

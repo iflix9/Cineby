@@ -100,14 +100,14 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           <button
             type="button"
             onClick={onClose}
-            className="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold text-zinc-300 hover:text-white hover:bg-zinc-800 transition-colors"
+            className="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold text-zinc-300 bg-gradient-to-b from-zinc-800/80 to-zinc-900/80 ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),_0_2px_6px_rgba(0,0,0,0.2)] hover:text-white hover:from-zinc-700/80 hover:to-zinc-800/80 transition-all duration-200 active:scale-95 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]"
           >
             Cancel
           </button>
           <button
             form="settings-form"
             type="submit"
-            className="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold bg-white text-black hover:bg-zinc-200 transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+            className="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold bg-gradient-to-b from-white to-zinc-200 text-black ring-1 ring-black/10 shadow-[inset_0_1px_1px_rgba(255,255,255,1),_0_2px_6px_rgba(0,0,0,0.3)] hover:from-white hover:to-zinc-100 transition-all duration-200 active:scale-95 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)] flex items-center justify-center gap-2 whitespace-nowrap"
           >
             <Save className="w-4 h-4 shrink-0" />
             Save Settings

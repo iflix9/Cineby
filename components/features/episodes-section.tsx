@@ -62,7 +62,7 @@ export function EpisodesSection({ show, allSeasonsData, seasonNum, episodeNum }:
           <button 
             type="button"
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="w-full bg-[#0f0f0f] border border-zinc-800 text-white text-sm font-medium px-4 py-2.5 rounded-xl flex items-center justify-between hover:bg-zinc-800/80 transition-colors"
+            className="w-full bg-gradient-to-b from-zinc-800/80 to-zinc-900/80 backdrop-blur-xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),_0_2px_6px_rgba(0,0,0,0.2)] text-white text-sm font-medium px-4 py-2.5 rounded-xl flex items-center justify-between hover:from-zinc-700/80 hover:to-zinc-800/80 active:scale-95 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-all duration-200"
           >
             <span>Season {activeSeason}</span>
             <Icons.chevronDown className={`w-4 h-4 text-zinc-400 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
@@ -71,8 +71,8 @@ export function EpisodesSection({ show, allSeasonsData, seasonNum, episodeNum }:
           {isDropdownOpen && (
             <>
               <div className="fixed inset-0 z-10" onClick={() => setIsDropdownOpen(false)} />
-              <div className="absolute left-0 top-full mt-2 w-full min-w-[160px] bg-zinc-900 border border-zinc-800 rounded-xl shadow-xl overflow-hidden origin-top z-20 animate-in fade-in slide-in-from-top-2 duration-200">
-                <div className="max-h-60 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-700 hover:[&::-webkit-scrollbar-thumb]:bg-zinc-600">
+              <div className="absolute left-0 top-full mt-2 w-full min-w-[160px] bg-zinc-900/90 backdrop-blur-2xl ring-1 ring-white/10 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.5)] overflow-hidden origin-top z-20 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="max-h-60 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-700 hover:[&::-webkit-scrollbar-thumb]:bg-zinc-600 p-1">
                   {validSeasons.map((s: any) => (
                     <button
                       key={s.id} 
@@ -80,7 +80,7 @@ export function EpisodesSection({ show, allSeasonsData, seasonNum, episodeNum }:
                         setActiveSeason(s.season_number);
                         setIsDropdownOpen(false);
                       }}
-                      className={`block w-full text-left px-4 py-2.5 text-sm hover:bg-zinc-800 transition-colors ${activeSeason === s.season_number ? 'text-white bg-zinc-800 font-medium' : 'text-zinc-400'}`}
+                      className={`block w-full text-left px-3 py-2 text-sm rounded-lg hover:bg-white/10 transition-colors ${activeSeason === s.season_number ? 'text-white bg-white/10 font-medium' : 'text-zinc-300'}`}
                     >
                       Season {s.season_number}
                     </button>
@@ -92,21 +92,21 @@ export function EpisodesSection({ show, allSeasonsData, seasonNum, episodeNum }:
         </div>
 
         {/* Search Input */}
-        <div className="relative flex items-center bg-[#0f0f0f] border border-zinc-800 px-4 py-2.5 rounded-xl flex-1 md:max-w-md transition-colors focus-within:border-zinc-500">
-          <Icons.search className="w-4 h-4 text-zinc-500 absolute left-4" />
+        <div className="relative flex items-center bg-gradient-to-b from-zinc-800/80 to-zinc-900/80 backdrop-blur-xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),_0_2px_6px_rgba(0,0,0,0.2)] px-4 py-2.5 rounded-xl flex-1 md:max-w-md transition-all duration-200 focus-within:ring-red-500/50 focus-within:from-zinc-800 focus-within:to-zinc-900">
+          <Icons.search className="w-4 h-4 text-zinc-400 absolute left-4" />
           <input 
             type="text" 
             placeholder="Search episode..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-transparent border-none outline-none text-[16px] sm:text-sm text-zinc-300 w-full pl-7 placeholder:text-zinc-500"
+            className="bg-transparent border-none outline-none text-[16px] sm:text-sm text-white w-full pl-7 placeholder:text-zinc-500"
           />
         </div>
 
         {/* Sort Button */}
         <button 
           onClick={() => setSortDesc(!sortDesc)}
-          className="bg-[#0f0f0f] border border-zinc-800 text-zinc-400 p-2.5 rounded-xl hover:bg-zinc-800/80 hover:text-white transition-colors"
+          className="bg-gradient-to-b from-zinc-800/80 to-zinc-900/80 backdrop-blur-xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),_0_2px_6px_rgba(0,0,0,0.2)] text-zinc-300 p-2.5 rounded-xl hover:from-zinc-700/80 hover:to-zinc-800/80 hover:text-white active:scale-95 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-all duration-200"
           title={sortDesc ? "Sort Oldest to Newest" : "Sort Newest to Oldest"}
         >
           {sortDesc ? <ArrowUpAZ className="w-5 h-5" /> : <ArrowDownAZ className="w-5 h-5" />}
@@ -181,7 +181,7 @@ export function EpisodesSection({ show, allSeasonsData, seasonNum, episodeNum }:
             );
 
             const cardClasses = `w-full text-left flex flex-col sm:flex-row items-start sm:items-center gap-4 p-3.5 sm:p-4 rounded-xl transition-all group/ep relative ${
-              isCurrent ? 'bg-zinc-800/90 border border-zinc-700 shadow-md' : 
+              isCurrent ? 'bg-[#0f0f11] hover:bg-zinc-900/90 border border-zinc-700/80 hover:border-zinc-600 shadow-md cursor-pointer' : 
               isReleased ? 'bg-[#0f0f11] hover:bg-zinc-900/90 border border-zinc-800/60 hover:border-zinc-700/60 cursor-pointer' : 
               'bg-[#0a0a0b] border border-zinc-900/60 opacity-70 cursor-default'
             }`;

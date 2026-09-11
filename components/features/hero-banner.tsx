@@ -89,7 +89,7 @@ export function HeroBanner({ movies, logos }: HeroBannerProps) {
               {movie.overview}
             </p>
             
-            <div className="flex flex-wrap items-center gap-4 mt-6">
+            <div className="flex flex-wrap items-center gap-3 mt-6">
               <button 
                 onClick={(e) => {
                   e.preventDefault();
@@ -98,7 +98,7 @@ export function HeroBanner({ movies, logos }: HeroBannerProps) {
                     playMedia('movie', movie.id.toString());
                   });
                 }}
-                className="bg-white text-black px-6 md:px-8 py-2.5 rounded-full font-bold text-sm md:text-base flex items-center gap-2 hover:bg-zinc-200 transition"
+                className="bg-gradient-to-b from-white to-zinc-200 text-black ring-1 ring-black/10 shadow-[inset_0_1px_1px_rgba(255,255,255,1),_0_2px_6px_rgba(0,0,0,0.3)] px-7 py-3 rounded-full font-semibold text-[15px] flex items-center gap-2 hover:from-white hover:to-zinc-100 active:scale-[0.97] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)] transition-all duration-200"
               >
                 <Icons.play className="w-5 h-5 fill-black" />
                 Play
@@ -106,7 +106,7 @@ export function HeroBanner({ movies, logos }: HeroBannerProps) {
               <Link 
                 href={`/movie/${movie.id}`}
                 prefetch={false}
-                className="bg-zinc-800/60 backdrop-blur-sm text-white border border-zinc-700/50 px-6 md:px-8 py-2.5 rounded-full font-semibold text-sm md:text-base flex items-center gap-2 hover:bg-zinc-700 transition"
+                className="bg-gradient-to-b from-white/15 to-white/5 backdrop-blur-2xl text-white ring-1 ring-white/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.25),_0_2px_6px_rgba(0,0,0,0.3)] px-7 py-3 rounded-full font-semibold text-[15px] flex items-center gap-2 hover:from-white/20 hover:to-white/10 active:scale-[0.97] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-all duration-200"
               >
                 <Icons.info className="w-5 h-5" />
                 See More

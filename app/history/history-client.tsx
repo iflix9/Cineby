@@ -53,13 +53,18 @@ export function HistoryClient() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
 
-  const activeEditMode = isEditMode && items.length > 0;
+  const activeItems = items.filter(item => 
+    (item.currentTime && item.currentTime > 0) || 
+    (item.progress && item.progress > 0)
+  );
+
+  const activeEditMode = isEditMode && activeItems.length > 0;
 
   if (!mounted) {
     return <div className="pt-32 px-4 text-center min-h-screen text-zinc-400">Loading your history...</div>;
   }
 
-  const filteredItems = items.filter((item) => {
+  const filteredItems = activeItems.filter((item) => {
     if (filter === 'movie') return item.type === 'movie';
     if (filter === 'tv') return item.type === 'tv';
     return true;
@@ -160,7 +165,7 @@ export function HistoryClient() {
       )}
 
       {/* Filters */}
-      {items.length > 0 && (
+      {activeItems.length > 0 && (
         <div className="flex items-center gap-2 mb-8 overflow-x-auto pb-2 scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none]">
           {(['all', 'movie', 'tv'] as const).map((t) => (
             <button
@@ -185,10 +190,10 @@ export function HistoryClient() {
             <Icons.library className="w-8 h-8 text-neutral-500" />
           </div>
           <h2 className="text-xl font-semibold mb-2">
-            {items.length === 0 ? 'Your watch history is empty' : 'No items found'}
+            {activeItems.length === 0 ? 'Your watch history is empty' : 'No items found'}
           </h2>
           <p className="text-neutral-500 max-w-sm mb-6 text-sm">
-            {items.length === 0
+            {activeItems.length === 0
               ? 'Movies and TV shows you watch will appear here so you can easily resume watching.'
               : `You don't have any ${filter === 'movie' ? 'movies' : 'TV shows'} in your history.`}
           </p>
