@@ -162,9 +162,9 @@ export default async function TVShowPage(props: {
               buttons={
                  <div className="flex flex-col">
                    <div className="flex items-center gap-2 sm:gap-3 pt-2 w-full overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                     <PlayButton type="tv" mediaId={show.id.toString()} season={Number(seasonNum)} episode={1} className="bg-gradient-to-b from-white to-zinc-200 text-black ring-1 ring-black/10 shadow-[inset_0_1px_1px_rgba(255,255,255,1),_0_2px_6px_rgba(0,0,0,0.3)] w-[46px] sm:w-auto px-0 sm:px-7 py-3 rounded-full font-semibold text-[15px] flex items-center justify-center gap-2 hover:from-white hover:to-zinc-100 active:scale-[0.97] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)] transition-all duration-200 shrink-0 h-[46px]">
+                     <PlayButton type="tv" mediaId={show.id.toString()} season={Number(seasonNum)} episode={1} className="bg-gradient-to-b from-white to-zinc-200 text-black ring-1 ring-black/10 shadow-[inset_0_1px_1px_rgba(255,255,255,1),_0_2px_6px_rgba(0,0,0,0.3)] px-7 py-3 rounded-full font-semibold text-[15px] flex items-center justify-center gap-2 hover:from-white hover:to-zinc-100 active:scale-[0.97] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)] transition-all duration-200 shrink-0 h-[46px]">
                        <Icons.play className="w-5 h-5 fill-black" />
-                       <span className="hidden sm:inline">Play</span>
+                       <span>Play</span>
                      </PlayButton>
                      <WatchlistButton media={{...show, media_type: 'tv', genre_ids: show.genres?.map(g => g.id) || []}} className="shrink-0" iconOnly />
                      
