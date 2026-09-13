@@ -53,10 +53,7 @@ export function HistoryClient() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
 
-  const activeItems = items.filter(item => 
-    (item.currentTime && item.currentTime > 0) || 
-    (item.progress && item.progress > 0)
-  );
+  const activeItems = items;
 
   const activeEditMode = isEditMode && activeItems.length > 0;
 
@@ -215,7 +212,7 @@ export function HistoryClient() {
               ? item.progress
               : (item.currentTime && item.duration)
                 ? Math.min(100, Math.round((item.currentTime / item.duration) * 100))
-                : 15;
+                : 0;
 
             return (
               <div
@@ -252,12 +249,14 @@ export function HistoryClient() {
                   </div>
 
                   {/* Progress Bar */}
-                  <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-zinc-800/80">
-                    <div
-                      className="h-full bg-red-600 transition-all duration-300"
-                      style={{ width: `${Math.min(100, Math.max(4, progressPct))}%` }}
-                    />
-                  </div>
+                  {progressPct > 0 && (
+                    <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-zinc-800/80">
+                      <div
+                        className="h-full bg-red-600 transition-all duration-300"
+                        style={{ width: `${Math.min(100, Math.max(4, progressPct))}%` }}
+                      />
+                    </div>
+                  )}
                 </div>
 
                 {/* Remove button */}
