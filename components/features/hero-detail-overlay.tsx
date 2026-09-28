@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 interface HeroDetailOverlayProps {
   logo: React.ReactNode;
@@ -15,30 +15,66 @@ export function HeroDetailOverlay({
   description,
   buttons,
 }: HeroDetailOverlayProps) {
+  const [isTrailerPlaying, setIsTrailerPlaying] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  useEffect(() => {
+    const handleTrailerPlaying = (e: Event) => {
+      const customEvt = e as CustomEvent<{ isPlaying: boolean }>;
+      setIsTrailerPlaying(!!customEvt.detail?.isPlaying);
+    };
+
+    window.addEventListener("detail-trailer-playing", handleTrailerPlaying);
+    return () => {
+      window.removeEventListener("detail-trailer-playing", handleTrailerPlaying);
+    };
+  }, []);
+
+  const shouldHideText = isTrailerPlaying && !isHovered;
+
   return (
     <>
-      {/* Bottom fade */}
+      {/* Bottom fade behind buttons */}
       <div
-        className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 via-40% to-transparent z-10 pointer-events-none"
+        className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-zinc-950/40 via-30% to-transparent z-10 pointer-events-none"
       />
       {/* Horizontal contrast vignette */}
       <div
-        className="absolute inset-0 bg-gradient-to-r from-zinc-950/95 via-zinc-950/70 to-zinc-950/20 sm:via-zinc-950/50 sm:to-transparent z-10 pointer-events-none w-full md:w-[75%]"
+        className="absolute inset-0 bg-gradient-to-r from-zinc-950/90 via-zinc-950/50 to-transparent z-10 pointer-events-none w-full md:w-[70%]"
       />
 
       {/* Content wrapper aligned with 1440px container */}
-      <div className="absolute inset-0 z-20 flex flex-col justify-end px-4 sm:px-6 md:px-10 lg:px-[max(3rem,calc((100vw-1440px)/2+48px))] pb-8 sm:pb-12 md:pb-16 w-full md:w-3/4 lg:w-2/3 pointer-events-none">
-        <div className="max-w-xl sm:max-w-2xl flex flex-col justify-end pointer-events-auto">
-          <div className="mb-2 sm:mb-3">
+      <div className="absolute inset-0 z-30 flex flex-col justify-end px-4 sm:px-6 md:px-10 lg:px-[max(3rem,calc((100vw-1440px)/2+48px))] pb-8 sm:pb-12 md:pb-16 w-full md:w-3/4 lg:w-2/3 pointer-events-none">
+        <div 
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          className="max-w-xl sm:max-w-2xl flex flex-col justify-end pointer-events-auto"
+        >
+          {/* Logo or Title Heading - smoothly drops down near the buttons when trailer plays */}
+          <div
+            className={`transition-all duration-700 ease-in-out origin-bottom-left ${
+              shouldHideText 
+                ? "mb-3 sm:mb-4 scale-95 sm:scale-90" 
+                : "mb-2 sm:mb-3 scale-100"
+            }`}
+          >
             {logo}
           </div>
 
-          <div className="mt-1 sm:mt-2 mb-4 sm:mb-6">
+          {/* Stats & Description - smoothly hides when trailer plays */}
+          <div
+            className={`transition-all duration-700 ease-in-out overflow-hidden ${
+              shouldHideText
+                ? "opacity-0 max-h-0 -translate-y-2 mt-0 mb-0 pointer-events-none"
+                : "opacity-100 max-h-[350px] translate-y-0 mt-1 sm:mt-2 mb-4 sm:mb-6"
+            }`}
+          >
             <div className="mb-2.5 sm:mb-3.5">{stats}</div>
             <div>{description}</div>
           </div>
 
-          <div className="relative z-20">
+          {/* Action Buttons */}
+          <div className="relative z-30">
             {buttons}
           </div>
         </div>

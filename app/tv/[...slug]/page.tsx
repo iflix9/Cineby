@@ -100,8 +100,8 @@ export default async function TVShowPage(props: {
       />
       <BackButton />
       
-      {/* Hero Banner Backdrop with Bottom Fade Mask */}
-      <div className="relative w-full overflow-hidden bg-transparent h-[75vh] min-h-[500px] md:h-[85vh] xl:h-[90vh] md:min-h-[600px] select-none [mask-image:linear-gradient(to_bottom,black_0%,black_65%,rgba(0,0,0,0.72)_80%,rgba(0,0,0,0.25)_92%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_65%,rgba(0,0,0,0.72)_80%,rgba(0,0,0,0.25)_92%,transparent_100%)]">
+      {/* Hero Banner Backdrop */}
+      <div className="relative w-full overflow-hidden bg-transparent h-[75vh] min-h-[500px] md:h-[85vh] xl:h-[90vh] md:min-h-[600px] select-none">
            <EmbeddedVideoPlayer 
              videoKey={trailer?.key}
              fallbackImage={getImageUrl(show.backdrop_path, 'original')}
