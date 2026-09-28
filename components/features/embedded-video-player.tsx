@@ -20,6 +20,7 @@ export function EmbeddedVideoPlayer({
 }: EmbeddedVideoPlayerProps) {
   const searchParams = useSearchParams();
   const [isVideoReady, setIsVideoReady] = useState(false);
+  const [hasVideoError, setHasVideoError] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
   const [isOverlayActive, setIsOverlayActive] = useState(false);
@@ -166,9 +167,9 @@ export function EmbeddedVideoPlayer({
     <>
       {/* Top Right Controls: Settings & Mute/Unmute Buttons */}
       {!isPlayerActive && (
-        <div className="absolute top-6 right-6 md:top-10 md:right-12 z-50 flex items-center gap-2.5 sm:gap-3">
+        <div className="absolute top-4 sm:top-6 right-4 sm:right-6 md:right-10 lg:right-[max(3rem,calc((100vw-1440px)/2+48px))] z-50 flex items-center gap-2.5 sm:gap-3">
           <DetailSettingsButton />
-          {videoKey && (
+          {videoKey && !hasVideoError && (
             <button
               onClick={toggleMute}
               className="w-11 h-11 rounded-full flex items-center justify-center bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-2xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),_0_2px_6px_rgba(0,0,0,0.3)] text-white hover:from-white/15 hover:to-white/10 active:scale-[0.97] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-all duration-200 group/mute"
@@ -186,13 +187,17 @@ export function EmbeddedVideoPlayer({
       )}
 
       {/* Background Video */}
-      {videoKey && (
+      {videoKey && !hasVideoError && (
         <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
           <div className="absolute top-1/2 left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2 pointer-events-none scale-[1.5] z-0">
             <YouTube
               videoId={videoKey}
               opts={playerOpts}
               onReady={onReady}
+              onError={() => {
+                setIsVideoReady(false);
+                setHasVideoError(true);
+              }}
               onStateChange={onStateChange}
               className="absolute inset-0 w-full h-full pointer-events-none"
               iframeClassName={`w-full h-full pointer-events-none transition-opacity duration-1000 ${
@@ -203,10 +208,10 @@ export function EmbeddedVideoPlayer({
         </div>
       )}
 
-      {/* Fallback Image Layer (Fades out when video is ready & not active) */}
+      {/* Fallback Image Layer (Always visible if video not ready, has error, or playing active) */}
       <div
         className={`absolute inset-0 z-10 bg-zinc-950 pointer-events-none transition-opacity duration-1000 ease-in-out ${
-          isVideoReady && !isPlayerActive ? "opacity-0" : "opacity-100"
+          isVideoReady && !isPlayerActive && !hasVideoError ? "opacity-0" : "opacity-100"
         }`}
       >
         <Image
@@ -214,7 +219,8 @@ export function EmbeddedVideoPlayer({
           alt={title}
           fill
           priority
-          className="object-cover object-top pointer-events-none"
+          sizes="100vw"
+          className="object-cover object-center pointer-events-none"
           referrerPolicy="no-referrer"
         />
       </div>

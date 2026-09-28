@@ -96,8 +96,8 @@ export default async function MoviePage(props: {
       />
       <BackButton />
       
-      {/* Hero Banner Backdrop */}
-      <div className="relative w-full h-[70vh] min-h-[500px] sm:h-[78vh] sm:min-h-[560px] md:h-[85vh] md:min-h-[640px] max-h-[920px] bg-zinc-950 overflow-hidden">
+      {/* Hero Banner Backdrop with Bottom Fade Mask */}
+      <div className="relative w-full overflow-hidden bg-transparent h-[75vh] min-h-[500px] md:h-[85vh] xl:h-[90vh] md:min-h-[600px] select-none [mask-image:linear-gradient(to_bottom,black_0%,black_65%,rgba(0,0,0,0.72)_80%,rgba(0,0,0,0.25)_92%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_65%,rgba(0,0,0,0.72)_80%,rgba(0,0,0,0.25)_92%,transparent_100%)]">
            <EmbeddedVideoPlayer 
              videoKey={trailer?.key}
              fallbackImage={getImageUrl(movie.backdrop_path, 'original')}
@@ -167,7 +167,7 @@ export default async function MoviePage(props: {
               }
               buttons={
                  <div className="flex flex-col">
-                   <div className="flex items-center gap-2 sm:gap-3 pt-2 w-full overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                   <div className="flex items-center gap-2.5 sm:gap-3 pt-2 w-full flex-wrap sm:flex-nowrap">
                      <PlayButton 
                        type="movie" 
                        mediaId={movie.id.toString()} 
@@ -179,13 +179,9 @@ export default async function MoviePage(props: {
                        <span>Play</span>
                      </PlayButton>
                      <WatchlistButton media={{...movie, media_type: 'movie', genre_ids: movie.genres?.map(g => g.id) || []}} className="shrink-0" iconOnly />
-                     <button className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-2xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),_0_2px_6px_rgba(0,0,0,0.3)] text-white font-medium text-[14px] md:text-[15px] w-[46px] sm:w-auto px-0 sm:px-5 py-2.5 rounded-full flex items-center justify-center gap-2 hover:from-white/15 hover:to-white/10 active:scale-[0.97] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-all duration-200 shrink-0 h-[46px]">
-                       <Icons.download className="w-4 h-4" />
-                       <span className="hidden sm:inline">Download</span>
-                     </button>
-                     <a href="#similar" className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-2xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),_0_2px_6px_rgba(0,0,0,0.3)] text-white font-medium text-[14px] md:text-[15px] w-[46px] sm:w-auto px-0 sm:px-5 py-2.5 rounded-full flex items-center justify-center gap-2 hover:from-white/15 hover:to-white/10 active:scale-[0.97] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-all duration-200 shrink-0 h-[46px]">
+                     <a href="#similar" className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-2xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),_0_2px_6px_rgba(0,0,0,0.3)] text-white font-medium text-[14px] md:text-[15px] px-5 py-2.5 rounded-full flex items-center justify-center gap-2 hover:from-white/15 hover:to-white/10 active:scale-[0.97] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-all duration-200 shrink-0 h-[46px]">
                        <Icons.sparkles className="w-4 h-4" />
-                       <span className="hidden sm:inline">Similars</span>
+                       <span>More Like This</span>
                      </a>
                    </div>
                    <WatchProviders providers={watchProviders} />
@@ -193,7 +189,7 @@ export default async function MoviePage(props: {
               }
            />
         </div>
-      <div className="w-full px-4 sm:px-8 md:px-12 lg:px-16 py-8 space-y-12 mt-4">
+      <div className="container mx-auto px-4 sm:px-6 md:px-10 lg:px-12 max-w-[1440px] relative z-20 space-y-12 md:space-y-16 mt-6 sm:mt-8 md:mt-10">
          <div className="w-full space-y-12">
             <div>
               <h2 className="flex items-center gap-2 text-xl md:text-2xl font-bold text-white mb-6">
@@ -231,13 +227,13 @@ export default async function MoviePage(props: {
               </div>
             </div>
          </div>
+         
+         {moreLikeThis.length > 0 && (
+           <div id="similar" className="relative scroll-mt-24">
+             <MediaCarousel title="More Like This" items={moreLikeThis.map(m => ({...m, media_type: 'movie'}))} />
+           </div>
+         )}
       </div>
-      
-      {moreLikeThis.length > 0 && (
-        <div id="similar" className="mt-8 relative z-20 scroll-mt-24">
-          <MediaCarousel title="More Like This" items={moreLikeThis.map(m => ({...m, media_type: 'movie'}))} />
-        </div>
-      )}
     </div>
   );
 }
