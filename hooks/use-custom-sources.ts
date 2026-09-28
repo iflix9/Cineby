@@ -5,11 +5,13 @@ interface CustomSourcesState {
   sources: Record<string, string>;
   movieTemplate: string;
   tvTemplate: string;
+  streamingMode: boolean;
   setSource: (key: string, url: string) => void;
   getSource: (key: string) => string | undefined;
   removeSource: (key: string) => void;
   setMovieTemplate: (url: string) => void;
   setTvTemplate: (url: string) => void;
+  setStreamingMode: (enabled: boolean) => void;
 }
 
 export const useCustomSources = create<CustomSourcesState>()(
@@ -18,6 +20,7 @@ export const useCustomSources = create<CustomSourcesState>()(
       sources: {},
       movieTemplate: '',
       tvTemplate: '',
+      streamingMode: false,
       setSource: (key, url) => set((state) => ({
         sources: { ...state.sources, [key]: url }
       })),
@@ -29,6 +32,7 @@ export const useCustomSources = create<CustomSourcesState>()(
       }),
       setMovieTemplate: (url) => set({ movieTemplate: url }),
       setTvTemplate: (url) => set({ tvTemplate: url }),
+      setStreamingMode: (enabled) => set({ streamingMode: enabled }),
     }),
     {
       name: 'cineby-custom-sources',

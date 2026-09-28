@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Volume2, VolumeX } from "lucide-react";
 import YouTube, { YouTubeEvent, YouTubePlayer } from "react-youtube";
 import { useSearchParams } from "next/navigation";
+import { DetailSettingsButton } from "./detail-settings-button";
 
 interface EmbeddedVideoPlayerProps {
   videoKey?: string | null;
@@ -163,19 +164,25 @@ export function EmbeddedVideoPlayer({
 
   return (
     <>
-      {/* Mute/Unmute Button */}
-      {videoKey && !isPlayerActive && (
-        <button
-          onClick={toggleMute}
-          className="absolute top-6 right-6 md:top-10 md:right-12 z-50 w-11 h-11 rounded-full flex items-center justify-center bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-2xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),_0_2px_6px_rgba(0,0,0,0.3)] text-white hover:from-white/15 hover:to-white/10 active:scale-[0.97] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-all duration-200 group/mute"
-          aria-label={isMuted ? "Unmute" : "Mute"}
-        >
-          {isMuted ? (
-            <VolumeX className="w-5 h-5 text-white transition-colors" />
-          ) : (
-            <Volume2 className="w-5 h-5 text-white transition-colors" />
+      {/* Top Right Controls: Settings & Mute/Unmute Buttons */}
+      {!isPlayerActive && (
+        <div className="absolute top-6 right-6 md:top-10 md:right-12 z-50 flex items-center gap-2.5 sm:gap-3">
+          <DetailSettingsButton />
+          {videoKey && (
+            <button
+              onClick={toggleMute}
+              className="w-11 h-11 rounded-full flex items-center justify-center bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-2xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),_0_2px_6px_rgba(0,0,0,0.3)] text-white hover:from-white/15 hover:to-white/10 active:scale-[0.97] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-all duration-200 group/mute"
+              aria-label={isMuted ? "Unmute" : "Mute"}
+              title={isMuted ? "Unmute" : "Mute"}
+            >
+              {isMuted ? (
+                <VolumeX className="w-5 h-5 text-white transition-colors" />
+              ) : (
+                <Volume2 className="w-5 h-5 text-white transition-colors" />
+              )}
+            </button>
           )}
-        </button>
+        </div>
       )}
 
       {/* Background Video */}

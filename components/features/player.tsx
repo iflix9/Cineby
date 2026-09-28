@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Settings, Trash2, Save, Info } from 'lucide-react';
+import { Settings, Save, Info, Plus, Trash2, ArrowUp, ArrowDown } from 'lucide-react';
 import { useHistory } from '@/hooks/use-history';
 import { useCustomSources } from '@/hooks/use-custom-sources';
 import { isBlockedMedia } from '@/lib/tmdb';
@@ -14,6 +14,7 @@ export interface PlayerProps {
   season?: number;
   episode?: number;
   onEpisodeChange?: (season: number, episode: number) => void;
+  onBack?: () => void;
 }
 
 export function Player({
@@ -21,21 +22,23 @@ export function Player({
   mediaId,
   season,
   episode,
-  onEpisodeChange
+  onEpisodeChange,
+  onBack,
 }: PlayerProps) {
   const router = useRouter();
   const { movieTemplate, tvTemplate, setMovieTemplate, setTvTemplate } = useCustomSources();
   const [isVisible, setIsVisible] = useState(true);
   const timeoutRef = useRef<number | null>(null);
+  const sourceListRef = useRef<HTMLDivElement | null>(null);
 
-  const [localMovie, setLocalMovie] = useState(movieTemplate);
-  const [localTv, setLocalTv] = useState(tvTemplate);
-
-  const startEditing = () => {
-    setLocalMovie(movieTemplate);
-    setLocalTv(tvTemplate);
-    setIsEditing(true);
-  };
+  const [moviePlayers, setMoviePlayers] = useState<string[]>(() => {
+    const list = movieTemplate.split(',').map((s) => s.trim()).filter(Boolean);
+    return list.length > 0 ? list : [''];
+  });
+  const [tvPlayers, setTvPlayers] = useState<string[]>(() => {
+    const list = tvTemplate.split(',').map((s) => s.trim()).filter(Boolean);
+    return list.length > 0 ? list : [''];
+  });
 
   const [activePlayerIndex, setActivePlayerIndex] = useState(0);
   const [isSourceListOpen, setIsSourceListOpen] = useState(false);
@@ -88,24 +91,64 @@ export function Player({
     };
   }, [handleInteraction]);
 
+  // Close player source dropdown when clicking outside
+  useEffect(() => {
+    if (!isSourceListOpen) return;
+    const handleClickOutside = (e: MouseEvent | TouchEvent) => {
+      if (sourceListRef.current && !sourceListRef.current.contains(e.target as Node)) {
+        setIsSourceListOpen(false);
+      }
+    };
+    window.addEventListener('mousedown', handleClickOutside);
+    window.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      window.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [isSourceListOpen]);
+
+  const handleUpdatePlayer = (index: number, val: string) => {
+    const setList = type === 'movie' ? setMoviePlayers : setTvPlayers;
+    if (val.includes(',')) {
+      const parts = val.split(',').map((p) => p.trim()).filter(Boolean);
+      if (parts.length > 1) {
+        setList((prev) => {
+          const next = [...prev];
+          next.splice(index, 1, ...parts);
+          return next;
+        });
+        return;
+      }
+    }
+    setList((prev) => {
+      const next = [...prev];
+      next[index] = val;
+      return next;
+    });
+  };
+
+  const handleAddPlayer = () => {
+    const setList = type === 'movie' ? setMoviePlayers : setTvPlayers;
+    setList((prev) => [...prev, '']);
+  };
+
+  const handleRemovePlayer = (index: number) => {
+    const setList = type === 'movie' ? setMoviePlayers : setTvPlayers;
+    setList((prev) => {
+      if (prev.length <= 1) return [''];
+      return prev.filter((_, i) => i !== index);
+    });
+  };
+
   const handleSaveGlobal = (e: React.FormEvent) => {
     e.preventDefault();
-    setMovieTemplate(localMovie.trim());
-    setTvTemplate(localTv.trim());
+    const validMovie = moviePlayers.map((p) => p.trim()).filter(Boolean).join(', ');
+    const validTv = tvPlayers.map((p) => p.trim()).filter(Boolean).join(', ');
+    setMovieTemplate(validMovie);
+    setTvTemplate(validTv);
     setIsEditing(false);
     setActivePlayerIndex(0);
     setIsSourceListOpen(false);
-  };
-
-  const handleClearTemplates = () => {
-    if (type === 'movie') {
-       setMovieTemplate('');
-       setLocalMovie('');
-    } else {
-       setTvTemplate('');
-       setLocalTv('');
-    }
-    setIsEditing(true);
   };
 
   const lastTrackedTimeRef = useRef<number>(0);
@@ -196,6 +239,86 @@ export function Player({
           className="w-full h-full border-0 absolute inset-0 z-0 bg-black"
         />
       )}
+
+      {/* Screen wake interaction area when controls are hidden */}
+      {!isVisible && (
+        <div 
+          className="absolute inset-0 z-[105]"
+          onPointerMove={handleInteraction}
+          onTouchStart={handleInteraction}
+        />
+      )}
+
+      {/* Top Left Navigation & Controls (Back Button & Player List Button) */}
+      <div 
+        ref={sourceListRef}
+        className={`fixed top-6 left-6 md:top-10 md:left-12 z-[110] transition-all duration-500 ease-in-out flex flex-col items-start gap-2 ${
+          isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        <div className="flex items-center gap-2 sm:gap-3">
+          {onBack && (
+            <button 
+              type="button"
+              onClick={onBack}
+              className="w-11 h-11 rounded-full flex items-center justify-center bg-gradient-to-b from-zinc-800/80 to-zinc-900/80 backdrop-blur-xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),_0_2px_6px_rgba(0,0,0,0.4)] hover:ring-red-500/50 hover:from-zinc-800 hover:to-zinc-900 text-zinc-300 hover:text-red-500 transition-all active:scale-95 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] group/back"
+              title="Close Player"
+              aria-label="Close Player"
+            >
+              <Icons.chevronLeft className="w-5 h-5 text-zinc-300 group-hover/back:text-red-500 transition-colors group-hover/back:-translate-x-0.5" />
+            </button>
+          )}
+
+          {customUrl && !isEditing && templates.length > 1 && (
+            <button
+              type="button"
+              onClick={() => setIsSourceListOpen(!isSourceListOpen)}
+              className={`h-11 px-3.5 rounded-full flex items-center justify-center gap-2 backdrop-blur-xl border shadow-2xl transition-all hover:scale-105 active:scale-95 group ${
+                isSourceListOpen 
+                  ? 'bg-white text-black border-white' 
+                  : 'bg-zinc-900/80 hover:bg-zinc-800/90 text-white border-zinc-800/80'
+              }`}
+              title="Change Player Source"
+              aria-label="Change Player Source"
+            >
+              <Icons.list className={`w-4 h-4 transition-colors ${isSourceListOpen ? 'text-black' : 'text-zinc-300 group-hover:text-white'}`} />
+              <span className="text-xs font-semibold tracking-wide">
+                Player {activePlayerIndex + 1}
+              </span>
+            </button>
+          )}
+        </div>
+
+        {/* Player List Dropdown */}
+        {isSourceListOpen && templates.length > 1 && (
+          <div className="bg-zinc-900/95 backdrop-blur-xl border border-zinc-800/80 rounded-2xl p-2 w-48 sm:w-52 flex flex-col gap-1 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+            <div className="px-3 py-1.5 text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
+              Select Player
+            </div>
+            {templates.map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => {
+                  setActivePlayerIndex(index);
+                  setIsSourceListOpen(false);
+                }}
+                className={`px-3.5 py-2.5 rounded-xl text-sm font-medium text-left transition-colors flex items-center justify-between ${
+                  activePlayerIndex === index 
+                    ? 'bg-red-500/10 text-red-500 font-semibold' 
+                    : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
+                }`}
+              >
+                <span className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${activePlayerIndex === index ? 'bg-red-500' : 'bg-zinc-600'}`} />
+                  Player {index + 1}
+                </span>
+                {activePlayerIndex === index && <Icons.check className="w-4 h-4" />}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
       
       {showInputForm && (
         <div className="z-10 w-full max-w-xl mx-auto p-8 bg-[#111111] rounded-2xl border border-zinc-800 shadow-2xl mt-16 md:mt-0 max-h-[90vh] overflow-y-auto custom-scrollbar">
@@ -225,25 +348,58 @@ export function Player({
           </div>
 
           <form onSubmit={handleSaveGlobal} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-zinc-300 mb-2">Movie Template URL</label>
-              <input
-                type="text"
-                value={localMovie}
-                onChange={(e) => setLocalMovie(e.target.value)}
-                placeholder="https://example.com/player/movie/{id}?autoplay=true"
-                className="w-full bg-[#0a0a0a] border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500 transition-all font-mono text-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-zinc-300 mb-2">TV Show Template URL</label>
-              <input
-                type="text"
-                value={localTv}
-                onChange={(e) => setLocalTv(e.target.value)}
-                placeholder="https://example.com/player/tv/{id}/{season}/{episode}?autoplay=true"
-                className="w-full bg-[#0a0a0a] border border-zinc-800 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500 transition-all font-mono text-sm"
-              />
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-bold uppercase tracking-wider text-zinc-300">
+                  {type === 'movie' ? 'Movie Players' : 'TV Show Players'}
+                </label>
+                <span className="text-xs text-zinc-500">
+                  {(type === 'movie' ? moviePlayers : tvPlayers).length} configured
+                </span>
+              </div>
+
+              {(type === 'movie' ? moviePlayers : tvPlayers).map((url, idx) => (
+                <div key={idx} className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-3 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 border border-zinc-700/50 flex items-center gap-1.5">
+                      <span className={`w-1.5 h-1.5 rounded-full ${idx === 0 ? 'bg-red-500' : 'bg-zinc-500'}`} />
+                      Player {idx + 1} {idx === 0 && <span className="text-zinc-400 font-normal">(Default)</span>}
+                    </span>
+
+                    {((type === 'movie' ? moviePlayers : tvPlayers).length > 1 || url.trim().length > 0) && (
+                      <button
+                        type="button"
+                        onClick={() => handleRemovePlayer(idx)}
+                        className="p-1 text-zinc-400 hover:text-red-400 transition-colors"
+                        title="Remove Player"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+
+                  <input
+                    type="text"
+                    value={url}
+                    onChange={(e) => handleUpdatePlayer(idx, e.target.value)}
+                    placeholder={
+                      type === 'movie'
+                        ? 'https://example.com/player/movie/{id}?autoplay=true'
+                        : 'https://example.com/player/tv/{id}/{season}/{episode}?autoplay=true'
+                    }
+                    className="w-full bg-[#0a0a0a] border border-zinc-800 rounded-lg px-3 py-2 text-white placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500 transition-all font-mono text-xs sm:text-sm"
+                  />
+                </div>
+              ))}
+
+              <button
+                type="button"
+                onClick={handleAddPlayer}
+                className="w-full py-2.5 px-3 rounded-xl border border-dashed border-zinc-700 hover:border-red-500/60 bg-zinc-900/40 hover:bg-red-500/10 text-zinc-300 hover:text-white text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-all active:scale-[0.99]"
+              >
+                <Plus className="w-4 h-4 text-red-500" />
+                <span>Add Player {(type === 'movie' ? moviePlayers : tvPlayers).length + 1}</span>
+              </button>
             </div>
             
             <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 pt-2">
@@ -279,59 +435,6 @@ export function Player({
               </ul>
             </div>
           </div>
-        </div>
-      )}
-
-      {/* Player Source Controls (when playing) */}
-      {customUrl && !isEditing && (
-        <div 
-          className={`fixed top-6 right-6 md:top-10 md:right-12 z-[110] transition-all duration-500 ease-in-out flex flex-col items-end gap-2 ${
-            isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          }`}
-        >
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={startEditing}
-              className="w-11 h-11 rounded-full flex items-center justify-center bg-zinc-900/80 hover:bg-zinc-800/90 text-white backdrop-blur-md border border-zinc-800/80 shadow-2xl transition-all hover:scale-105 active:scale-95 group"
-              title="Edit Player Settings"
-            >
-              <Settings className="w-5 h-5 text-zinc-300 group-hover:text-white transition-colors" />
-            </button>
-            
-            {templates.length > 1 && (
-              <button
-                type="button"
-                onClick={() => setIsSourceListOpen(!isSourceListOpen)}
-                className={`w-11 h-11 rounded-full flex items-center justify-center backdrop-blur-md border border-zinc-800/80 shadow-2xl transition-all hover:scale-105 active:scale-95 group ${isSourceListOpen ? 'bg-white text-black' : 'bg-zinc-900/80 hover:bg-zinc-800/90 text-white'}`}
-                title="Change Player"
-              >
-                <Icons.list className={`w-5 h-5 transition-colors ${isSourceListOpen ? 'text-black' : 'text-zinc-300 group-hover:text-white'}`} />
-              </button>
-            )}
-          </div>
-
-          {isSourceListOpen && templates.length > 1 && (
-            <div className="bg-zinc-900/90 backdrop-blur-md border border-zinc-800/80 rounded-2xl p-2 w-48 flex flex-col gap-1 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
-              {templates.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    setActivePlayerIndex(index);
-                    setIsSourceListOpen(false);
-                  }}
-                  className={`px-4 py-2.5 rounded-xl text-sm font-medium text-left transition-colors flex items-center justify-between ${
-                    activePlayerIndex === index 
-                      ? 'bg-red-500/10 text-red-500' 
-                      : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
-                  }`}
-                >
-                  <span>Player {index + 1}</span>
-                  {activePlayerIndex === index && <Icons.check className="w-4 h-4" />}
-                </button>
-              ))}
-            </div>
-          )}
         </div>
       )}
     </div>

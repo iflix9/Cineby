@@ -8,6 +8,7 @@ import { Movie, TMDBImage } from '@/types/tmdb';
 import { getImageUrl, getGenreNames } from '@/lib/tmdb';
 import { motion, AnimatePresence } from 'motion/react';
 import { triggerAdPopUp } from '@/lib/ad';
+import { PlayButton } from './play-button';
 
 interface HeroBannerProps {
   movies: Movie[];
@@ -90,19 +91,15 @@ export function HeroBanner({ movies, logos }: HeroBannerProps) {
             </p>
             
             <div className="flex flex-wrap items-center gap-3 mt-6">
-              <button 
-                onClick={(e) => {
-                  e.preventDefault();
-                  triggerAdPopUp();
-                  import('./player-overlay').then(({ playMedia }) => {
-                    playMedia('movie', movie.id.toString());
-                  });
-                }}
+              <PlayButton 
+                type="movie"
+                mediaId={movie.id.toString()}
+                title={movie.title}
                 className="bg-gradient-to-b from-white to-zinc-200 text-black ring-1 ring-black/10 shadow-[inset_0_1px_1px_rgba(255,255,255,1),_0_2px_6px_rgba(0,0,0,0.3)] px-7 py-3 rounded-full font-semibold text-[15px] flex items-center gap-2 hover:from-white hover:to-zinc-100 active:scale-[0.97] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)] transition-all duration-200"
               >
                 <Icons.play className="w-5 h-5 fill-black" />
                 Play
-              </button>
+              </PlayButton>
               <Link 
                 href={`/movie/${movie.id}`}
                 prefetch={false}
