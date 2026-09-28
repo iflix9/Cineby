@@ -19,7 +19,7 @@ export function Navbar() {
   return (
     <>
       <header className="absolute top-0 left-0 w-full z-50 bg-transparent">
-        <div className="w-full px-4 sm:px-8 md:px-12 lg:px-16 h-20 flex items-center justify-between">
+        <div className="container mx-auto px-4 sm:px-6 md:px-10 lg:px-12 max-w-[1440px] h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 relative z-10 group">
             <picture>
               <img src="/logo.png" alt="Cineby" width={40} height={40} className="w-8 h-8 md:w-10 md:h-10 transition-transform duration-300 group-hover:scale-[1.06]" />

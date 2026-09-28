@@ -11,8 +11,8 @@ export function Footer() {
   }
 
   return (
-    <footer className="w-full pb-8 md:pb-12 pt-8 md:pt-10 bg-black">
-      <div className="w-full px-4 sm:px-8 md:px-12 lg:px-16 mx-auto">
+    <footer className="w-full pb-8 md:pb-12 pt-4 md:pt-6 bg-black border-t border-white/5">
+      <div className="container mx-auto px-4 sm:px-6 md:px-10 lg:px-12 max-w-[1440px]">
         <h2 className="text-xl font-bold text-white mb-3">Cineby</h2>
         <p className="text-xs sm:text-sm md:text-base text-neutral-400 mb-3 max-w-none lg:max-w-4xl">
           Cineby is a metadata search engine powered by TMDB. We do not host, store, or provide any media files.

@@ -54,17 +54,19 @@ export function MediaCarousel({ title, items }: MediaCarouselProps) {
   if (!items || items.length === 0) return null;
 
   return (
-    <section className="w-full px-4 sm:px-8 md:px-12 lg:px-16 flex flex-col space-y-3">
-      <div className="z-10 relative flex items-center gap-2.5 md:gap-3">
-        <div className="w-1 h-5 md:h-6 bg-red-600 rounded-sm"></div>
-        <h2 className="text-xl md:text-2xl font-bold tracking-tight text-white drop-shadow-md">
-          {title}
-        </h2>
+    <section className="w-full flex flex-col">
+      <div className="flex items-center justify-between sm:justify-start gap-3 sm:gap-5 mb-5">
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <div className="w-1 h-5 md:h-6 bg-red-600 rounded-sm"></div>
+          <h2 className="text-xl md:text-2xl font-bold tracking-tight text-white drop-shadow-md">
+            {title}
+          </h2>
+        </div>
       </div>
-      <div className="relative group/carousel w-full overflow-hidden rounded-xl">
+      <div className="relative group/carousel w-full overflow-hidden">
         <button 
           onClick={() => scroll('left')}
-          className="absolute left-0 top-0 bottom-0 z-20 bg-black/60 hover:bg-black/90 text-white opacity-0 group-hover/carousel:opacity-100 transition-all hidden md:flex items-center justify-center w-12 pointer-events-auto group/carousel-left"
+          className="absolute left-0 top-0 bottom-0 z-20 bg-black/60 hover:bg-black/90 text-white opacity-0 group-hover/carousel:opacity-100 transition-all hidden md:flex items-center justify-center w-12 pointer-events-auto group/carousel-left rounded-l-xl"
         >
           <Icons.chevronLeft className="w-8 h-8 text-zinc-300 group-hover/carousel-left:text-red-500 transition-colors" />
         </button>
@@ -76,13 +78,13 @@ export function MediaCarousel({ title, items }: MediaCarouselProps) {
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
           className={cn(
-            "flex items-center gap-4 overflow-x-auto scrollbar-hide select-none w-full transition-cursor",
+            "flex gap-3 min-[390px]:gap-3.5 sm:gap-4 md:gap-[18px] lg:gap-5 overflow-x-auto snap-x snap-mandatory pb-6 sm:pb-8 pt-2 px-0.5 scrollbar-hide select-none w-full transition-cursor",
             isDown ? "cursor-grabbing" : "cursor-grab",
             !isDown && "scroll-smooth"
           )} 
         >
           {items.map((item) => (
-            <div key={item.id} className="flex-shrink-0 w-[140px] sm:w-[160px] md:w-[200px] relative whitespace-normal">
+            <div key={item.id} className="w-[148px] min-[390px]:w-[162px] min-[500px]:w-[170px] sm:w-[180px] md:w-[188px] lg:w-[198px] xl:w-[206px] shrink-0 snap-start relative whitespace-normal">
               <MovieCard media={item} />
             </div>
           ))}
@@ -90,7 +92,7 @@ export function MediaCarousel({ title, items }: MediaCarouselProps) {
 
         <button 
           onClick={() => scroll('right')}
-          className="absolute right-0 top-0 bottom-0 z-10 bg-black/60 hover:bg-black/90 text-white opacity-0 group-hover/carousel:opacity-100 transition-all hidden md:flex items-center justify-center w-12 pointer-events-auto group/carousel-right"
+          className="absolute right-0 top-0 bottom-0 z-20 bg-black/60 hover:bg-black/90 text-white opacity-0 group-hover/carousel:opacity-100 transition-all hidden md:flex items-center justify-center w-12 pointer-events-auto group/carousel-right rounded-r-xl"
         >
           <Icons.chevronRight className="w-8 h-8 text-zinc-300 group-hover/carousel-right:text-red-500 transition-colors" />
         </button>

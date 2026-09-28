@@ -80,8 +80,8 @@ export function ContinueWatchingRow() {
   };
 
   return (
-    <section className="relative space-y-4 px-4 sm:px-8 md:px-12 lg:px-16 my-8">
-      <div className="flex items-center justify-between">
+    <section className="relative flex flex-col w-full">
+      <div className="flex items-center justify-between sm:justify-start gap-3 sm:gap-5 mb-5">
         <div className="flex items-center gap-2">
           <Icons.play className="w-5 h-5 text-red-500 fill-red-500" />
           <h2 className="text-xl md:text-2xl font-bold tracking-tight text-white">
@@ -90,7 +90,7 @@ export function ContinueWatchingRow() {
         </div>
         <Link
           href="/history"
-          className="text-xs sm:text-sm font-semibold text-zinc-400 hover:text-red-400 transition-colors flex items-center gap-1"
+          className="text-xs sm:text-sm font-semibold text-zinc-400 hover:text-red-400 transition-colors flex items-center gap-1 sm:ml-auto"
         >
           <span>See All</span>
           <Icons.chevronRight className="w-4 h-4" />
@@ -115,7 +115,7 @@ export function ContinueWatchingRow() {
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
           className={cn(
-            "flex items-center gap-4 overflow-x-auto select-none w-full py-1 scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
+            "flex gap-3 min-[390px]:gap-3.5 sm:gap-4 md:gap-[18px] lg:gap-5 overflow-x-auto snap-x snap-mandatory pb-6 sm:pb-8 pt-2 px-0.5 select-none w-full scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
             isDown ? "cursor-grabbing" : "cursor-grab",
             !isDown && "scroll-smooth"
           )}

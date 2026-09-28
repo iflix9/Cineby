@@ -140,7 +140,7 @@ export default async function Home() {
       />
       <h1 className="sr-only">Cineby - Free Movies and TV Shows Database</h1>
       <HeroBanner movies={trendingMovies.slice(0, 7)} logos={heroLogos} />
-      <div className="mt-8 sm:mt-12 md:mt-16 relative z-10 space-y-8 md:space-y-12 pb-20">
+      <div className="container mx-auto px-4 sm:px-6 md:px-10 lg:px-12 max-w-[1440px] relative z-20 mt-6 sm:mt-8 md:mt-12 space-y-12 md:space-y-16 mb-6 sm:mb-8 md:mb-10">
         <ContinueWatchingRow />
         <MediaCarousel title="Trending Today" items={trendingAll} />
         <MediaCarousel
