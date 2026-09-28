@@ -42,7 +42,7 @@ export function HeroBanner({ movies, logos }: HeroBannerProps) {
 
   return (
     <div 
-      className="relative w-full h-[78vh] min-h-[560px] sm:h-[82vh] sm:min-h-[620px] md:h-[86vh] md:min-h-[660px] lg:h-[90vh] lg:min-h-[720px] xl:max-h-[960px] overflow-hidden select-none"
+      className="relative w-full h-[85vh] min-h-[580px] sm:h-[88vh] sm:min-h-[640px] md:h-[92vh] md:min-h-[720px] lg:h-[95vh] lg:min-h-[780px] xl:h-[96vh] xl:min-h-[820px] overflow-hidden select-none"
     >
       <AnimatePresence mode="wait">
         <motion.div
@@ -60,17 +60,18 @@ export function HeroBanner({ movies, logos }: HeroBannerProps) {
               alt={movie.title || 'Hero Background'}
               fill
               priority
-              className="object-cover object-[center_25%] sm:object-top"
+              sizes="100vw"
+              className="object-cover object-center sm:object-[center_20%] lg:object-[center_15%]"
               referrerPolicy="no-referrer"
             />
             {/* Top gradient for navbar contrast */}
             <div className="absolute top-0 inset-x-0 h-28 sm:h-36 bg-gradient-to-b from-black/90 via-black/40 to-transparent z-10 pointer-events-none" />
 
-            {/* Horizontal Vignette - enhanced for mobile readability, soft for desktop */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 via-35% to-black/30 sm:via-black/55 sm:via-45% sm:to-transparent z-10 pointer-events-none" />
+            {/* Horizontal Vignette - left-side legibility while leaving backdrop image expansive and visible */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 via-30% sm:via-black/40 sm:via-40% to-transparent z-10 pointer-events-none" />
 
             {/* Bottom Fade into page content */}
-            <div className="absolute bottom-0 inset-x-0 h-48 sm:h-64 md:h-80 bg-gradient-to-t from-black via-black/85 via-40% to-transparent z-10 pointer-events-none" />
+            <div className="absolute bottom-0 inset-x-0 h-40 sm:h-52 md:h-64 bg-gradient-to-t from-black via-black/80 via-40% to-transparent z-10 pointer-events-none" />
           </div>
 
           {/* Content Wrapper */}
