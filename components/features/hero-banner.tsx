@@ -16,17 +16,24 @@ interface HeroBannerProps {
 
 export function HeroBanner({ movies, logos }: HeroBannerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
 
-  const featuredMovies = movies?.slice(0, 5) || [];
+  const featuredMovies = movies?.slice(0, 7) || [];
 
   useEffect(() => {
-    if (featuredMovies.length <= 1 || isPaused) return;
+    if (featuredMovies.length <= 1) return;
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % featuredMovies.length);
-    }, 10000); // 10 seconds
+    }, 7000); // 7 seconds per slide
     return () => clearInterval(interval);
-  }, [featuredMovies.length, isPaused]);
+  }, [currentIndex, featuredMovies.length]);
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev - 1 + featuredMovies.length) % featuredMovies.length);
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % featuredMovies.length);
+  };
 
   if (!movies || movies.length === 0) return null;
 
@@ -35,11 +42,7 @@ export function HeroBanner({ movies, logos }: HeroBannerProps) {
 
   return (
     <div 
-      className="relative w-full h-[75vh] min-h-[520px] sm:h-[80vh] sm:min-h-[580px] md:h-[85vh] md:min-h-[640px] lg:h-[90vh] lg:min-h-[700px] xl:max-h-[960px] overflow-hidden select-none"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-      onTouchStart={() => setIsPaused(true)}
-      onTouchEnd={() => setIsPaused(false)}
+      className="relative w-full h-[78vh] min-h-[560px] sm:h-[82vh] sm:min-h-[620px] md:h-[86vh] md:min-h-[660px] lg:h-[90vh] lg:min-h-[720px] xl:max-h-[960px] overflow-hidden select-none"
     >
       <AnimatePresence mode="wait">
         <motion.div
@@ -67,12 +70,12 @@ export function HeroBanner({ movies, logos }: HeroBannerProps) {
             <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 via-35% to-black/30 sm:via-black/55 sm:via-45% sm:to-transparent z-10 pointer-events-none" />
 
             {/* Bottom Fade into page content */}
-            <div className="absolute bottom-0 inset-x-0 h-44 sm:h-56 md:h-72 bg-gradient-to-t from-black via-black/80 via-40% to-transparent z-10 pointer-events-none" />
+            <div className="absolute bottom-0 inset-x-0 h-48 sm:h-64 md:h-80 bg-gradient-to-t from-black via-black/85 via-40% to-transparent z-10 pointer-events-none" />
           </div>
 
           {/* Content Wrapper */}
           <div className="absolute inset-0 z-20 flex flex-col justify-end">
-            <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 pb-10 sm:pb-14 md:pb-16 lg:pb-20">
+            <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 pb-16 sm:pb-20 md:pb-24 lg:pb-28">
               <div className="max-w-xl lg:max-w-2xl xl:max-w-3xl space-y-3 sm:space-y-4">
                 {/* Logo or Title */}
                 {displayLogo ? (
@@ -143,22 +146,53 @@ export function HeroBanner({ movies, logos }: HeroBannerProps) {
         </motion.div>
       </AnimatePresence>
 
-      {/* Slide Navigation Dots */}
+      {/* Slide Navigation Controls */}
       {featuredMovies.length > 1 && (
-        <div className="absolute bottom-4 sm:bottom-12 md:bottom-14 right-4 sm:right-8 md:right-12 lg:right-16 xl:right-20 z-30 flex items-center gap-1.5 sm:gap-2 bg-black/40 backdrop-blur-md px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-full border border-white/10">
-          {featuredMovies.map((m, idx) => (
-            <button
-              key={m.id}
-              onClick={() => setCurrentIndex(idx)}
-              className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
-                idx === currentIndex
-                  ? 'w-6 sm:w-8 bg-red-600 shadow-sm shadow-red-500/50'
-                  : 'w-1.5 sm:w-2 bg-white/30 hover:bg-white/60'
-              }`}
-              title={`Slide to ${m.title}`}
-              aria-label={`Slide ${idx + 1}`}
-            />
-          ))}
+        <div className="absolute bottom-5 sm:bottom-8 md:bottom-10 right-4 sm:right-8 md:right-12 lg:right-16 xl:right-20 z-30 flex items-center gap-1 sm:gap-1.5 bg-black/50 backdrop-blur-md px-2 py-1.5 sm:px-3 sm:py-2 rounded-full border border-white/10 shadow-lg">
+          <button
+            onClick={handlePrev}
+            className="hidden sm:flex items-center justify-center w-5 h-5 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
+            title="Previous slide"
+            aria-label="Previous slide"
+          >
+            <Icons.chevronLeft className="w-3.5 h-3.5" />
+          </button>
+
+          {featuredMovies.map((m, idx) => {
+            const isActive = idx === currentIndex;
+            return (
+              <button
+                key={m.id}
+                onClick={() => setCurrentIndex(idx)}
+                className={`relative flex items-center justify-start rounded-full transition-all duration-300 ${
+                  isActive
+                    ? 'w-7 sm:w-9 h-1.5 sm:h-2 bg-white/20 overflow-hidden shadow-sm'
+                    : 'w-1.5 sm:w-2 h-1.5 sm:h-2 bg-white/30 hover:bg-white/60'
+                }`}
+                title={`Slide ${idx + 1}: ${m.title}`}
+                aria-label={`Slide ${idx + 1}`}
+              >
+                {isActive && (
+                  <motion.span
+                    key={`timer-${m.id}-${currentIndex}`}
+                    initial={{ width: '0%' }}
+                    animate={{ width: '100%' }}
+                    transition={{ duration: 7, ease: 'linear' }}
+                    className="absolute inset-y-0 left-0 bg-red-600 rounded-full shadow-[0_0_8px_rgba(239,68,68,0.8)]"
+                  />
+                )}
+              </button>
+            );
+          })}
+
+          <button
+            onClick={handleNext}
+            className="hidden sm:flex items-center justify-center w-5 h-5 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
+            title="Next slide"
+            aria-label="Next slide"
+          >
+            <Icons.chevronRight className="w-3.5 h-3.5" />
+          </button>
         </div>
       )}
     </div>

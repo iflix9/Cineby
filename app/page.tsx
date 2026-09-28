@@ -74,8 +74,8 @@ export default async function Home() {
     kDramas = kDramasRes.results;
 
     if (trendingMovies?.length > 0) {
-      const top5 = trendingMovies.slice(0, 5);
-      const imagesPromises = top5.map((m) =>
+      const top7 = trendingMovies.slice(0, 7);
+      const imagesPromises = top7.map((m) =>
         fetchTMDB<TMDBImages>(`/movie/${m.id}/images`, {
           include_image_language: "en,null",
         }).catch(() => null),
@@ -84,7 +84,7 @@ export default async function Home() {
 
       imagesResults.forEach((images, index) => {
         if (images && images.logos?.length > 0) {
-          heroLogos[top5[index].id] = images.logos[0];
+          heroLogos[top7[index].id] = images.logos[0];
         }
       });
     }
@@ -139,8 +139,8 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <h1 className="sr-only">Cineby - Free Movies and TV Shows Database</h1>
-      <HeroBanner movies={trendingMovies.slice(0, 5)} logos={heroLogos} />
-      <div className="-mt-2 md:-mt-4 relative z-10 space-y-8 md:space-y-10">
+      <HeroBanner movies={trendingMovies.slice(0, 7)} logos={heroLogos} />
+      <div className="mt-8 sm:mt-12 md:mt-16 relative z-10 space-y-8 md:space-y-12 pb-20">
         <ContinueWatchingRow />
         <MediaCarousel title="Trending Today" items={trendingAll} />
         <MediaCarousel
