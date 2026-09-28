@@ -188,12 +188,15 @@ export function SearchBar({ isMobile }: { isMobile?: boolean }) {
       <button 
         onClick={openSearch}
         className={isMobile
-          ? `relative flex flex-col items-center justify-center w-12 h-11 bg-[#050505] rounded-xl transition-colors duration-200 shadow-sm cursor-pointer ${isOpen ? 'text-[#ff3333]' : 'text-zinc-300 hover:text-white'}`
+          ? `relative flex items-center justify-center w-11 h-11 rounded-full transition-all duration-200 cursor-pointer select-none active:scale-90 ${
+              isOpen ? 'text-red-500 bg-red-500/15 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]' : 'text-zinc-400 hover:text-white hover:bg-white/5'
+            }`
           : `px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer flex items-center justify-center ${isOpen ? 'text-red-500 bg-zinc-800/50' : 'text-zinc-300 hover:text-red-500 hover:bg-zinc-800/50'}`}
         aria-label="Open search"
+        title="Search"
       >
-        <Icons.search className={`w-5 h-5 transition-colors duration-200 ${isMobile && isOpen ? 'mb-1' : ''}`} strokeWidth={2.5} />
-        {isMobile && isOpen && <span className="absolute bottom-1 w-1 h-1 rounded-full bg-[#ff3333]"></span>}
+        <Icons.search className="w-5 h-5 transition-colors" strokeWidth={2.2} />
+        {isMobile && isOpen && <span className="absolute bottom-1.5 w-1 h-1 rounded-full bg-red-500" />}
       </button>
 
       {mounted && isOpen && createPortal(

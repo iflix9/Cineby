@@ -31,11 +31,15 @@ export function BrowseDropdown({ isMobile }: { isMobile?: boolean }) {
   const trigger = isMobile ? (
     <div 
       data-browse-trigger
-      className={`relative flex flex-col items-center justify-center w-12 h-11 bg-[#050505] rounded-xl transition-colors duration-200 shadow-sm cursor-pointer ${isOpen ? 'text-[#ff3333]' : 'text-zinc-300 hover:text-white'}`}
+      className={`relative flex items-center justify-center w-11 h-11 rounded-full transition-all duration-200 cursor-pointer select-none active:scale-90 ${
+        isOpen ? 'text-red-500 bg-red-500/15 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]' : 'text-zinc-400 hover:text-white hover:bg-white/5'
+      }`}
       onClick={() => setIsOpen(!isOpen)}
+      title="Browse"
+      aria-label="Browse"
     >
-      <Icons.layoutGrid className={`w-5 h-5 ${isOpen ? 'mb-1' : ''}`} />
-      {isOpen && <span className="absolute bottom-1 w-1 h-1 rounded-full bg-[#ff3333]"></span>}
+      <Icons.layoutGrid className="w-5 h-5 transition-colors" />
+      {isOpen && <span className="absolute bottom-1.5 w-1 h-1 rounded-full bg-red-500" />}
     </div>
   ) : (
     <div 

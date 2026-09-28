@@ -44,33 +44,35 @@ export function HeroDetailOverlay({
   return (
     <>
       <div
-        className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/30 to-transparent z-10 pointer-events-none"
+        className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/50 via-40% to-transparent z-10 pointer-events-none"
       />
       <div
-        className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/40 to-transparent z-10 pointer-events-none md:w-[75%]"
+        className="absolute inset-0 bg-gradient-to-r from-zinc-950/95 via-zinc-950/70 to-zinc-950/30 sm:via-zinc-950/50 sm:to-transparent z-10 pointer-events-none w-full md:w-[75%]"
       />
 
-      <div className="absolute bottom-12 left-0 w-full px-4 sm:px-8 md:px-12 lg:px-16 z-20">
-        <div className="max-w-2xl flex flex-col justify-end">
-          <div
-            className={`transition-all duration-1000 origin-bottom-left ${
-              isIdle ? "scale-[0.8] mb-6" : "scale-100 mb-0"
-            }`}
-          >
-            {logo}
-          </div>
+      <div className="absolute bottom-6 sm:bottom-10 md:bottom-12 left-0 w-full px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 z-20">
+        <div className="max-w-[1600px] mx-auto w-full">
+          <div className="max-w-xl sm:max-w-2xl flex flex-col justify-end">
+            <div
+              className={`transition-all duration-1000 origin-bottom-left ${
+                isIdle ? "scale-[0.8] mb-6" : "scale-100 mb-0"
+              }`}
+            >
+              {logo}
+            </div>
 
-          <div
-            className={`transition-all duration-1000 ease-in-out overflow-hidden ${
-              isIdle ? "opacity-0 max-h-0 mt-0 mb-0" : "opacity-100 max-h-[300px] mt-4 mb-8"
-            }`}
-          >
-            <div className="mb-4">{stats}</div>
-            <div>{description}</div>
-          </div>
+            <div
+              className={`transition-all duration-1000 ease-in-out overflow-hidden ${
+                isIdle ? "opacity-0 max-h-0 mt-0 mb-0" : "opacity-100 max-h-[300px] mt-3 sm:mt-4 mb-6 sm:mb-8"
+              }`}
+            >
+              <div className="mb-3 sm:mb-4">{stats}</div>
+              <div>{description}</div>
+            </div>
 
-          <div className="relative z-20">
-            {buttons}
+            <div className="relative z-20">
+              {buttons}
+            </div>
           </div>
         </div>
       </div>

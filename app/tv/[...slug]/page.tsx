@@ -101,7 +101,7 @@ export default async function TVShowPage(props: {
       <BackButton />
       
       {/* Hero Banner Backdrop */}
-      <div className="relative w-full h-[75vh] md:h-[85vh] bg-zinc-950 overflow-hidden">
+      <div className="relative w-full h-[70vh] min-h-[500px] sm:h-[78vh] sm:min-h-[560px] md:h-[85vh] md:min-h-[640px] max-h-[920px] bg-zinc-950 overflow-hidden">
            <EmbeddedVideoPlayer 
              videoKey={trailer?.key}
              fallbackImage={getImageUrl(show.backdrop_path, 'original')}

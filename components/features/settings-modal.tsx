@@ -142,12 +142,12 @@ function SettingsModalContent({ onClose }: { onClose: () => void }) {
         <div className="p-5 sm:p-6 overflow-y-auto custom-scrollbar space-y-6">
           <form id="settings-form" onSubmit={handleSave} className="space-y-6">
             {/* Streaming Mode Toggle */}
-            <div className="bg-gradient-to-b from-zinc-900/90 to-zinc-900/40 p-4 rounded-xl border border-zinc-800 flex items-center justify-between gap-4 shadow-sm hover:border-zinc-700/70 transition-colors">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2.5">
-                  <span className="font-semibold text-white text-base">Streaming Mode</span>
+            <div className="bg-gradient-to-b from-zinc-900/90 to-zinc-900/40 p-4 sm:p-5 rounded-xl border border-zinc-800 shadow-sm hover:border-zinc-700/70 transition-colors space-y-2.5">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center flex-wrap gap-2 min-w-0">
+                  <span className="font-semibold text-white text-sm sm:text-base whitespace-nowrap">Streaming Mode</span>
                   <span
-                    className={`text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full transition-colors ${
+                    className={`text-[10px] sm:text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full whitespace-nowrap transition-colors ${
                       localStreamingMode
                         ? 'bg-red-500/20 text-red-400 border border-red-500/30'
                         : 'bg-zinc-800 text-zinc-400 border border-zinc-700/50'
@@ -156,42 +156,45 @@ function SettingsModalContent({ onClose }: { onClose: () => void }) {
                     {localStreamingMode ? 'ON • Streaming' : 'OFF • Trailer'}
                   </span>
                 </div>
-                <p className="text-xs text-zinc-400 leading-relaxed max-w-md">
-                  When enabled (ON), the Play button launches the embed player stream. When turned off (OFF), it plays the official trailer.
-                </p>
+
+                {/* Toggle switch with embedded ON / OFF labels */}
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={localStreamingMode}
+                  onClick={() => setLocalStreamingMode(!localStreamingMode)}
+                  className={`relative inline-flex h-7 sm:h-8 w-14 sm:w-16 shrink-0 cursor-pointer items-center rounded-full p-1 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-500/50 select-none ${
+                    localStreamingMode
+                      ? 'bg-red-600 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]'
+                      : 'bg-zinc-800 border border-zinc-700/60 shadow-[inset_0_1px_2px_rgba(0,0,0,0.4)]'
+                  }`}
+                  aria-label={`Toggle Streaming Mode: Currently ${localStreamingMode ? 'ON' : 'OFF'}`}
+                >
+                  <span
+                    className={`absolute left-2 text-[9px] sm:text-[10px] font-extrabold tracking-wider text-white transition-opacity duration-200 select-none ${
+                      localStreamingMode ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                    }`}
+                  >
+                    ON
+                  </span>
+                  <span
+                    className={`absolute right-1.5 sm:right-2 text-[9px] sm:text-[10px] font-extrabold tracking-wider text-zinc-400 transition-opacity duration-200 select-none ${
+                      localStreamingMode ? 'opacity-0 pointer-events-none' : 'opacity-100'
+                    }`}
+                  >
+                    OFF
+                  </span>
+                  <span
+                    className={`pointer-events-none inline-block h-5 sm:h-6 w-5 sm:w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                      localStreamingMode ? 'translate-x-7 sm:translate-x-8' : 'translate-x-0'
+                    }`}
+                  />
+                </button>
               </div>
 
-              {/* Toggle switch with embedded ON / OFF labels */}
-              <button
-                type="button"
-                role="switch"
-                aria-checked={localStreamingMode}
-                onClick={() => setLocalStreamingMode(!localStreamingMode)}
-                className={`relative inline-flex h-8 w-16 shrink-0 cursor-pointer items-center rounded-full p-1 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-500/50 select-none ${
-                  localStreamingMode ? 'bg-red-600 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]' : 'bg-zinc-800 border border-zinc-700/60 shadow-[inset_0_1px_2px_rgba(0,0,0,0.4)]'
-                }`}
-                aria-label={`Toggle Streaming Mode: Currently ${localStreamingMode ? 'ON' : 'OFF'}`}
-              >
-                <span
-                  className={`absolute left-2.5 text-[10px] font-extrabold tracking-wider text-white transition-opacity duration-200 select-none ${
-                    localStreamingMode ? 'opacity-100' : 'opacity-0 pointer-events-none'
-                  }`}
-                >
-                  ON
-                </span>
-                <span
-                  className={`absolute right-2 text-[10px] font-extrabold tracking-wider text-zinc-400 transition-opacity duration-200 select-none ${
-                    localStreamingMode ? 'opacity-0 pointer-events-none' : 'opacity-100'
-                  }`}
-                >
-                  OFF
-                </span>
-                <span
-                  className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
-                    localStreamingMode ? 'translate-x-8' : 'translate-x-0'
-                  }`}
-                />
-              </button>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                When enabled (<span className="text-zinc-200 font-medium">ON</span>), the Play button launches the embed player stream. When turned off (<span className="text-zinc-200 font-medium">OFF</span>), it plays the official trailer.
+              </p>
             </div>
 
             {/* Custom Players Section */}

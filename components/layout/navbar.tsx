@@ -37,26 +37,54 @@ export function Navbar() {
              </a>
              <BrowseDropdown />
              <SearchBar />
-             <button onClick={() => setIsSettingsOpen(true)} className="group text-zinc-300 hover:text-red-500 hover:bg-zinc-800/50 px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer flex items-center">
-               <Icons.user className="w-5 h-5 transition-colors duration-200" strokeWidth={2.5} />
+             <button onClick={() => setIsSettingsOpen(true)} className="group text-zinc-300 hover:text-red-500 hover:bg-zinc-800/50 px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer flex items-center" title="Settings" aria-label="Settings">
+               <Icons.settings className="w-5 h-5 transition-colors duration-200" strokeWidth={2.2} />
              </button>
           </nav>
         </div>
       </header>
       
-      {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#161616]/95 backdrop-blur-xl border border-zinc-800/80 rounded-[20px] p-1.5 px-2.5 flex items-center justify-between w-max gap-1 shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
-        <Link href="/" className={`relative flex flex-col items-center justify-center w-12 h-11 bg-[#050505] rounded-xl transition-colors duration-200 shadow-sm ${pathname === '/' ? 'text-[#ff3333]' : 'text-zinc-300 hover:text-white'}`}>
-          <Icons.home className={`w-5 h-5 ${pathname === '/' ? 'mb-1' : ''}`} />
-          {pathname === '/' && <span className="absolute bottom-1 w-1 h-1 rounded-full bg-[#ff3333]"></span>}
+      {/* Mobile Floating Bottom Navigation Dock (Icon Only) */}
+      <nav 
+        className="md:hidden fixed bottom-5 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 h-[54px] bg-[#121214]/85 backdrop-blur-2xl border border-white/10 rounded-full px-2 py-1.5 flex items-center justify-center gap-1.5 shadow-[0_16px_40px_rgba(0,0,0,0.8),_inset_0_1px_1px_rgba(255,255,255,0.12),_0_0_0_1px_rgba(0,0,0,0.6)] select-none"
+        aria-label="Mobile navigation"
+      >
+        <Link 
+          href="/" 
+          className={`relative flex items-center justify-center w-11 h-11 rounded-full transition-all duration-200 active:scale-90 ${
+            pathname === '/' 
+              ? 'text-red-500 bg-red-500/15 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]' 
+              : 'text-zinc-400 hover:text-white hover:bg-white/5'
+          }`}
+          title="Home"
+          aria-label="Home"
+        >
+          <Icons.home className="w-5 h-5 transition-colors" />
+          {pathname === '/' && <span className="absolute bottom-1.5 w-1 h-1 rounded-full bg-red-500" />}
         </Link>
-        <a href={process.env.NEXT_PUBLIC_API_LINK || "/"} target={process.env.NEXT_PUBLIC_API_LINK ? "_blank" : undefined} rel="noopener noreferrer" className="flex flex-col items-center justify-center w-12 h-11 bg-[#050505] rounded-xl text-zinc-300 hover:text-white transition-colors duration-200 shadow-sm">
-          <Icons.code className="w-5 h-5" />
+
+        <a 
+          href={process.env.NEXT_PUBLIC_API_LINK || "/"} 
+          target={process.env.NEXT_PUBLIC_API_LINK ? "_blank" : undefined} 
+          rel="noopener noreferrer" 
+          className="relative flex items-center justify-center w-11 h-11 rounded-full text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-200 active:scale-90"
+          title="API"
+          aria-label="API"
+        >
+          <Icons.code className="w-5 h-5 transition-colors" />
         </a>
+
         <BrowseDropdown isMobile={true} />
+
         <SearchBar isMobile={true} />
-        <button onClick={() => setIsSettingsOpen(true)} className="flex flex-col items-center justify-center w-12 h-11 bg-[#050505] rounded-xl text-zinc-300 hover:text-white transition-colors duration-200 shadow-sm">
-           <Icons.logIn className="w-5 h-5" strokeWidth={2.5} />
+
+        <button 
+          onClick={() => setIsSettingsOpen(true)} 
+          className="relative flex items-center justify-center w-11 h-11 rounded-full text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-200 active:scale-90" 
+          title="Settings" 
+          aria-label="Settings"
+        >
+          <Icons.settings className="w-5 h-5 transition-colors" strokeWidth={2.2} />
         </button>
       </nav>
 
