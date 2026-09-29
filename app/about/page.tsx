@@ -3,8 +3,11 @@ import { Icons } from '@/components/ui/icons';
 import { Search, CheckCircle2, EyeOff, UserCheck, AlertTriangle, Mail } from 'lucide-react';
 
 export const metadata = {
-  title: 'About & Legal',
-  description: 'About Cineby: A metadata search engine and BYOC (Bring Your Own Content) client.',
+  title: 'About Cineby - Free Movies & TV Database',
+  description: 'Learn about Cineby, our service model, Bring Your Own Content (BYOC) architecture, and copyright compliance policies.',
+  alternates: {
+    canonical: '/about',
+  },
 };
 
 export default function AboutPage() {

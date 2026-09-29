@@ -5,6 +5,8 @@ import { PersonDetails, PersonCombinedCredits, Media } from '@/types/tmdb';
 import { BackButton } from '@/components/features/back-button';
 import { MovieCard } from '@/components/ui/movie-card';
 
+export const revalidate = 86400;
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
   try {

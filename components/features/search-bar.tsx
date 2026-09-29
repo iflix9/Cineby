@@ -10,6 +10,8 @@ import Image from 'next/image';
 import { playMedia } from './player-overlay';
 import { triggerAdPopUp } from '@/lib/ad';
 
+const searchCache = new Map<string, { results: any[]; hasMore: boolean }>();
+
 export function SearchBar({ isMobile }: { isMobile?: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
@@ -105,6 +107,14 @@ export function SearchBar({ isMobile }: { isMobile?: boolean }) {
 
     let isMounted = true;
     const fetchResults = async () => {
+      const cacheKey = `${searchType}:${debouncedQuery.trim().toLowerCase()}:${page}`;
+      if (searchCache.has(cacheKey)) {
+        const cached = searchCache.get(cacheKey)!;
+        setResults(prev => page === 1 ? cached.results : [...prev, ...cached.results]);
+        setHasMore(cached.hasMore);
+        return;
+      }
+
       if (page === 1) setIsLoading(true);
       try {
         let endpoint = `/api/tmdb/search/${searchType === 'anime' ? 'multi' : searchType}`;
@@ -121,8 +131,10 @@ export function SearchBar({ isMobile }: { isMobile?: boolean }) {
              );
           }
           
+          const hasMoreResults = data.page < data.total_pages;
+          searchCache.set(cacheKey, { results: newResults, hasMore: hasMoreResults });
           setResults(prev => page === 1 ? newResults : [...prev, ...newResults]);
-          setHasMore(data.page < data.total_pages);
+          setHasMore(hasMoreResults);
         }
       } catch (error) {
         console.error('Search failed:', error);

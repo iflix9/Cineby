@@ -124,21 +124,9 @@ export default async function Home() {
     );
   }
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'Cineby',
-    alternateName: ['Cineby Free Movies', 'Cineby TV'],
-    url: 'https://www.cinebyfree.co/',
-  };
-
   return (
     <div>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <h1 className="sr-only">Cineby - Free Movies and TV Shows Database</h1>
+      <h1 className="sr-only">Cineby - Watch Free Movies, TV Shows, Anime & Trailers Online</h1>
       <HeroBanner movies={trendingMovies.slice(0, 7)} logos={heroLogos} />
       <div className="container mx-auto px-4 sm:px-6 md:px-10 lg:px-12 max-w-[1440px] relative z-20 mt-6 sm:mt-8 md:mt-12 space-y-12 md:space-y-16 mb-6 sm:mb-8 md:mb-10">
         <ContinueWatchingRow />

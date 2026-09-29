@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
 import { Player } from './player';
 import { triggerAdPopUp } from '@/lib/ad';
 import { isBlockedMedia } from '@/lib/tmdb';
@@ -39,9 +38,6 @@ export const playTrailer = (
 };
 
 export function PlayerOverlay() {
-  const pathname = usePathname();
-  const router = useRouter();
-  
   const [playing, setPlaying] = useState<{ type: 'movie' | 'tv'; mediaId: string; season?: number; episode?: number } | null>(null);
   const [trailerPlaying, setTrailerPlaying] = useState<TrailerData | null>(null);
 
@@ -187,12 +183,7 @@ export function PlayerOverlay() {
         episode={playing.episode}
         onBack={handleClose}
         onEpisodeChange={(s, e) => {
-          if (pathname && playing.type === 'tv') {
-             router.replace(`/tv/${playing.mediaId}/${s}/${e}`, { scroll: false });
-             setPlaying({ ...playing, season: s, episode: e });
-          } else {
-             setPlaying({ ...playing, season: s, episode: e });
-          }
+          setPlaying(prev => prev ? { ...prev, season: s, episode: e } : null);
         }}
       />
     </div>

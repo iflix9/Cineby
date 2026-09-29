@@ -3,7 +3,7 @@ import { TMDBResponse, Media } from '@/types/tmdb';
 import { BrowseClient } from './browse-client';
 import { Metadata } from 'next';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 14400;
 
 interface BrowsePageProps {
   params: Promise<{ type: string }>;
@@ -11,9 +11,40 @@ interface BrowsePageProps {
 
 export async function generateMetadata({ params }: BrowsePageProps): Promise<Metadata> {
   const { type } = await params;
-  const title = type === 'movie' ? 'Movies' : type === 'tv' ? 'TV Shows' : type === 'anime' ? 'Anime' : 'Browse';
+  const config = {
+    movie: {
+      title: 'Browse Free Movies Online - Cineby',
+      desc: 'Discover and browse thousands of popular and trending movies on Cineby. Filter by genre, release year, and country.',
+    },
+    tv: {
+      title: 'Browse TV Shows & Series - Cineby',
+      desc: 'Discover top-rated and trending TV series, seasons, and episodes on Cineby. Updated daily with new releases.',
+    },
+    anime: {
+      title: 'Watch Anime Series & Movies Online - Cineby',
+      desc: 'Explore popular Japanese anime series, movies, and animations with full metadata and episodes on Cineby.',
+    },
+  }[type] || {
+    title: 'Browse Media - Cineby',
+    desc: 'Explore movies, TV shows, and entertainment on Cineby.',
+  };
+
   return {
-    title: title,
+    title: config.title,
+    description: config.desc,
+    alternates: {
+      canonical: `/browse/${type}`,
+    },
+    openGraph: {
+      title: config.title,
+      description: config.desc,
+      siteName: 'Cineby',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: config.title,
+      description: config.desc,
+    },
   };
 }
 

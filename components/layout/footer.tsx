@@ -11,23 +11,39 @@ export function Footer() {
   }
 
   return (
-    <footer className="w-full pb-8 md:pb-12 pt-4 md:pt-6 bg-black border-t border-white/5">
+    <footer className="w-full pb-8 md:pb-12 pt-6 md:pt-8 bg-black border-t border-white/5">
       <div className="container mx-auto px-4 sm:px-6 md:px-10 lg:px-12 max-w-[1440px]">
-        <h2 className="text-xl font-bold text-white mb-3">Cineby</h2>
-        <p className="text-xs sm:text-sm md:text-base text-neutral-400 mb-3 max-w-none lg:max-w-4xl">
-          Cineby is a metadata search engine powered by TMDB. We do not host, store, or provide any media files.
+        <h2 className="text-xl font-bold text-white mb-2">Cineby</h2>
+        <p className="text-xs sm:text-sm text-neutral-400 mb-4 max-w-none lg:max-w-4xl leading-relaxed">
+          Cineby is a free cinematic metadata discovery engine powered by TMDB. Browse movies, TV series, anime, and trailers on Cineby. We do not host or store any media files.
         </p>
-        <div className="mt-4">
+        <div className="flex flex-wrap items-center gap-3 pt-1">
+          <Link
+            href="/browse/movie"
+            className="text-xs sm:text-sm text-neutral-400 hover:text-white transition-colors"
+          >
+            Movies
+          </Link>
+          <span className="text-neutral-700">•</span>
+          <Link
+            href="/browse/tv"
+            className="text-xs sm:text-sm text-neutral-400 hover:text-white transition-colors"
+          >
+            TV Shows
+          </Link>
+          <span className="text-neutral-700">•</span>
+          <Link
+            href="/browse/anime"
+            className="text-xs sm:text-sm text-neutral-400 hover:text-white transition-colors"
+          >
+            Anime
+          </Link>
+          <span className="text-neutral-700">•</span>
           <Link
             href="/about"
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-neutral-900/50 hover:bg-neutral-800 text-sm font-medium text-neutral-400 hover:text-white transition-all border border-neutral-800/50 hover:border-neutral-700"
+            className="text-xs sm:text-sm text-neutral-400 hover:text-white transition-colors"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-info">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M12 16v-4"/>
-              <path d="M12 8h.01"/>
-            </svg>
-            About
+            About & Legal
           </Link>
         </div>
       </div>

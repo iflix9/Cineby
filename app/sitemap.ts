@@ -1,37 +1,50 @@
-import { MetadataRoute } from 'next';
+import type { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cinebyfree.co';
+  const currentDate = new Date();
 
   return [
     {
       url: baseUrl,
-      lastModified: new Date(),
+      lastModified: currentDate,
       changeFrequency: 'daily',
-      priority: 1,
+      priority: 1.0,
     },
     {
-      url: `${baseUrl}/movies`,
-      lastModified: new Date(),
+      url: `${baseUrl}/browse/movie`,
+      lastModified: currentDate,
       changeFrequency: 'daily',
-      priority: 0.8,
+      priority: 0.9,
     },
     {
-      url: `${baseUrl}/tv`,
-      lastModified: new Date(),
+      url: `${baseUrl}/browse/tv`,
+      lastModified: currentDate,
       changeFrequency: 'daily',
-      priority: 0.8,
+      priority: 0.9,
     },
     {
-      url: `${baseUrl}/search`,
-      lastModified: new Date(),
+      url: `${baseUrl}/browse/anime`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/about`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/watchlist`,
+      lastModified: currentDate,
       changeFrequency: 'weekly',
       priority: 0.5,
     },
     {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
+      url: `${baseUrl}/history`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
       priority: 0.5,
     },
   ];

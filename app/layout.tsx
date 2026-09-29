@@ -16,42 +16,72 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cinebyfree.co';
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://cinebyfree.co'),
+  metadataBase: new URL(siteUrl),
   applicationName: 'Cineby',
   appleWebApp: {
     title: 'Cineby',
-    statusBarStyle: 'default',
+    statusBarStyle: 'black-translucent',
     capable: true,
   },
   title: {
-    default: 'Cineby - Free Movies and TV Shows Database',
-    template: '%s - Cineby'
+    default: 'Cineby - Watch Free Movies & TV Shows Online',
+    template: '%s | Cineby'
   },
-  description: 'Cineby is your ultimate cinematic database. Discover, explore, and track your favorite movies, TV shows, cast details, and more.',
-  keywords: ['Cineby', 'movies', 'TV shows', 'cinema', 'database', 'streaming', 'film', 'metadata', 'actors', 'series'],
-  authors: [{ name: 'Cineby' }],
+  description: 'Cineby is the leading free movies and TV shows database. Discover, explore, and track thousands of trending movies, series, anime, and trailers on Cineby.',
+  keywords: [
+    'Cineby',
+    'Cineby movies',
+    'Cineby free',
+    'Cineby TV',
+    'Cineby streaming',
+    'Cineby app',
+    'Cineby watch movies',
+    'Cineby official',
+    'watch free movies online',
+    'free TV shows',
+    'movie database',
+    'anime streaming database',
+    'cinema trailers',
+    'film metadata'
+  ],
+  authors: [{ name: 'Cineby', url: siteUrl }],
   creator: 'Cineby',
   publisher: 'Cineby',
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: '/',
+    url: siteUrl,
     title: {
-      default: 'Cineby - Free Movies and TV Shows Database',
-      template: '%s - Cineby'
+      default: 'Cineby - Watch Free Movies & TV Shows Online',
+      template: '%s | Cineby'
     },
-    description: 'Cineby is your ultimate cinematic database. Discover, explore, and track your favorite movies, TV shows, and cast details.',
+    description: 'Cineby is the leading free movies and TV shows database. Discover, explore, and track thousands of trending movies, series, anime, and trailers on Cineby.',
     siteName: 'Cineby',
+    images: [
+      {
+        url: '/logo.png',
+        width: 512,
+        height: 512,
+        alt: 'Cineby Logo',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: {
-      default: 'Cineby - Free Movies and TV Shows Database',
-      template: '%s - Cineby'
+      default: 'Cineby - Watch Free Movies & TV Shows Online',
+      template: '%s | Cineby'
     },
     description: 'Discover and explore movies, TV shows, and cast details on Cineby.',
     creator: '@cineby',
+    site: '@cineby',
+    images: ['/logo.png'],
   },
   robots: {
     index: true,
@@ -66,11 +96,67 @@ export const metadata: Metadata = {
   },
 };
 
+const brandSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${siteUrl}/#organization`,
+      name: 'Cineby',
+      url: siteUrl,
+      logo: `${siteUrl}/logo.png`,
+      sameAs: [
+        'https://twitter.com/cineby',
+        'https://discord.gg/cineby'
+      ],
+      description: 'Cineby is a free movies, TV shows, and anime metadata discovery platform.',
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${siteUrl}/#website`,
+      url: siteUrl,
+      name: 'Cineby',
+      alternateName: ['Cineby Free Movies', 'Cineby TV', 'Cineby Stream', 'Cineby App'],
+      publisher: {
+        '@id': `${siteUrl}/#organization`,
+      },
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: {
+          '@type': 'EntryPoint',
+          urlTemplate: `${siteUrl}/browse/movie?query={search_term_string}`,
+        },
+        'query-input': 'required name=search_term_string',
+      },
+    },
+    {
+      '@type': 'WebApplication',
+      '@id': `${siteUrl}/#webapp`,
+      name: 'Cineby',
+      applicationCategory: 'EntertainmentApplication',
+      operatingSystem: 'All',
+      browserRequirements: 'Requires JavaScript. Requires HTML5.',
+      url: siteUrl,
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+    },
+  ],
+};
+
 export default function RootLayout({children}: {children: React.ReactNode}) {
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || process.env.NEXT_PUBLIC_GA_ID;
 
   return (
     <html lang="en" className="dark">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(brandSchema) }}
+        />
+      </head>
       <body className={`${inter.className} bg-black text-white antialiased min-h-screen`} suppressHydrationWarning>
         <Navbar />
         <Suspense fallback={null}>

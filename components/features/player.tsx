@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 import { Settings, Save, Info, Plus, Trash2, ArrowUp, ArrowDown } from 'lucide-react';
 import { useHistory } from '@/hooks/use-history';
 import { useCustomSources } from '@/hooks/use-custom-sources';
@@ -25,7 +24,6 @@ export function Player({
   onEpisodeChange,
   onBack,
 }: PlayerProps) {
-  const router = useRouter();
   const { movieTemplate, tvTemplate, setMovieTemplate, setTvTemplate } = useCustomSources();
   const [isVisible, setIsVisible] = useState(true);
   const timeoutRef = useRef<number | null>(null);
@@ -185,33 +183,6 @@ export function Player({
               currentTime: data.currentTime,
               duration: data.duration,
             });
-
-            fetch('/api/watch-history', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                mediaId,
-                type,
-                season,
-                episode,
-                progress: calculatedProgress,
-                currentTime: data.currentTime,
-                duration: data.duration,
-              }),
-            }).catch(() => {});
-          }
-        }
-
-        if (type === 'tv') {
-          const seasonNum = data.season || data.s || data?.data?.season;
-          const episodeNum = data.episode || data.ep || data.e || data?.data?.episode;
-          
-          if (seasonNum && episodeNum && (String(seasonNum) !== String(season) || String(episodeNum) !== String(episode))) {
-            if (onEpisodeChange) {
-              onEpisodeChange(Number(seasonNum), Number(episodeNum));
-            } else {
-              router.replace(`/tv/${mediaId}/${seasonNum}/${episodeNum}`, { scroll: false });
-            }
           }
         }
       } catch (err) {
@@ -221,7 +192,7 @@ export function Player({
 
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
-  }, [type, mediaId, router, season, episode, onEpisodeChange]);
+  }, [type, mediaId, season, episode]);
 
   if (isBlockedMedia(mediaId, type)) {
     return null;

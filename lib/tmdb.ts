@@ -1,3 +1,5 @@
+import { cache } from 'react';
+
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 
 export const BLOCKED_MOVIE_IDS: number[] = [];
@@ -15,7 +17,7 @@ export function isBlockedMedia(id: number | string, type: string = 'movie'): boo
   return BLOCKED_MOVIE_IDS.includes(numericId) || BLOCKED_TV_IDS.includes(numericId);
 }
 
-export async function fetchTMDB<T>(path: string, params: Record<string, string> = {}): Promise<T> {
+export const fetchTMDB = cache(async function fetchTMDB<T>(path: string, params: Record<string, string> = {}): Promise<T> {
   const apiKey = process.env.TMDB_API_KEY;
   
   if (!apiKey) {
@@ -34,7 +36,7 @@ export async function fetchTMDB<T>(path: string, params: Record<string, string> 
     headers: {
       accept: 'application/json',
     },
-    // Next.js edge revalidation (15 minutes)
+    // Next.js ISR revalidation (4 hours)
     next: { revalidate: 14400 },
   });
 
@@ -55,7 +57,7 @@ export async function fetchTMDB<T>(path: string, params: Record<string, string> 
   }
 
   return data as T;
-}
+});
 
 // Fallback image utility
 export const TMDB_GENRES: Record<number, string> = {

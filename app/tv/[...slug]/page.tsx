@@ -5,6 +5,7 @@ import { TVShowDetails, Credits, TMDBResponse, TVShow, Video, TMDBImages } from 
 import { Icons } from '@/components/ui/icons';
 import { WatchlistButton } from '@/components/features/watchlist-button';
 import { MediaCarousel } from '@/components/features/media-carousel';
+import { CastCarousel } from '@/components/features/cast-carousel';
 import { BackButton } from '@/components/features/back-button';
 import { PlayButton } from '@/components/features/play-button';
 import { EpisodesSection } from '@/components/features/episodes-section';
@@ -14,19 +15,42 @@ import { HeroDetailOverlay } from '@/components/features/hero-detail-overlay';
 import { EmbeddedVideoPlayer } from '@/components/features/embedded-video-player';
 import { TrackHistory } from '@/components/features/track-history';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 86400;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string[] }> }) {
   const { slug } = await params;
   const id = slug[0];
   try {
     const show = await fetchTMDB<TVShowDetails>(`/tv/${id}`);
+    const releaseYear = show.first_air_date ? show.first_air_date.substring(0, 4) : '';
+    const titleText = `${show.name}${releaseYear ? ` (${releaseYear})` : ''} - Watch TV Series Free on Cineby`;
+    const descText = show.overview
+      ? `${show.overview.slice(0, 155)}... Stream ${show.name} episodes, seasons, cast, and trailers free on Cineby.`
+      : `Stream ${show.name} on Cineby. Free TV shows and series database.`;
+    const poster = getImageUrl(show.poster_path, 'original');
+
     return {
-      title: show.name,
-      description: show.overview,
+      title: titleText,
+      description: descText,
+      alternates: {
+        canonical: `/tv/${id}`,
+      },
+      openGraph: {
+        title: titleText,
+        description: descText,
+        images: show.poster_path ? [{ url: poster, alt: show.name }] : [],
+        type: 'video.tv_show',
+        siteName: 'Cineby',
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: titleText,
+        description: descText,
+        images: show.poster_path ? [poster] : [],
+      },
     };
   } catch {
-    return { title: 'TV Show Not Found' };
+    return { title: 'TV Show - Cineby' };
   }
 }
 
@@ -84,11 +108,40 @@ export default async function TVShowPage(props: {
   );
 
   const trailer = videos.results.find(v => v.type === 'Trailer' && v.site === 'YouTube') || videos.results[0];
-  const mainCast = credits.cast.slice(0, 10);
+  const mainCast = credits.cast.slice(0, 25);
   const logo = images.logos?.length > 0 ? images.logos[0] : null;
+
+  const tvJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'TVSeries',
+    name: show.name,
+    description: show.overview,
+    image: show.poster_path ? getImageUrl(show.poster_path, 'original') : undefined,
+    numberOfSeasons: show.number_of_seasons,
+    numberOfEpisodes: show.number_of_episodes,
+    actor: mainCast.slice(0, 5).map(c => ({
+      '@type': 'Person',
+      name: c.name,
+    })),
+    aggregateRating: show.vote_count > 0 ? {
+      '@type': 'AggregateRating',
+      ratingValue: show.vote_average,
+      bestRating: 10,
+      ratingCount: show.vote_count,
+    } : undefined,
+    publisher: {
+      '@type': 'Organization',
+      name: 'Cineby',
+      url: process.env.NEXT_PUBLIC_SITE_URL || 'https://cinebyfree.co',
+    },
+  };
 
   return (
     <div className="relative w-full min-h-screen bg-zinc-950 pb-24 md:pb-32">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(tvJsonLd) }}
+      />
       <TrackHistory 
         mediaId={show.id}
         type="tv"
@@ -202,41 +255,11 @@ export default async function TVShowPage(props: {
                 />
             )}
 
-            <div className="pt-8">
-              <h2 className="flex items-center gap-2 text-xl md:text-2xl font-bold text-white mb-6">
-                 <div className="w-1 h-5 md:h-6 bg-red-600 rounded-sm"></div>
-                 Top Cast
-              </h2>
-              <div className="flex overflow-x-auto gap-4 pb-4 scrollbar-hide">
-                 {mainCast.map(actor => (
-                   <Link href={`/person/${actor.id}`} prefetch={false} key={actor.id} className="w-[120px] md:w-[140px] shrink-0 group flex flex-col cursor-pointer">
-                      <div className="aspect-[2/3] relative w-full rounded-xl overflow-hidden bg-neutral-900 border border-zinc-800/50 group-hover:border-zinc-700 transition-colors">
-                         {actor.profile_path ? (
-                           <Image 
-                             src={getImageUrl(actor.profile_path)}
-                             alt={actor.name}
-                             fill
-                             className="object-cover transition-transform duration-500 group-hover:scale-105"
-                             referrerPolicy="no-referrer"
-                           />
-                         ) : (
-                           <div className="w-full h-full flex items-center justify-center text-neutral-600 bg-neutral-800">
-                             <span className="text-xs">No Image</span>
-                           </div>
-                         )}
-                      </div>
-                      <div className="mt-2 space-y-0.5 text-center md:text-left">
-                         <div className="text-sm font-semibold text-white tracking-wide truncate max-w-[120px] group-hover:text-red-500 transition-colors">
-                           {actor.name}
-                         </div>
-                         <div className="text-xs font-medium text-zinc-400 truncate max-w-[120px]">
-                           {actor.character}
-                         </div>
-                      </div>
-                   </Link>
-                 ))}
+            {mainCast.length > 0 && (
+              <div className="pt-8">
+                <CastCarousel cast={mainCast} title="Top Cast" />
               </div>
-            </div>
+            )}
          </div>
          
          {moreLikeThis.length > 0 && (

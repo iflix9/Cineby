@@ -1,18 +1,20 @@
 'use client';
 
 import * as React from 'react';
-import { MovieCard } from '@/components/ui/movie-card';
-import { Media } from '@/types/tmdb';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Cast } from '@/types/tmdb';
+import { getImageUrl } from '@/lib/tmdb';
 import { Icons } from '@/components/ui/icons';
 import { cn } from '@/lib/utils';
 
-interface MediaCarouselProps {
-  title: string;
-  items: Media[];
+interface CastCarouselProps {
+  cast: Cast[];
+  title?: string;
   className?: string;
 }
 
-export function MediaCarousel({ title, items, className }: MediaCarouselProps) {
+export function CastCarousel({ cast, title = 'Top Cast', className }: CastCarouselProps) {
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const [isDown, setIsDown] = React.useState(false);
   const [startX, setStartX] = React.useState(0);
@@ -20,6 +22,7 @@ export function MediaCarousel({ title, items, className }: MediaCarouselProps) {
   const [canScrollLeft, setCanScrollLeft] = React.useState(false);
   const [canScrollRight, setCanScrollRight] = React.useState(true);
   
+  // Track whether mouse moved significantly to prevent link click on drag
   const hasDraggedRef = React.useRef(false);
 
   const checkScrollability = React.useCallback(() => {
@@ -44,7 +47,7 @@ export function MediaCarousel({ title, items, className }: MediaCarouselProps) {
       }
       window.removeEventListener('resize', checkScrollability);
     };
-  }, [checkScrollability, items]);
+  }, [checkScrollability, cast]);
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
@@ -71,6 +74,7 @@ export function MediaCarousel({ title, items, className }: MediaCarouselProps) {
 
   const handleMouseUp = () => {
     setIsDown(false);
+    // Keep hasDraggedRef true for a short moment so click event can check it
     setTimeout(() => {
       hasDraggedRef.current = false;
     }, 150);
@@ -87,7 +91,13 @@ export function MediaCarousel({ title, items, className }: MediaCarouselProps) {
     scrollRef.current.scrollLeft = scrollLeftPos - walk;
   };
 
-  if (!items || items.length === 0) return null;
+  const handleCardClick = (e: React.MouseEvent) => {
+    if (hasDraggedRef.current) {
+      e.preventDefault();
+    }
+  };
+
+  if (!cast || cast.length === 0) return null;
 
   return (
     <section className={cn("w-full flex flex-col", className)}>
@@ -116,6 +126,7 @@ export function MediaCarousel({ title, items, className }: MediaCarouselProps) {
           <Icons.chevronLeft className="w-8 h-8 text-zinc-300 group-hover/carousel-left:text-red-500 transition-colors" />
         </button>
 
+        {/* Cast Items Row Container */}
         <div 
           ref={scrollRef}
           onMouseDown={handleMouseDown}
@@ -128,9 +139,53 @@ export function MediaCarousel({ title, items, className }: MediaCarouselProps) {
             !isDown && "scroll-smooth"
           )} 
         >
-          {items.map((item) => (
-            <div key={item.id} className="w-[148px] min-[390px]:w-[162px] min-[500px]:w-[170px] sm:w-[180px] md:w-[188px] lg:w-[198px] xl:w-[206px] shrink-0 snap-start relative whitespace-normal">
-              <MovieCard media={item} />
+          {cast.map((actor) => (
+            <div 
+              key={actor.id} 
+              className="w-[125px] min-[390px]:w-[136px] sm:w-[148px] md:w-[158px] lg:w-[165px] shrink-0 snap-start relative whitespace-normal group flex flex-col"
+            >
+              <Link 
+                href={`/person/${actor.id}`} 
+                prefetch={false} 
+                onClick={handleCardClick}
+                className="flex flex-col cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-red-500 rounded-xl"
+              >
+                {/* Photo container */}
+                <div className="aspect-[2/3] relative w-full rounded-xl overflow-hidden bg-neutral-900 border border-zinc-800/70 group-hover:border-red-500/50 shadow-md group-hover:shadow-lg group-hover:shadow-red-500/10 transition-all duration-300">
+                  {actor.profile_path ? (
+                    <Image 
+                      src={getImageUrl(actor.profile_path, 'w500')}
+                      alt={actor.name}
+                      fill
+                      sizes="(max-width: 640px) 140px, (max-width: 1024px) 160px, 180px"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      referrerPolicy="no-referrer"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center text-neutral-500 bg-gradient-to-b from-neutral-800 to-neutral-900 p-2 text-center">
+                      <div className="w-10 h-10 rounded-full bg-neutral-700/60 flex items-center justify-center mb-1.5 text-zinc-400">
+                        <Icons.user className="w-5 h-5" />
+                      </div>
+                      <span className="text-[11px] font-medium text-zinc-400 line-clamp-1">No Image</span>
+                    </div>
+                  )}
+
+                  {/* Gradient shadow overlay on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                </div>
+
+                {/* Actor Info */}
+                <div className="mt-2.5 space-y-0.5 px-0.5 text-left">
+                  <div className="text-xs sm:text-sm font-semibold text-white tracking-wide truncate group-hover:text-red-500 transition-colors duration-200">
+                    {actor.name}
+                  </div>
+                  {actor.character && (
+                    <div className="text-[11px] sm:text-xs font-normal text-zinc-400 truncate">
+                      {actor.character}
+                    </div>
+                  )}
+                </div>
+              </Link>
             </div>
           ))}
         </div>

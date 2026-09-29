@@ -6,6 +6,7 @@ import { MovieDetails, Credits, TMDBResponse, Movie, Video, TMDBImages } from '@
 import { Icons } from '@/components/ui/icons';
 import { WatchlistButton } from '@/components/features/watchlist-button';
 import { MediaCarousel } from '@/components/features/media-carousel';
+import { CastCarousel } from '@/components/features/cast-carousel';
 import { BackButton } from '@/components/features/back-button';
 import { PlayButton } from '@/components/features/play-button';
 import { WatchProviders } from '@/components/features/watch-providers';
@@ -14,21 +15,44 @@ import { HeroDetailOverlay } from '@/components/features/hero-detail-overlay';
 import { EmbeddedVideoPlayer } from '@/components/features/embedded-video-player';
 import { TrackHistory } from '@/components/features/track-history';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 86400;
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   if (isBlockedMedia(id, 'movie')) {
-    return { title: 'Content Unavailable' };
+    return { title: 'Content Unavailable - Cineby' };
   }
   try {
     const movie = await fetchTMDB<MovieDetails>(`/movie/${id}`);
+    const releaseYear = movie.release_date ? movie.release_date.substring(0, 4) : '';
+    const titleText = `${movie.title}${releaseYear ? ` (${releaseYear})` : ''} - Watch Free on Cineby`;
+    const descText = movie.overview
+      ? `${movie.overview.slice(0, 155)}... Watch ${movie.title} and explore cast, reviews, and trailers on Cineby.`
+      : `Watch ${movie.title} on Cineby. Free movies and cinema database.`;
+    const poster = getImageUrl(movie.poster_path, 'original');
+
     return {
-      title: movie.title,
-      description: movie.overview,
+      title: titleText,
+      description: descText,
+      alternates: {
+        canonical: `/movie/${id}`,
+      },
+      openGraph: {
+        title: titleText,
+        description: descText,
+        images: movie.poster_path ? [{ url: poster, alt: movie.title }] : [],
+        type: 'video.movie',
+        siteName: 'Cineby',
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: titleText,
+        description: descText,
+        images: movie.poster_path ? [poster] : [],
+      },
     };
   } catch {
-    return { title: 'Movie Not Found' };
+    return { title: 'Movie - Cineby' };
   }
 }
 
@@ -81,12 +105,41 @@ export default async function MoviePage(props: {
   const moreLikeThis = Array.from(moreLikeThisMap.values());
 
   const trailer = videos.results.find(v => v.type === 'Trailer' && v.site === 'YouTube') || videos.results[0];
-  const mainCast = credits.cast.slice(0, 10);
+  const mainCast = credits.cast.slice(0, 25);
   const director = credits.crew.find(c => c.job === 'Director');
   const logo = images.logos?.length > 0 ? images.logos[0] : null;
 
+  const movieJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Movie',
+    name: movie.title,
+    description: movie.overview,
+    image: movie.poster_path ? getImageUrl(movie.poster_path, 'original') : undefined,
+    datePublished: movie.release_date,
+    director: director ? { '@type': 'Person', name: director.name } : undefined,
+    actor: mainCast.slice(0, 5).map(c => ({
+      '@type': 'Person',
+      name: c.name,
+    })),
+    aggregateRating: movie.vote_count > 0 ? {
+      '@type': 'AggregateRating',
+      ratingValue: movie.vote_average,
+      bestRating: 10,
+      ratingCount: movie.vote_count,
+    } : undefined,
+    publisher: {
+      '@type': 'Organization',
+      name: 'Cineby',
+      url: process.env.NEXT_PUBLIC_SITE_URL || 'https://cinebyfree.co',
+    },
+  };
+
   return (
     <div className="relative w-full min-h-screen bg-zinc-950 pb-24 md:pb-32">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(movieJsonLd) }}
+      />
       <TrackHistory 
         mediaId={movie.id}
         type="movie"
@@ -191,41 +244,9 @@ export default async function MoviePage(props: {
         </div>
       <div className="container mx-auto px-4 sm:px-6 md:px-10 lg:px-12 max-w-[1440px] relative z-20 space-y-12 md:space-y-16 mt-6 sm:mt-8 md:mt-10">
          <div className="w-full space-y-12">
-            <div>
-              <h2 className="flex items-center gap-2 text-xl md:text-2xl font-bold text-white mb-6">
-                 <div className="w-1 h-5 md:h-6 bg-red-600 rounded-sm"></div>
-                 Top Cast
-              </h2>
-              <div className="flex overflow-x-auto gap-4 pb-4 scrollbar-hide">
-                 {mainCast.map(actor => (
-                   <Link href={`/person/${actor.id}`} prefetch={false} key={actor.id} className="w-[120px] md:w-[140px] shrink-0 group flex flex-col cursor-pointer">
-                      <div className="aspect-[2/3] relative w-full rounded-xl overflow-hidden bg-neutral-900 border border-zinc-800/50 group-hover:border-zinc-700 transition-colors">
-                         {actor.profile_path ? (
-                           <Image 
-                             src={getImageUrl(actor.profile_path)}
-                             alt={actor.name}
-                             fill
-                             className="object-cover transition-transform duration-500 group-hover:scale-105"
-                             referrerPolicy="no-referrer"
-                           />
-                         ) : (
-                           <div className="w-full h-full flex items-center justify-center text-neutral-600 bg-neutral-800">
-                             <span className="text-xs">No Image</span>
-                           </div>
-                         )}
-                      </div>
-                      <div className="mt-2 space-y-0.5 text-center md:text-left">
-                         <div className="text-sm font-semibold text-white tracking-wide truncate max-w-[120px] group-hover:text-red-500 transition-colors">
-                           {actor.name}
-                         </div>
-                         <div className="text-xs font-medium text-zinc-400 truncate max-w-[120px]">
-                           {actor.character}
-                         </div>
-                      </div>
-                   </Link>
-                 ))}
-              </div>
-            </div>
+            {mainCast.length > 0 && (
+              <CastCarousel cast={mainCast} title="Top Cast" />
+            )}
          </div>
          
          {moreLikeThis.length > 0 && (
