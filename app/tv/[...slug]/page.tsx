@@ -22,21 +22,21 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const id = slug[0];
   try {
     const show = await fetchTMDB<TVShowDetails>(`/tv/${id}`);
-    const releaseYear = show.first_air_date ? show.first_air_date.substring(0, 4) : '';
-    const titleText = `${show.name}${releaseYear ? ` (${releaseYear})` : ''} - Watch TV Series Free on Cineby`;
+    const pageTitle = show.name;
+    const fullOgTitle = `${show.name} | Cineby`;
     const descText = show.overview
       ? `${show.overview.slice(0, 155)}... Stream ${show.name} episodes, seasons, cast, and trailers free on Cineby.`
       : `Stream ${show.name} on Cineby. Free TV shows and series database.`;
     const poster = getImageUrl(show.poster_path, 'original');
 
     return {
-      title: titleText,
+      title: pageTitle,
       description: descText,
       alternates: {
         canonical: `/tv/${id}`,
       },
       openGraph: {
-        title: titleText,
+        title: fullOgTitle,
         description: descText,
         images: show.poster_path ? [{ url: poster, alt: show.name }] : [],
         type: 'video.tv_show',
@@ -44,13 +44,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       },
       twitter: {
         card: 'summary_large_image',
-        title: titleText,
+        title: fullOgTitle,
         description: descText,
         images: show.poster_path ? [poster] : [],
       },
     };
   } catch {
-    return { title: 'TV Show - Cineby' };
+    return { title: 'TV Show' };
   }
 }
 

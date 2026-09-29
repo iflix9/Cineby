@@ -20,25 +20,25 @@ export const revalidate = 86400;
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   if (isBlockedMedia(id, 'movie')) {
-    return { title: 'Content Unavailable - Cineby' };
+    return { title: 'Content Unavailable' };
   }
   try {
     const movie = await fetchTMDB<MovieDetails>(`/movie/${id}`);
-    const releaseYear = movie.release_date ? movie.release_date.substring(0, 4) : '';
-    const titleText = `${movie.title}${releaseYear ? ` (${releaseYear})` : ''} - Watch Free on Cineby`;
+    const pageTitle = movie.title;
+    const fullOgTitle = `${movie.title} | Cineby`;
     const descText = movie.overview
       ? `${movie.overview.slice(0, 155)}... Watch ${movie.title} and explore cast, reviews, and trailers on Cineby.`
       : `Watch ${movie.title} on Cineby. Free movies and cinema database.`;
     const poster = getImageUrl(movie.poster_path, 'original');
 
     return {
-      title: titleText,
+      title: pageTitle,
       description: descText,
       alternates: {
         canonical: `/movie/${id}`,
       },
       openGraph: {
-        title: titleText,
+        title: fullOgTitle,
         description: descText,
         images: movie.poster_path ? [{ url: poster, alt: movie.title }] : [],
         type: 'video.movie',
@@ -46,13 +46,13 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       },
       twitter: {
         card: 'summary_large_image',
-        title: titleText,
+        title: fullOgTitle,
         description: descText,
         images: movie.poster_path ? [poster] : [],
       },
     };
   } catch {
-    return { title: 'Movie - Cineby' };
+    return { title: 'Movie' };
   }
 }
 
