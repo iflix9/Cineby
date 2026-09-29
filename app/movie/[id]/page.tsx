@@ -130,7 +130,7 @@ export default async function MoviePage(props: {
     publisher: {
       '@type': 'Organization',
       name: 'Cineby',
-      url: process.env.NEXT_PUBLIC_SITE_URL || 'https://cinebyfree.co',
+      url: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.cinebyfree.co',
     },
   };
 

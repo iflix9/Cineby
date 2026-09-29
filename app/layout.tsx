@@ -16,7 +16,9 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://cinebyfree.co';
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL && process.env.NEXT_PUBLIC_SITE_URL.startsWith('http'))
+  ? process.env.NEXT_PUBLIC_SITE_URL
+  : 'https://www.cinebyfree.co';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -28,7 +30,7 @@ export const metadata: Metadata = {
   },
   title: {
     default: 'Cineby - Watch Free Movies & TV Shows Online',
-    template: '%s | Cineby'
+    template: '%s | Cineby',
   },
   description: 'Cineby is the leading free movies and TV shows database. Discover, explore, and track thousands of trending movies, series, anime, and trailers on Cineby.',
   keywords: [
@@ -45,13 +47,13 @@ export const metadata: Metadata = {
     'movie database',
     'anime streaming database',
     'cinema trailers',
-    'film metadata'
+    'film metadata',
   ],
   authors: [{ name: 'Cineby', url: siteUrl }],
   creator: 'Cineby',
   publisher: 'Cineby',
-  alternates: {
-    canonical: '/',
+  verification: {
+    google: 'google889937a54e106376',
   },
   openGraph: {
     type: 'website',
@@ -59,29 +61,29 @@ export const metadata: Metadata = {
     url: siteUrl,
     title: {
       default: 'Cineby - Watch Free Movies & TV Shows Online',
-      template: '%s | Cineby'
+      template: '%s | Cineby',
     },
     description: 'Cineby is the leading free movies and TV shows database. Discover, explore, and track thousands of trending movies, series, anime, and trailers on Cineby.',
     siteName: 'Cineby',
     images: [
       {
-        url: '/logo.png',
-        width: 512,
-        height: 512,
+        url: `${siteUrl}/logo.png`,
+        width: 80,
+        height: 80,
         alt: 'Cineby Logo',
       },
     ],
   },
   twitter: {
-    card: 'summary_large_image',
+    card: 'summary',
     title: {
       default: 'Cineby - Watch Free Movies & TV Shows Online',
-      template: '%s | Cineby'
+      template: '%s | Cineby',
     },
     description: 'Discover and explore movies, TV shows, and cast details on Cineby.',
     creator: '@cineby',
     site: '@cineby',
-    images: ['/logo.png'],
+    images: [`${siteUrl}/logo.png`],
   },
   robots: {
     index: true,
@@ -107,7 +109,7 @@ const brandSchema = {
       logo: `${siteUrl}/logo.png`,
       sameAs: [
         'https://twitter.com/cineby',
-        'https://discord.gg/cineby'
+        'https://discord.gg/cineby',
       ],
       description: 'Cineby is a free movies, TV shows, and anime metadata discovery platform.',
     },
@@ -120,44 +122,20 @@ const brandSchema = {
       publisher: {
         '@id': `${siteUrl}/#organization`,
       },
-      potentialAction: {
-        '@type': 'SearchAction',
-        target: {
-          '@type': 'EntryPoint',
-          urlTemplate: `${siteUrl}/browse/movie?query={search_term_string}`,
-        },
-        'query-input': 'required name=search_term_string',
-      },
-    },
-    {
-      '@type': 'WebApplication',
-      '@id': `${siteUrl}/#webapp`,
-      name: 'Cineby',
-      applicationCategory: 'EntertainmentApplication',
-      operatingSystem: 'All',
-      browserRequirements: 'Requires JavaScript. Requires HTML5.',
-      url: siteUrl,
-      offers: {
-        '@type': 'Offer',
-        price: '0',
-        priceCurrency: 'USD',
-      },
     },
   ],
 };
 
-export default function RootLayout({children}: {children: React.ReactNode}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || process.env.NEXT_PUBLIC_GA_ID;
 
   return (
     <html lang="en" className="dark">
-      <head>
+      <body className={`${inter.className} bg-black text-white antialiased min-h-screen`} suppressHydrationWarning>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(brandSchema) }}
         />
-      </head>
-      <body className={`${inter.className} bg-black text-white antialiased min-h-screen`} suppressHydrationWarning>
         <Navbar />
         <Suspense fallback={null}>
           <PlayerOverlay />
@@ -171,5 +149,3 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
     </html>
   );
 }
-
-

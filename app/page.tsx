@@ -14,6 +14,12 @@ import { ContinueWatchingRow } from "@/components/features/continue-watching-row
 
 export const revalidate = 14400;
 
+export const metadata = {
+  alternates: {
+    canonical: '/',
+  },
+};
+
 export default async function Home() {
   let trendingAll: Media[] = [];
   let trendingMovies: Movie[] = [];
