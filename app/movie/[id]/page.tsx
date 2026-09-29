@@ -234,7 +234,7 @@ export default async function MoviePage(props: {
                      <WatchlistButton media={{...movie, media_type: 'movie', genre_ids: movie.genres?.map(g => g.id) || []}} className="shrink-0" iconOnly />
                      <a href="#similar" className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-2xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),_0_2px_6px_rgba(0,0,0,0.3)] text-white font-medium text-[14px] md:text-[15px] px-5 py-2.5 rounded-full flex items-center justify-center gap-2 hover:from-white/15 hover:to-white/10 active:scale-[0.97] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-all duration-200 shrink-0 h-[46px]">
                        <Icons.sparkles className="w-4 h-4" />
-                       <span>More Like This</span>
+                       <span>Similars</span>
                      </a>
                    </div>
                    <WatchProviders providers={watchProviders} />
@@ -251,7 +251,7 @@ export default async function MoviePage(props: {
          
          {moreLikeThis.length > 0 && (
            <div id="similar" className="relative scroll-mt-24">
-             <MediaCarousel title="More Like This" items={moreLikeThis.map(m => ({...m, media_type: 'movie'}))} />
+             <MediaCarousel title="Similars" items={moreLikeThis.map(m => ({...m, media_type: 'movie'}))} />
            </div>
          )}
       </div>

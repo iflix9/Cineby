@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Icons } from '@/components/ui/icons';
@@ -91,24 +91,31 @@ export function HeroBanner({ movies, logos }: HeroBannerProps) {
               )}
               
               {/* Metadata Row */}
-              <div className="flex items-center flex-wrap mb-4 sm:mb-6 text-[12px] sm:text-[14px] md:text-[15px] gap-1.5 sm:gap-2 md:gap-3 font-semibold text-zinc-300">
-                <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/10">
-                  <Icons.star className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-500 fill-red-500" />
-                  <span className="text-red-400 font-bold">{movie.vote_average?.toFixed(1)}</span>
-                </div>
-                {movie.release_date && (
+              <div className="flex items-center flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-6 text-[13px] sm:text-[14px] md:text-[15px] text-zinc-400 font-medium whitespace-nowrap">
+                {movie.vote_average !== undefined && movie.vote_average > 0 && (
                   <>
-                    <span className="text-zinc-500 font-bold">&bull;</span>
-                    <span className="bg-black/30 backdrop-blur-md px-2 py-0.5 rounded border border-white/5">
-                      {movie.release_date.substring(0, 4)}
-                    </span>
+                    <div className="flex items-center gap-1 shrink-0">
+                      <Icons.star className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600 fill-red-600" />
+                      <span className="text-white font-medium">{movie.vote_average.toFixed(1)}</span>
+                    </div>
+                    <span className="text-zinc-600 shrink-0">&middot;</span>
                   </>
                 )}
-                {getGenreNames(movie.genre_ids).slice(0, 3).map((genre) => (
-                  <div key={genre} className="flex items-center gap-1.5 sm:gap-2 md:gap-3">
-                    <span className="text-zinc-500 font-bold">&bull;</span>
-                    <span className="text-zinc-300">{genre}</span>
-                  </div>
+                {movie.release_date && (
+                  <>
+                    <span className="shrink-0 text-zinc-300 font-medium">
+                      {new Date(movie.release_date).getFullYear()}
+                    </span>
+                    <span className="text-zinc-600 shrink-0">&middot;</span>
+                  </>
+                )}
+                {getGenreNames(movie.genre_ids).slice(0, 3).map((genre, idx, arr) => (
+                  <Fragment key={genre}>
+                    <span className="shrink-0 text-zinc-300">{genre}</span>
+                    {idx < arr.length - 1 && (
+                      <span className="text-zinc-600 shrink-0">&middot;</span>
+                    )}
+                  </Fragment>
                 ))}
               </div>
 
