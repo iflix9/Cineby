@@ -23,8 +23,11 @@ export function EmbeddedVideoPlayer({
   const [hasVideoError, setHasVideoError] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
-  const [player, setPlayer] = useState<YouTubePlayer | null>(null);
   const [isOverlayActive, setIsOverlayActive] = useState(false);
+  const [hasPlayer, setHasPlayer] = useState(false);
+
+  // Store the YouTubePlayer instance in a ref instead of state to prevent React Fiber circular JSON serialization errors
+  const playerRef = useRef<YouTubePlayer | null>(null);
 
   const isPlayInUrl = searchParams?.get("play") === "true";
   const isPlayerActive = isPlayInUrl || isOverlayActive;
@@ -61,42 +64,44 @@ export function EmbeddedVideoPlayer({
   }, []);
 
   useEffect(() => {
-    if (!player) return;
+    const p = playerRef.current;
+    if (!p) return;
 
     if (isPlayerActive || isFinished) {
       try {
-        player.mute();
-        player.pauseVideo();
+        p.mute();
+        p.pauseVideo();
       } catch (err) {
         // ignore
       }
     } else {
       try {
         if (isMuted) {
-          player.mute();
+          p.mute();
         } else {
-          player.unMute();
+          p.unMute();
         }
-        player.playVideo();
+        p.playVideo();
       } catch (err) {
         // ignore
       }
     }
-  }, [player, isPlayerActive, isMuted, isFinished]);
+  }, [hasPlayer, isPlayerActive, isMuted, isFinished]);
 
   useEffect(() => {
-    if (!player) return;
+    const p = playerRef.current;
+    if (!p) return;
 
     // Detect when video reaches within 1.2s of the end to prevent end-screen cards, then stop and finish
     const interval = setInterval(async () => {
       if (isPlayerActiveRef.current || isFinished) return;
 
       try {
-        const currentTime = await player.getCurrentTime();
-        const duration = await player.getDuration();
+        const currentTime = await p.getCurrentTime();
+        const duration = await p.getDuration();
         
         if (duration > 0 && duration - currentTime <= 1.2) {
-          player.pauseVideo();
+          p.pauseVideo();
           setIsFinished(true);
         }
       } catch (err) {
@@ -105,11 +110,24 @@ export function EmbeddedVideoPlayer({
     }, 150);
 
     return () => clearInterval(interval);
-  }, [player, isFinished]);
+  }, [hasPlayer, isFinished]);
+
+  // Clean up player on unmount
+  useEffect(() => {
+    return () => {
+      try {
+        playerRef.current?.destroy();
+      } catch (e) {
+        // ignore
+      }
+      playerRef.current = null;
+    };
+  }, []);
 
   const onReady = (event: YouTubeEvent) => {
     const ytPlayer = event.target;
-    setPlayer(ytPlayer);
+    playerRef.current = ytPlayer;
+    setHasPlayer(true);
     ytPlayer.mute();
 
     if (isPlayerActiveRef.current) {
@@ -140,13 +158,14 @@ export function EmbeddedVideoPlayer({
     e.preventDefault();
     e.stopPropagation();
 
-    if (player) {
+    const p = playerRef.current;
+    if (p) {
       if (isMuted) {
-        player.unMute();
-        player.setVolume(100);
-        player.playVideo();
+        p.unMute();
+        p.setVolume(100);
+        p.playVideo();
       } else {
-        player.mute();
+        p.mute();
       }
       setIsMuted(!isMuted);
     }
@@ -156,17 +175,18 @@ export function EmbeddedVideoPlayer({
     e.preventDefault();
     e.stopPropagation();
 
-    if (player) {
+    const p = playerRef.current;
+    if (p) {
       try {
         setIsFinished(false);
         setIsVideoReady(true);
-        player.seekTo(0);
+        p.seekTo(0);
         if (isMuted) {
-          player.mute();
+          p.mute();
         } else {
-          player.unMute();
+          p.unMute();
         }
-        player.playVideo();
+        p.playVideo();
       } catch (err) {
         // ignore
       }
@@ -225,47 +245,47 @@ export function EmbeddedVideoPlayer({
         </div>
       )}
 
-      {/* Visual Backdrop (Video + Fallback Backdrop Image) with Bottom Fade Mask */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 [mask-image:linear-gradient(to_bottom,black_0%,black_52%,rgba(0,0,0,0.72)_72%,rgba(0,0,0,0.25)_88%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_52%,rgba(0,0,0,0.72)_72%,rgba(0,0,0,0.25)_88%,transparent_100%)]">
-        {/* Background Video */}
-        {videoKey && !hasVideoError && (
-          <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
-            <div className="absolute top-1/2 left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2 pointer-events-none scale-[1.5] z-0">
+      {/* Fallback Static Backdrop Image */}
+      <div className="absolute inset-0">
+        <Image
+          src={fallbackImage}
+          alt={title || "Backdrop"}
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+          referrerPolicy="no-referrer"
+        />
+        {/* Soft dark overlay for text readability when no video is playing */}
+        <div className="absolute inset-0 bg-black/30" />
+      </div>
+
+      {/* Embedded YouTube Player Layer */}
+      {videoKey && !hasVideoError && (
+        <div
+          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out pointer-events-none ${
+            isVideoReady && !isPlayerActive && !isFinished ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <div className="w-full h-full relative overflow-hidden pointer-events-none">
+            <div className="absolute inset-0 w-full h-full scale-[1.35] md:scale-[1.25] pointer-events-none">
               <YouTube
                 videoId={videoKey}
                 opts={playerOpts}
                 onReady={onReady}
-                onError={() => {
-                  setIsVideoReady(false);
-                  setHasVideoError(true);
-                }}
+                onEnd={() => setIsFinished(true)}
+                onError={() => setHasVideoError(true)}
                 onStateChange={onStateChange}
-                className="absolute inset-0 w-full h-full pointer-events-none"
-                iframeClassName={`w-full h-full pointer-events-none transition-opacity duration-1000 ${
-                  isVideoReady && !isPlayerActive && !isFinished ? "opacity-100" : "opacity-0"
-                }`}
+                className="w-full h-full pointer-events-none"
+                iframeClassName="w-full h-full pointer-events-none"
               />
             </div>
           </div>
-        )}
-
-        {/* Fallback Backdrop Image Layer (Visible when video not ready, has error, paused/finished, or playing active) */}
-        <div
-          className={`absolute inset-0 z-10 bg-zinc-950 pointer-events-none transition-opacity duration-1000 ease-in-out ${
-            isVideoReady && !isPlayerActive && !hasVideoError && !isFinished ? "opacity-0" : "opacity-100"
-          }`}
-        >
-          <Image
-            src={fallbackImage}
-            alt={title}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-center pointer-events-none"
-            referrerPolicy="no-referrer"
-          />
         </div>
-      </div>
+      )}
+
+      {/* Vignettes for cinematic contrast and readability */}
+      <div className="absolute inset-0 pointer-events-none [mask-image:linear-gradient(to_bottom,black_0%,black_52%,rgba(0,0,0,0.72)_72%,rgba(0,0,0,0.25)_88%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_52%,rgba(0,0,0,0.72)_72%,rgba(0,0,0,0.25)_88%,transparent_100%)] bg-gradient-to-b from-transparent via-transparent to-zinc-950" />
     </>
   );
 }

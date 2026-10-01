@@ -83,18 +83,10 @@ export function EpisodesSection({ show, allSeasonsData, seasonNum, episodeNum }:
     };
   }, [checkScrollability, filteredAndSortedEpisodes]);
 
-  // Auto-scroll to current episode on mount or season change
+  // Reset scroll to beginning when season changes
   useEffect(() => {
     if (scrollRef.current) {
-      const timer = setTimeout(() => {
-        const activeCard = document.getElementById('active-episode-card');
-        activeCard?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-          inline: 'center',
-        });
-      }, 100);
-      return () => clearTimeout(timer);
+      scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
     }
   }, [activeSeason]);
 
@@ -288,21 +280,19 @@ export function EpisodesSection({ show, allSeasonsData, seasonNum, episodeNum }:
 
       {/* Netflix Horizontal Row Carousel Container */}
       <div className="relative group/carousel w-full">
-        {/* Left Side Floating Backdrop Arrow (Desktop) */}
+        {/* Left Side Floating Backdrop Arrow (Desktop) - matching media carousel style */}
         <button 
           onClick={() => scroll('left')}
           disabled={!canScrollLeft}
           aria-label="Scroll episodes left"
           className={cn(
-            "absolute left-0 top-0 bottom-4 z-20 w-12 bg-gradient-to-r from-black/90 via-black/50 to-transparent transition-all duration-200 hidden md:flex items-center justify-start pl-2 rounded-l-xl pointer-events-auto",
+            "absolute left-0 top-0 bottom-5 z-20 bg-black/60 hover:bg-black/90 text-white transition-all duration-200 hidden md:flex items-center justify-center w-12 pointer-events-auto group/carousel-left rounded-l-xl",
             canScrollLeft 
               ? "opacity-0 group-hover/carousel:opacity-100 cursor-pointer" 
               : "opacity-0 pointer-events-none cursor-default"
           )}
         >
-          <div className="w-9 h-9 rounded-full bg-zinc-900/90 border border-white/20 flex items-center justify-center text-white shadow-xl hover:bg-red-600 hover:border-red-600 transition-colors">
-            <ChevronLeft className="w-5 h-5 -ml-0.5" />
-          </div>
+          <Icons.chevronLeft className="w-8 h-8 text-zinc-300 group-hover/carousel-left:text-red-500 transition-colors" />
         </button>
 
         {/* Scrollable Row */}
@@ -332,14 +322,12 @@ export function EpisodesSection({ show, allSeasonsData, seasonNum, episodeNum }:
             </div>
           ) : (
             filteredAndSortedEpisodes.map((ep: any) => {
-              const isCurrent = seasonNum === ep.season_number.toString() && episodeNum === ep.episode_number.toString();
               const todayStr = new Date().toISOString().split('T')[0];
               const isReleased = ep.air_date ? ep.air_date <= todayStr : false;
 
               return (
                 <div
                   key={ep.id}
-                  id={isCurrent ? 'active-episode-card' : undefined}
                   data-season={ep.season_number}
                   data-episode={ep.episode_number}
                   data-released={isReleased ? "true" : "false"}
@@ -359,12 +347,7 @@ export function EpisodesSection({ show, allSeasonsData, seasonNum, episodeNum }:
                   )}
                 >
                   {/* Thumbnail Container (16:9 Video Aspect) */}
-                  <div className={cn(
-                    "relative aspect-video w-full rounded-xl overflow-hidden bg-neutral-900 transition-all duration-300",
-                    isCurrent 
-                      ? "ring-2 ring-red-500 shadow-[0_0_20px_rgba(220,38,38,0.4)]" 
-                      : "ring-1 ring-white/10 group-hover/card:ring-white/30 group-hover/card:shadow-[0_10px_24px_rgba(0,0,0,0.6)] group-hover/card:scale-[1.02]"
-                  )}>
+                  <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-neutral-900 transition-all duration-300 ring-1 ring-white/10 group-hover/card:ring-white/30 group-hover/card:shadow-[0_10px_24px_rgba(0,0,0,0.6)] group-hover/card:scale-[1.02]">
                     {ep.still_path || show.backdrop_path ? (
                       <Image 
                         src={getImageUrl(ep.still_path || show.backdrop_path, 'w500')}
@@ -397,19 +380,11 @@ export function EpisodesSection({ show, allSeasonsData, seasonNum, episodeNum }:
                       </div>
                     )}
 
-                    {/* Currently Playing Status Badge (Top-Right) */}
-                    {isCurrent && (
-                      <div className="absolute top-2.5 right-2.5 bg-red-600 px-2 py-0.5 rounded-md text-[10px] font-bold text-white uppercase tracking-wider shadow-lg flex items-center gap-1.5 z-10">
-                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                        <span>Now Playing</span>
-                      </div>
-                    )}
-
-                    {/* Hover Play Button (Netflix Style) */}
+                    {/* Hover Play Button (Exact style from Movie Card) */}
                     {isReleased ? (
-                      <div className="absolute inset-0 bg-black/25 group-hover/card:bg-black/45 transition-all flex items-center justify-center z-10">
-                        <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 text-black flex items-center justify-center shadow-2xl opacity-0 group-hover/card:opacity-100 scale-75 group-hover/card:scale-100 transition-all duration-200 group-hover/card:bg-red-600 group-hover/card:text-white">
-                          <Icons.play className="w-5 h-5 fill-current ml-0.5" />
+                      <div className="absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-300 group-hover/card:opacity-100 flex items-center justify-center z-10">
+                        <div className="bg-white/20 backdrop-blur-md p-4 rounded-full transform translate-y-4 opacity-0 group-hover/card:translate-y-0 group-hover/card:opacity-100 transition-all duration-300">
+                          <Icons.play className="w-6 h-6 text-white fill-white ml-0.5" />
                         </div>
                       </div>
                     ) : (
@@ -422,11 +397,6 @@ export function EpisodesSection({ show, allSeasonsData, seasonNum, episodeNum }:
                         )}
                       </div>
                     )}
-
-                    {/* Active Episode Bottom Accent Bar */}
-                    {isCurrent && (
-                      <div className="absolute bottom-0 left-0 right-0 h-1 bg-red-600 shadow-[0_0_10px_rgba(220,38,38,0.9)] z-20" />
-                    )}
                   </div>
 
                   {/* Metadata Below Thumbnail */}
@@ -434,11 +404,9 @@ export function EpisodesSection({ show, allSeasonsData, seasonNum, episodeNum }:
                     <div className="flex items-baseline justify-between gap-2">
                       <h4 className={cn(
                         "font-semibold text-sm sm:text-[15px] leading-snug line-clamp-1 transition-colors duration-200",
-                        isCurrent 
-                          ? "text-red-500 font-bold" 
-                          : isReleased 
-                            ? "text-zinc-100 group-hover/card:text-red-400" 
-                            : "text-zinc-500"
+                        isReleased 
+                          ? "text-zinc-100 group-hover/card:text-red-400" 
+                          : "text-zinc-500"
                       )}>
                         {ep.episode_number}. {ep.name}
                       </h4>
@@ -460,21 +428,19 @@ export function EpisodesSection({ show, allSeasonsData, seasonNum, episodeNum }:
           )}
         </div>
 
-        {/* Right Side Floating Backdrop Arrow (Desktop) */}
+        {/* Right Side Floating Backdrop Arrow (Desktop) - matching media carousel style */}
         <button 
           onClick={() => scroll('right')}
           disabled={!canScrollRight}
           aria-label="Scroll episodes right"
           className={cn(
-            "absolute right-0 top-0 bottom-4 z-20 w-12 bg-gradient-to-l from-black/90 via-black/50 to-transparent transition-all duration-200 hidden md:flex items-center justify-end pr-2 rounded-r-xl pointer-events-auto",
+            "absolute right-0 top-0 bottom-5 z-20 bg-black/60 hover:bg-black/90 text-white transition-all duration-200 hidden md:flex items-center justify-center w-12 pointer-events-auto group/carousel-right rounded-r-xl",
             canScrollRight 
               ? "opacity-0 group-hover/carousel:opacity-100 cursor-pointer" 
               : "opacity-0 pointer-events-none cursor-default"
           )}
         >
-          <div className="w-9 h-9 rounded-full bg-zinc-900/90 border border-white/20 flex items-center justify-center text-white shadow-xl hover:bg-red-600 hover:border-red-600 transition-colors">
-            <ChevronRight className="w-5 h-5 -mr-0.5" />
-          </div>
+          <Icons.chevronRight className="w-8 h-8 text-zinc-300 group-hover/carousel-right:text-red-500 transition-colors" />
         </button>
       </div>
     </section>
