@@ -126,12 +126,12 @@ const brandSchema = {
   ],
 };
 
-export default function RootLayout({ 
+export default function RootLayout({
   children,
   modal,
-}: { 
+}: {
   children: React.ReactNode;
-  modal: React.ReactNode;
+  modal?: React.ReactNode;
 }) {
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || process.env.NEXT_PUBLIC_GA_ID;
 

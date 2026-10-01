@@ -3,7 +3,11 @@
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { Icons } from '@/components/ui/icons';
 
-export function BackButton() {
+interface BackButtonProps {
+  isModal?: boolean;
+}
+
+export function BackButton({ isModal }: BackButtonProps = {}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -12,6 +16,8 @@ export function BackButton() {
     const isPlay = searchParams?.get('play') === 'true';
     if (isPlay && pathname) {
       router.replace(pathname);
+    } else if (isModal) {
+      router.back();
     } else if (pathname?.startsWith('/movie/') || pathname?.startsWith('/tv/')) {
       router.push('/');
     } else {
