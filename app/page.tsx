@@ -10,6 +10,7 @@ import {
 } from "@/types/tmdb";
 import { HeroBanner } from "@/components/features/hero-banner";
 import { MediaCarousel } from "@/components/features/media-carousel";
+import { NetworkMediaCarousel } from "@/components/features/network-media-carousel";
 import { ContinueWatchingRow } from "@/components/features/continue-watching-row";
 
 export const revalidate = 14400;
@@ -24,7 +25,8 @@ export default async function Home() {
   let trendingAll: Media[] = [];
   let trendingMovies: Movie[] = [];
   let animeShows: TVShow[] = [];
-  let tvAiringShows: TVShow[] = [];
+  let netflixShows: TVShow[] = [];
+  let netflixMovies: Movie[] = [];
   let upcomingMovies: Movie[] = [];
   let heroLogos: Record<number, TMDBImage> = {};
   let kDramas: TVShow[] = [];
@@ -40,7 +42,8 @@ export default async function Home() {
       trendingAllRes,
       trendingRes,
       animeRes,
-      tvAiringRes,
+      netflixTvRes,
+      netflixMoviesRes,
       upcomingRes,
       kDramasRes,
     ] = await Promise.all([
@@ -52,11 +55,12 @@ export default async function Home() {
         sort_by: "popularity.desc",
       }),
       fetchTMDB<TMDBResponse<TVShow>>("/discover/tv", {
-        with_original_language: "en",
-        with_genres: "18",
-        without_genres: "16,10763,10764,10767,99",
-        "air_date.gte": sevenDaysAgo,
-        "air_date.lte": today,
+        with_networks: "213",
+        sort_by: "popularity.desc",
+      }),
+      fetchTMDB<TMDBResponse<Movie>>("/discover/movie", {
+        with_watch_providers: "8",
+        watch_region: "US",
         sort_by: "popularity.desc",
       }),
       fetchTMDB<TMDBResponse<Movie>>("/movie/upcoming"),
@@ -73,9 +77,8 @@ export default async function Home() {
     trendingAll = trendingAllRes.results;
     trendingMovies = trendingRes.results;
     animeShows = animeRes.results;
-    tvAiringShows = (tvAiringRes.results || []).filter(
-      (show) => !show.genre_ids?.some((g) => [16, 10763, 10764, 10767, 99].includes(g))
-    );
+    netflixShows = netflixTvRes.results || [];
+    netflixMovies = netflixMoviesRes.results || [];
     upcomingMovies = upcomingRes.results;
     kDramas = kDramasRes.results;
 
@@ -141,9 +144,10 @@ export default async function Home() {
           title="K-Dramas Airing This Week"
           items={kDramas.map((t) => ({ ...t, media_type: "tv" }))}
         />
-        <MediaCarousel
-          title="TV Shows Airing This Week"
-          items={tvAiringShows.map((t) => ({ ...t, media_type: "tv" }))}
+        <NetworkMediaCarousel
+          initialMovieItems={netflixMovies.map((m) => ({ ...m, media_type: "movie" }))}
+          initialTvItems={netflixShows.map((t) => ({ ...t, media_type: "tv" }))}
+          initialType="movie"
         />
         <MediaCarousel
           title="Popular Anime"

@@ -11,7 +11,7 @@ export function Navbar() {
   const pathname = usePathname();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   
-  const isDetailsPage = pathname?.startsWith('/movie/') || pathname?.startsWith('/tv/') || pathname?.startsWith('/person/');
+  const isDetailsPage = pathname?.startsWith('/movie/') || pathname?.startsWith('/tv/');
   if (isDetailsPage) {
     return null;
   }

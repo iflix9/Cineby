@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { Cast } from '@/types/tmdb';
 import { getImageUrl } from '@/lib/tmdb';
 import { Icons } from '@/components/ui/icons';
@@ -144,14 +143,11 @@ export function CastCarousel({ cast, title = 'Top Cast', className }: CastCarous
               key={actor.id} 
               className="w-[125px] min-[390px]:w-[136px] sm:w-[148px] md:w-[158px] lg:w-[165px] shrink-0 snap-start relative whitespace-normal group flex flex-col"
             >
-              <Link 
-                href={`/person/${actor.id}`} 
-                prefetch={false} 
-                onClick={handleCardClick}
-                className="flex flex-col cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-red-500 rounded-xl"
+              <div 
+                className="flex flex-col rounded-xl select-none"
               >
                 {/* Photo container */}
-                <div className="aspect-[2/3] relative w-full rounded-xl overflow-hidden bg-neutral-900 border border-zinc-800/70 group-hover:border-red-500/50 shadow-md group-hover:shadow-lg group-hover:shadow-red-500/10 transition-all duration-300">
+                <div className="aspect-[2/3] relative w-full rounded-xl overflow-hidden bg-neutral-900 border border-zinc-800/70 group-hover:border-zinc-700 shadow-md group-hover:shadow-lg transition-all duration-300">
                   {actor.profile_path ? (
                     <Image 
                       src={getImageUrl(actor.profile_path, 'w500')}
@@ -176,7 +172,7 @@ export function CastCarousel({ cast, title = 'Top Cast', className }: CastCarous
 
                 {/* Actor Info */}
                 <div className="mt-2.5 space-y-0.5 px-0.5 text-left">
-                  <div className="text-xs sm:text-sm font-semibold text-white tracking-wide truncate group-hover:text-red-500 transition-colors duration-200">
+                  <div className="text-xs sm:text-sm font-semibold text-white tracking-wide truncate group-hover:text-zinc-200 transition-colors duration-200">
                     {actor.name}
                   </div>
                   {actor.character && (
@@ -185,7 +181,7 @@ export function CastCarousel({ cast, title = 'Top Cast', className }: CastCarous
                     </div>
                   )}
                 </div>
-              </Link>
+              </div>
             </div>
           ))}
         </div>

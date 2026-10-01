@@ -6,7 +6,7 @@ import Link from 'next/link';
 export function Footer() {
   const pathname = usePathname();
 
-  if (pathname?.startsWith('/movie') || pathname?.startsWith('/tv') || pathname?.startsWith('/person')) {
+  if (pathname?.startsWith('/movie') || pathname?.startsWith('/tv')) {
     return null;
   }
 
