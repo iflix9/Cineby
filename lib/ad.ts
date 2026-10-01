@@ -11,11 +11,18 @@ export const triggerAdPopUp = () => {
     
     // If there's no previous time, or if 1 hour has passed
     if (!lastAdTime || now - parseInt(lastAdTime, 10) >= oneHourMs) {
-      window.open(directLink, '_blank', 'noopener,noreferrer');
+      try {
+        window.open(directLink, '_blank', 'noopener,noreferrer');
+      } catch {
+        // Silently ignore if blocked
+      }
       sessionStorage.setItem(LAST_AD_KEY, now.toString());
     }
-  } catch (e) {
-    // Fallback if sessionStorage is restricted (e.g. incognito)
-    window.open(directLink, '_blank', 'noopener,noreferrer');
+  } catch {
+    try {
+      window.open(directLink, '_blank', 'noopener,noreferrer');
+    } catch {
+      // Silently ignore
+    }
   }
 };

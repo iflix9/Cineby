@@ -23,6 +23,22 @@ export function EpisodesSection({ show, allSeasonsData, seasonNum, episodeNum }:
   const [activeSeason, setActiveSeason] = useState(Number(seasonNum) || 1);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  // Cache seasons loaded from server or fetched on-demand
+  const [seasonsCache, setSeasonsCache] = useState<Record<number, any>>(() => {
+    const cache: Record<number, any> = {};
+    if (Array.isArray(allSeasonsData)) {
+      allSeasonsData.forEach((s) => {
+        if (s && s.season_number) {
+          cache[s.season_number] = s;
+        }
+      });
+    }
+    return cache;
+  });
+
+  const activeSeasonData = seasonsCache[activeSeason];
+  const isSeasonLoading = !activeSeasonData;
+
   // Carousel scroll & drag state
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isDown, setIsDown] = useState(false);
@@ -32,9 +48,24 @@ export function EpisodesSection({ show, allSeasonsData, seasonNum, episodeNum }:
   const [canScrollRight, setCanScrollRight] = useState(true);
   const hasDraggedRef = useRef(false);
 
-  const activeSeasonData = useMemo(() => {
-    return allSeasonsData?.find((s) => s && s.season_number === activeSeason);
-  }, [allSeasonsData, activeSeason]);
+  // Fetch season data on demand if not cached
+  useEffect(() => {
+    if (!seasonsCache[activeSeason] && show?.id) {
+      let isSubscribed = true;
+      fetch(`/api/tmdb/tv/${show.id}/season/${activeSeason}`)
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data && isSubscribed) {
+            setSeasonsCache((prev) => ({ ...prev, [activeSeason]: data }));
+          }
+        })
+        .catch((err) => console.error('Failed to load season:', err));
+
+      return () => {
+        isSubscribed = false;
+      };
+    }
+  }, [activeSeason, seasonsCache, show?.id]);
 
   const filteredAndSortedEpisodes = useMemo(() => {
     if (!activeSeasonData?.episodes) return [];
@@ -308,7 +339,21 @@ export function EpisodesSection({ show, allSeasonsData, seasonNum, episodeNum }:
             !isDown && "scroll-smooth"
           )} 
         >
-          {filteredAndSortedEpisodes.length === 0 ? (
+          {isSeasonLoading ? (
+            Array.from({ length: 5 }).map((_, idx) => (
+              <div 
+                key={idx} 
+                className="flex flex-col w-[260px] sm:w-[300px] md:w-[330px] lg:w-[350px] shrink-0 snap-start animate-pulse"
+              >
+                <div className="aspect-video w-full rounded-xl bg-zinc-900/80 border border-white/5" />
+                <div className="pt-3 space-y-2">
+                  <div className="h-4 bg-zinc-800/80 rounded w-3/4" />
+                  <div className="h-3 bg-zinc-800/50 rounded w-1/3" />
+                  <div className="h-3 bg-zinc-800/30 rounded w-full" />
+                </div>
+              </div>
+            ))
+          ) : filteredAndSortedEpisodes.length === 0 ? (
             <div className="w-full py-14 text-center text-zinc-400 bg-zinc-900/40 rounded-2xl border border-white/5 flex flex-col items-center justify-center gap-2">
               <p className="text-sm font-medium">No episodes found matching &quot;{searchQuery}&quot;</p>
               {searchQuery && (

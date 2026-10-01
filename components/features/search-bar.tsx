@@ -105,6 +105,7 @@ export function SearchBar({ isMobile }: { isMobile?: boolean }) {
       return;
     }
 
+    const controller = new AbortController();
     let isMounted = true;
     const fetchResults = async () => {
       const cacheKey = `${searchType}:${debouncedQuery.trim().toLowerCase()}:${page}`;
@@ -118,7 +119,10 @@ export function SearchBar({ isMobile }: { isMobile?: boolean }) {
       if (page === 1) setIsLoading(true);
       try {
         let endpoint = `/api/tmdb/search/${searchType === 'anime' ? 'multi' : searchType}`;
-        const response = await fetch(`${endpoint}?query=${encodeURIComponent(debouncedQuery)}&include_adult=false&page=${page}`);
+        const response = await fetch(
+          `${endpoint}?query=${encodeURIComponent(debouncedQuery)}&include_adult=false&page=${page}`,
+          { signal: controller.signal }
+        );
         if (response.ok && isMounted) {
           const data = await response.json();
           // Filter out people from multi search and ensure they have a poster
@@ -132,19 +136,29 @@ export function SearchBar({ isMobile }: { isMobile?: boolean }) {
           }
           
           const hasMoreResults = data.page < data.total_pages;
+          if (searchCache.size > 100) {
+            searchCache.clear();
+          }
           searchCache.set(cacheKey, { results: newResults, hasMore: hasMoreResults });
           setResults(prev => page === 1 ? newResults : [...prev, ...newResults]);
           setHasMore(hasMoreResults);
         }
-      } catch (error) {
-        console.error('Search failed:', error);
+      } catch (error: any) {
+        if (error?.name !== 'AbortError') {
+          console.error('Search failed:', error);
+        }
       } finally {
-        if (isMounted && page === 1) setIsLoading(false);
+        if (isMounted && page === 1 && !controller.signal.aborted) {
+          setIsLoading(false);
+        }
       }
     };
 
     fetchResults();
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
   }, [debouncedQuery, page, searchType]);
 
   // Intersection Observer for infinite scrolling

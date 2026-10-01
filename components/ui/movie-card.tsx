@@ -14,7 +14,7 @@ interface MovieCardProps {
   priority?: boolean;
 }
 
-export function MovieCard({ media, className, priority = false }: MovieCardProps) {
+function MovieCardComponent({ media, className, priority = false }: MovieCardProps) {
   const isMovie = 'title' in media;
   const title = isMovie ? (media as Movie).title : (media as TVShow).name;
   const releaseDate = isMovie ? (media as Movie).release_date : (media as TVShow).first_air_date;
@@ -67,3 +67,5 @@ export function MovieCard({ media, className, priority = false }: MovieCardProps
     </div>
   );
 }
+
+export const MovieCard = React.memo(MovieCardComponent);

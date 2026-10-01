@@ -94,11 +94,13 @@ export function BrowseClient({ initialData, type, endpoint, queryParams }: Brows
       return;
     }
 
+    const abortController = new AbortController();
+
     const fetchFilteredData = async () => {
       setIsLoading(true);
       setAutoLoadMore(false);
       try {
-        const params = new URLSearchParams(JSON.parse(queryParamsStr));
+        const params = new URLSearchParams(queryParams);
         params.set('page', '1');
         
         applyCategoryParams(params, selectedCategory, type);
@@ -125,22 +127,32 @@ export function BrowseClient({ initialData, type, endpoint, queryParams }: Brows
           }
         }
 
-        const response = await fetch(`/api/tmdb${endpoint}?${params.toString()}`);
+        const response = await fetch(`/api/tmdb${endpoint}?${params.toString()}`, {
+          signal: abortController.signal,
+        });
         if (response.ok) {
           const data: TMDBResponse<Media> = await response.json();
           setItems(data.results);
           setPage(data.page);
           setHasMore(data.page < data.total_pages);
         }
-      } catch (error) {
-        console.error('Failed to filter items:', error);
+      } catch (error: any) {
+        if (error?.name !== 'AbortError') {
+          console.error('Failed to filter items:', error);
+        }
       } finally {
-        setIsLoading(false);
+        if (!abortController.signal.aborted) {
+          setIsLoading(false);
+        }
       }
     };
 
     fetchFilteredData();
-  }, [selectedGenre, selectedCountry, selectedYear, selectedCategory, type, endpoint, queryParamsStr]);
+
+    return () => {
+      abortController.abort();
+    };
+  }, [selectedGenre, selectedCountry, selectedYear, selectedCategory, type, endpoint, queryParamsStr, queryParams]);
 
   const loadMore = useCallback(async () => {
     if (isLoadingRef.current || !hasMoreRef.current) return;

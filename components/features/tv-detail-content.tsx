@@ -64,8 +64,12 @@ export async function TVDetailContent({ slug, searchParams, isModal = false }: T
   const moreLikeThis = Array.from(moreLikeThisMap.values());
 
   const validSeasons = show.seasons?.filter((s) => s.season_number > 0) || [];
+  const currentSeasonNum = Number(seasonNum) || 1;
+  const initialSeasonsToFetch = validSeasons.filter(
+    (s) => s.season_number === currentSeasonNum || s.season_number === 1
+  );
   const allSeasonsData = await Promise.all(
-    validSeasons.map((s) => fetchTMDB<any>(`/tv/${id}/season/${s.season_number}`).catch(() => null))
+    initialSeasonsToFetch.map((s) => fetchTMDB<any>(`/tv/${id}/season/${s.season_number}`).catch(() => null))
   );
 
   const trailer = videos.results.find((v) => v.type === 'Trailer' && v.site === 'YouTube') || videos.results[0];
