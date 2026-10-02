@@ -148,6 +148,11 @@ export function EmbeddedVideoPlayer({
       return;
     }
 
+    // PlayerState.PLAYING is 1 - immediately fade video in once frames start rolling
+    if (event.data === 1) {
+      setIsVideoReady(true);
+    }
+
     // PlayerState.ENDED is 0
     if (event.data === 0) {
       setIsFinished(true);
@@ -232,14 +237,18 @@ export function EmbeddedVideoPlayer({
               <button
                 type="button"
                 onClick={toggleMute}
-                className="w-11 h-11 rounded-full flex items-center justify-center bg-gradient-to-b from-zinc-800/80 to-zinc-900/80 backdrop-blur-xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),_0_2px_6px_rgba(0,0,0,0.4)] text-zinc-300 hover:text-white hover:ring-white/30 active:scale-95 transition-all duration-200 group/mute cursor-pointer"
-                aria-label={isMuted ? "Unmute" : "Mute"}
-                title={isMuted ? "Unmute" : "Mute"}
+                className={`w-11 h-11 rounded-full flex items-center justify-center backdrop-blur-xl ring-1 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),_0_2px_6px_rgba(0,0,0,0.4)] active:scale-95 transition-all duration-200 group/mute cursor-pointer ${
+                  !isMuted
+                    ? "bg-red-600/90 hover:bg-red-600 ring-red-500/40 text-white shadow-[0_0_16px_rgba(239,68,68,0.4)]"
+                    : "bg-gradient-to-b from-zinc-800/80 to-zinc-900/80 hover:ring-white/30 text-zinc-300 hover:text-white ring-white/10"
+                }`}
+                aria-label={isMuted ? "Unmute trailer" : "Mute trailer"}
+                title={isMuted ? "Unmute trailer" : "Mute trailer"}
               >
                 {isMuted ? (
-                  <VolumeX className="w-5 h-5 text-zinc-300 group-hover/mute:text-white transition-colors" />
+                  <VolumeX className="w-5 h-5 transition-colors" />
                 ) : (
-                  <Volume2 className="w-5 h-5 text-zinc-300 group-hover/mute:text-white transition-colors" />
+                  <Volume2 className="w-5 h-5 transition-colors animate-pulse text-white" />
                 )}
               </button>
             )
@@ -255,22 +264,22 @@ export function EmbeddedVideoPlayer({
           fill
           priority
           sizes="100vw"
-          className="object-cover"
+          className="object-cover object-center"
           referrerPolicy="no-referrer"
         />
-        {/* Soft dark overlay for text readability when no video is playing */}
-        <div className="absolute inset-0 bg-black/30" />
+        {/* Soft base tint for text clarity */}
+        <div className="absolute inset-0 bg-black/25" />
       </div>
 
       {/* Embedded YouTube Player Layer */}
       {videoKey && !hasVideoError && (
         <div
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out pointer-events-none ${
+          className={`absolute inset-0 transition-opacity duration-1000 ease-out pointer-events-none ${
             isVideoReady && !isPlayerActive && !isFinished ? "opacity-100" : "opacity-0"
           }`}
         >
-          <div className="w-full h-full relative overflow-hidden pointer-events-none">
-            <div className="absolute inset-0 w-full h-full scale-[1.35] md:scale-[1.25] pointer-events-none">
+          <div className="w-full h-full relative overflow-hidden pointer-events-none flex items-center justify-center">
+            <div className="absolute inset-0 w-full h-full scale-[1.32] sm:scale-[1.25] md:scale-[1.2] lg:scale-[1.16] pointer-events-none origin-center">
               <YouTube
                 videoId={videoKey}
                 opts={playerOpts}
@@ -286,8 +295,14 @@ export function EmbeddedVideoPlayer({
         </div>
       )}
 
-      {/* Vignettes for cinematic contrast and readability */}
-      <div className="absolute inset-0 pointer-events-none [mask-image:linear-gradient(to_bottom,black_0%,black_52%,rgba(0,0,0,0.72)_72%,rgba(0,0,0,0.25)_88%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_52%,rgba(0,0,0,0.72)_72%,rgba(0,0,0,0.25)_88%,transparent_100%)] bg-gradient-to-b from-transparent via-transparent to-zinc-950" />
+      {/* Top Scrim - provides contrast for top navigation and controls */}
+      <div className="absolute top-0 inset-x-0 h-28 sm:h-36 bg-gradient-to-b from-zinc-950/80 via-zinc-950/30 to-transparent pointer-events-none z-10" />
+
+      {/* Radial vignette for subtle cinematic depth */}
+      <div className="absolute inset-0 pointer-events-none z-10 bg-[radial-gradient(circle_at_center,transparent_45%,rgba(9,9,11,0.35)_100%)]" />
+
+      {/* Seamless bottom fade directly into the page's zinc-950 background */}
+      <div className="absolute bottom-0 inset-x-0 h-48 sm:h-64 md:h-80 bg-gradient-to-t from-zinc-950 via-zinc-950/90 via-35% md:via-45% to-transparent pointer-events-none z-10" />
     </>
   );
 }

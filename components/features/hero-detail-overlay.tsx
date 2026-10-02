@@ -34,13 +34,15 @@ export function HeroDetailOverlay({
 
   return (
     <>
-      {/* Bottom fade behind buttons */}
+      {/* Dynamic horizontal vignette: softens during trailer playback, deepens when reading metadata */}
       <div
-        className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-zinc-950/40 via-30% to-transparent z-10 pointer-events-none"
+        className={`absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/75 via-35% md:via-50% to-transparent z-10 pointer-events-none w-full md:w-[75%] lg:w-[60%] transition-opacity duration-700 ease-in-out ${
+          shouldHideText ? "opacity-35" : "opacity-95"
+        }`}
       />
-      {/* Horizontal contrast vignette */}
+      {/* Ambient bottom scrim behind interactive buttons */}
       <div
-        className="absolute inset-0 bg-gradient-to-r from-zinc-950/90 via-zinc-950/50 to-transparent z-10 pointer-events-none w-full md:w-[70%]"
+        className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-zinc-950/90 via-zinc-950/40 to-transparent z-10 pointer-events-none"
       />
 
       {/* Content wrapper aligned with 1440px container */}
