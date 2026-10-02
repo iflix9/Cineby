@@ -215,29 +215,31 @@ export function EmbeddedVideoPlayer({
     <>
       {/* Top Right Controls: Settings & Mute/Unmute or Replay Buttons */}
       {!isPlayerActive && (
-        <div className="absolute top-4 sm:top-6 right-4 sm:right-6 md:right-10 lg:right-[max(3rem,calc((100vw-1440px)/2+48px))] z-50 flex items-center gap-2.5 sm:gap-3">
+        <div className="fixed top-4 sm:top-6 right-4 sm:right-6 md:right-8 z-[70] flex items-center gap-2.5 sm:gap-3">
           <DetailSettingsButton />
           {videoKey && !hasVideoError && (
             isFinished ? (
               <button
+                type="button"
                 onClick={handleReplay}
-                className="w-11 h-11 rounded-full flex items-center justify-center bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-2xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),_0_2px_6px_rgba(0,0,0,0.3)] text-white hover:from-white/15 hover:to-white/10 active:scale-[0.97] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-all duration-200 group/replay"
+                className="w-11 h-11 rounded-full flex items-center justify-center bg-gradient-to-b from-zinc-800/80 to-zinc-900/80 backdrop-blur-xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),_0_2px_6px_rgba(0,0,0,0.4)] text-zinc-300 hover:text-white hover:ring-white/30 active:scale-95 transition-all duration-200 group/replay cursor-pointer"
                 aria-label="Replay trailer"
                 title="Replay trailer"
               >
-                <RotateCcw className="w-5 h-5 text-white transition-transform duration-300 group-hover/replay:-rotate-45" />
+                <RotateCcw className="w-5 h-5 text-zinc-300 group-hover/replay:text-white transition-transform duration-300 group-hover/replay:-rotate-45" />
               </button>
             ) : (
               <button
+                type="button"
                 onClick={toggleMute}
-                className="w-11 h-11 rounded-full flex items-center justify-center bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-2xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),_0_2px_6px_rgba(0,0,0,0.3)] text-white hover:from-white/15 hover:to-white/10 active:scale-[0.97] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-all duration-200 group/mute"
+                className="w-11 h-11 rounded-full flex items-center justify-center bg-gradient-to-b from-zinc-800/80 to-zinc-900/80 backdrop-blur-xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),_0_2px_6px_rgba(0,0,0,0.4)] text-zinc-300 hover:text-white hover:ring-white/30 active:scale-95 transition-all duration-200 group/mute cursor-pointer"
                 aria-label={isMuted ? "Unmute" : "Mute"}
                 title={isMuted ? "Unmute" : "Mute"}
               >
                 {isMuted ? (
-                  <VolumeX className="w-5 h-5 text-white transition-colors" />
+                  <VolumeX className="w-5 h-5 text-zinc-300 group-hover/mute:text-white transition-colors" />
                 ) : (
-                  <Volume2 className="w-5 h-5 text-white transition-colors" />
+                  <Volume2 className="w-5 h-5 text-zinc-300 group-hover/mute:text-white transition-colors" />
                 )}
               </button>
             )
