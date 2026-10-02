@@ -25,7 +25,7 @@ export function HeroBanner({ movies, logos }: HeroBannerProps) {
       setCurrentIndex((prev) => (prev + 1) % featuredMovies.length);
     }, 7000); // 7 seconds per slide
     return () => clearInterval(interval);
-  }, [currentIndex, featuredMovies.length]);
+  }, [featuredMovies.length]);
 
   const handlePrev = () => {
     setCurrentIndex((prev) => (prev - 1 + featuredMovies.length) % featuredMovies.length);

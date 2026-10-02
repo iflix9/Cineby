@@ -12,7 +12,7 @@ interface MediaCarouselProps {
   className?: string;
 }
 
-export function MediaCarousel({ title, items, className }: MediaCarouselProps) {
+function MediaCarouselComponent({ title, items, className }: MediaCarouselProps) {
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const [isDown, setIsDown] = React.useState(false);
   const [startX, setStartX] = React.useState(0);
@@ -153,3 +153,5 @@ export function MediaCarousel({ title, items, className }: MediaCarouselProps) {
     </section>
   );
 }
+
+export const MediaCarousel = React.memo(MediaCarouselComponent);
