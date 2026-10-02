@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Player } from './player';
+import { TrailerFullscreenPlayer } from './trailer-fullscreen-player';
 import { triggerAdPopUp } from '@/lib/ad';
 import { isBlockedMedia } from '@/lib/tmdb';
 import { Icons } from '@/components/ui/icons';
@@ -100,68 +101,16 @@ export function PlayerOverlay() {
 
   if (trailerPlaying) {
     return (
-      <div className="fixed inset-0 bg-black/95 z-[150] w-full h-full flex flex-col justify-between overflow-hidden backdrop-blur-md animate-in fade-in duration-200">
-        {/* Header Bar */}
-        <div className="w-full flex items-center justify-between p-4 sm:p-6 z-10 shrink-0">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleCloseTrailer}
-              className="w-11 h-11 rounded-full flex items-center justify-center bg-gradient-to-b from-zinc-800/80 to-zinc-900/80 backdrop-blur-xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),_0_2px_6px_rgba(0,0,0,0.4)] hover:ring-red-500/50 hover:from-zinc-800 hover:to-zinc-900 text-zinc-300 hover:text-red-500 transition-all duration-200 active:scale-95 group/back"
-              title="Close Trailer"
-              aria-label="Close Trailer"
-            >
-              <Icons.chevronLeft className="w-5 h-5 text-zinc-300 group-hover/back:text-red-500 transition-colors" />
-            </button>
-            <div className="flex items-center gap-2 sm:gap-3">
-              {trailerPlaying.title && (
-                <span className="text-white font-bold text-sm sm:text-base md:text-lg line-clamp-1 max-w-[180px] sm:max-w-md">
-                  {trailerPlaying.title}
-                </span>
-              )}
-              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider bg-red-600/20 text-red-400 border border-red-500/30 px-2.5 py-0.5 rounded-full shrink-0">
-                Official Trailer
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 sm:gap-3">
-            {trailerPlaying.mediaInfo && (
-              <button
-                type="button"
-                onClick={() => {
-                  const info = trailerPlaying.mediaInfo;
-                  handleCloseTrailer();
-                  if (info) {
-                    playMedia(info.type, info.mediaId, info.season, info.episode);
-                  }
-                }}
-                className="bg-gradient-to-b from-white to-zinc-200 text-black ring-1 ring-black/10 shadow-[inset_0_1px_1px_rgba(255,255,255,1),_0_2px_6px_rgba(0,0,0,0.3)] px-4 sm:px-5 py-2 rounded-full font-semibold text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 hover:from-white hover:to-zinc-100 active:scale-95 transition-all duration-200 cursor-pointer"
-                title="Watch full stream"
-              >
-                <Icons.play className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-black" />
-                <span className="hidden xs:inline">Stream Full Movie/Show</span>
-                <span className="xs:hidden">Stream</span>
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Trailer Video Player */}
-        <div className="flex-1 w-full max-w-6xl mx-auto px-4 py-2 sm:py-6 flex items-center justify-center">
-          <div className="w-full aspect-video rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10 bg-black">
-            <iframe
-              src={`https://www.youtube-nocookie.com/embed/${trailerPlaying.trailerKey}?autoplay=1&rel=0&modestbranding=1&enablejsapi=1`}
-              title={`${trailerPlaying.title || 'Media'} Trailer`}
-              className="w-full h-full border-0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            />
-          </div>
-        </div>
-
-        {/* Footer spacing */}
-        <div className="h-4 sm:h-6" />
-      </div>
+      <TrailerFullscreenPlayer
+        trailerKey={trailerPlaying.trailerKey}
+        title={trailerPlaying.title}
+        mediaInfo={trailerPlaying.mediaInfo}
+        onClose={handleCloseTrailer}
+        onStreamMedia={(type, mediaId, season, episode) => {
+          handleCloseTrailer();
+          playMedia(type, mediaId, season, episode);
+        }}
+      />
     );
   }
 
