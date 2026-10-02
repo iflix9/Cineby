@@ -12,11 +12,12 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   }
   try {
     const movie = await fetchTMDB<MovieDetails>(`/movie/${id}`);
-    const pageTitle = movie.title;
-    const fullOgTitle = `${movie.title} | Cineby`;
+    const year = movie.release_date ? new Date(movie.release_date).getFullYear() : null;
+    const pageTitle = year ? `${movie.title} (${year}) – Where to Stream, Official Trailer & Guide` : `${movie.title} – Where to Stream, Official Trailer & Guide`;
+    const fullOgTitle = `${movie.title} – Streaming Guide & Trailer | Cineby`;
     const descText = movie.overview
-      ? `${movie.overview.slice(0, 155)}... Watch ${movie.title} and explore cast, reviews, and trailers on Cineby.`
-      : `Watch ${movie.title} on Cineby. Free movies and cinema database.`;
+      ? `${movie.overview.slice(0, 140)}... Discover where to stream ${movie.title}, watch official trailers, ratings, and cast on Cineby.`
+      : `Find where to stream ${movie.title} online. Watch official trailers, cast, ratings, and streaming guide on Cineby.`;
     const poster = getImageUrl(movie.poster_path, 'original');
 
     return {

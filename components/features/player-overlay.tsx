@@ -127,6 +127,7 @@ export function PlayerOverlay() {
           <div className="flex items-center gap-2 sm:gap-3">
             {trailerPlaying.mediaInfo && (
               <button
+                type="button"
                 onClick={() => {
                   const info = trailerPlaying.mediaInfo;
                   handleCloseTrailer();
@@ -134,7 +135,7 @@ export function PlayerOverlay() {
                     playMedia(info.type, info.mediaId, info.season, info.episode);
                   }
                 }}
-                className="bg-gradient-to-b from-white to-zinc-200 text-black ring-1 ring-black/10 shadow-[inset_0_1px_1px_rgba(255,255,255,1),_0_2px_6px_rgba(0,0,0,0.3)] px-4 sm:px-5 py-2 rounded-full font-semibold text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 hover:from-white hover:to-zinc-100 active:scale-95 transition-all duration-200"
+                className="bg-gradient-to-b from-white to-zinc-200 text-black ring-1 ring-black/10 shadow-[inset_0_1px_1px_rgba(255,255,255,1),_0_2px_6px_rgba(0,0,0,0.3)] px-4 sm:px-5 py-2 rounded-full font-semibold text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2 hover:from-white hover:to-zinc-100 active:scale-95 transition-all duration-200 cursor-pointer"
                 title="Watch full stream"
               >
                 <Icons.play className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-black" />
@@ -142,14 +143,6 @@ export function PlayerOverlay() {
                 <span className="xs:hidden">Stream</span>
               </button>
             )}
-            <button
-              onClick={handleCloseTrailer}
-              className="w-10 h-10 rounded-full flex items-center justify-center bg-zinc-900/80 hover:bg-zinc-800 text-zinc-400 hover:text-white transition-colors border border-zinc-800"
-              title="Close"
-              aria-label="Close"
-            >
-              <Icons.x className="w-5 h-5" />
-            </button>
           </div>
         </div>
 

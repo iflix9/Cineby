@@ -1,6 +1,6 @@
 {
   "name": "Cineby",
-  "description": "Cineby - Discover and explore movies and TV shows. Your ultimate cinematic metadata database.",
+  "description": "Cineby - Discover where to watch movies and TV shows. Your ultimate cinematic streaming guide.",
   "requestFramePermissions": [
     "fullscreen"
   ],

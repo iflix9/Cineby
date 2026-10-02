@@ -23,7 +23,7 @@ function getFallbackHtml() {
     </head>
     <body>
       <h1>Service Temporarily Unavailable</h1>
-      <p>We are currently experiencing high traffic or performing background database syncs. Please try again in a few moments.</p>
+      <p>We are currently experiencing high traffic or performing background catalog updates. Please try again in a few moments.</p>
       <a href="/">Return to Homepage</a>
     </body>
     </html>

@@ -1,11 +1,11 @@
-# Cineby - Open Source Cinematic Database
+# Cineby - Open Source Cinematic Streaming Guide
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=flat&logo=react&logoColor=%2361DAFB)
 ![Next.js](https://img.shields.io/badge/next.js-%23000000.svg?style=flat&logo=next.js&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=flat&logo=tailwind-css&logoColor=white)
 
-Cineby is an open-source, informational metadata search engine designed to help users explore and discover data about cinema, television, and cast members. Powered by TMDB (The Movie Database), it serves purely as an educational index to organize cast, crew, and cinematic releases into a beautiful and responsive user interface.
+Cineby is an open-source, informational streaming guide and entertainment discovery platform designed to help users explore where to watch cinema, television, cast members, and official trailers. Powered by TMDB (The Movie Database), it organizes cast, crew, trailers, and releases into a beautiful and responsive user interface.
 
 ## 📖 Educational & Informational Purpose (Fair Use)
 

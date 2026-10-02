@@ -39,7 +39,7 @@ export default function AboutPage() {
             </h2>
             <div className="space-y-4 text-sm text-zinc-300 leading-relaxed">
               <p>
-                Cineby operates as a pure metadata search engine powered by The Movie Database (TMDB) API. The application itself acts merely as an empty client.
+                Cineby operates as a streaming guide and discovery platform powered by The Movie Database (TMDB) API. The application itself acts merely as an informational client.
               </p>
               <p>
                 <strong>Out of the box, Cineby does not contain, host, link to, or provide any media content whatsoever.</strong>
@@ -71,7 +71,7 @@ export default function AboutPage() {
                 The display of posters and metadata falls under Fair Use, as our platform functions strictly as an index and discovery engine for cinematic research. We do not host, distribute, or pirate any copyrighted media.
               </p>
               <p>
-                As an informational database, any DMCA notices regarding media files are inherently misdirected, as no such files exist on our infrastructure. All video playback capabilities are provided locally by the user via their own Bring Your Own Content (BYOC) setup.
+                As an informational streaming guide and entertainment directory, any DMCA notices regarding media files are inherently misdirected, as no such files exist on our infrastructure. All video playback capabilities are provided locally by the user via their own Bring Your Own Content (BYOC) setup.
               </p>
             </div>
           </div>

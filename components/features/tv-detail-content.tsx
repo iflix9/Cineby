@@ -8,6 +8,8 @@ import { MediaCarousel } from '@/components/features/media-carousel';
 import { CastCarousel } from '@/components/features/cast-carousel';
 import { BackButton } from '@/components/features/back-button';
 import { PlayButton } from '@/components/features/play-button';
+import { TrailerButton } from '@/components/features/trailer-button';
+import { TrailersCarousel } from '@/components/features/trailers-carousel';
 import { EpisodesSection } from '@/components/features/episodes-section';
 import { WatchProviders } from '@/components/features/watch-providers';
 import { HeroDetailOverlay } from '@/components/features/hero-detail-overlay';
@@ -46,7 +48,7 @@ export async function TVDetailContent({ slug, searchParams, isModal = false }: T
       <div className="pt-32 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto min-h-[70vh] flex flex-col items-center justify-center text-center">
         <h1 className="text-4xl font-bold mb-4 text-white">Service Temporarily Unavailable</h1>
         <p className="text-zinc-400 max-w-lg mx-auto mb-8 text-lg">
-          We are currently experiencing high traffic or performing background database syncs. Please try again in a few moments.
+          We are currently experiencing high traffic or performing background catalog updates. Please try again in a few moments.
         </p>
         <Link href="/" className="px-8 py-3 bg-red-600 hover:bg-red-700 text-white rounded-full font-semibold transition-colors duration-200">
           Return to Homepage
@@ -88,6 +90,19 @@ export async function TVDetailContent({ slug, searchParams, isModal = false }: T
       '@type': 'Person',
       name: c.name,
     })),
+    genre: show.genres?.map((g) => g.name),
+    potentialAction: {
+      '@type': 'WatchAction',
+      target: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.cinebyfree.co'}/tv/${show.id}`,
+    },
+    trailer: trailer?.key ? {
+      '@type': 'VideoObject',
+      name: `${show.name} Official Trailer`,
+      description: `Watch the official trailer for ${show.name} on Cineby.`,
+      thumbnailUrl: `https://img.youtube.com/vi/${trailer.key}/hqdefault.jpg`,
+      embedUrl: `https://www.youtube-nocookie.com/embed/${trailer.key}`,
+      uploadDate: show.first_air_date,
+    } : undefined,
     aggregateRating: show.vote_count > 0 ? {
       '@type': 'AggregateRating',
       ratingValue: show.vote_average,
@@ -192,6 +207,18 @@ export async function TVDetailContent({ slug, searchParams, isModal = false }: T
                   <Icons.play className="w-5 h-5 fill-black" />
                   <span>Play</span>
                 </PlayButton>
+                {trailer?.key && (
+                  <TrailerButton 
+                    trailerKey={trailer.key}
+                    title={show.name}
+                    mediaInfo={{ 
+                      type: 'tv', 
+                      mediaId: show.id.toString(), 
+                      season: Number(seasonNum), 
+                      episode: Number(episodeNum) || 1 
+                    }}
+                  />
+                )}
                 <WatchlistButton media={{ ...show, media_type: 'tv', genre_ids: show.genres?.map((g) => g.id) || [] }} className="shrink-0" iconOnly />
                 
                 <a href="#episodes" className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-2xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),_0_2px_6px_rgba(0,0,0,0.3)] text-white font-medium text-[14px] md:text-[15px] px-5 py-2.5 rounded-full flex items-center justify-center gap-2 hover:from-white/15 hover:to-white/10 active:scale-[0.97] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-all duration-200 shrink-0 h-[46px]">
@@ -221,8 +248,16 @@ export async function TVDetailContent({ slug, searchParams, isModal = false }: T
             />
           )}
 
+          {videos.results?.length > 0 && (
+            <TrailersCarousel 
+              videos={videos.results} 
+              mediaTitle={show.name}
+              mediaInfo={{ type: 'tv', mediaId: show.id.toString() }}
+            />
+          )}
+
           {mainCast.length > 0 && (
-            <div className="pt-8">
+            <div className="pt-4">
               <CastCarousel cast={mainCast} title="Top Cast" />
             </div>
           )}
