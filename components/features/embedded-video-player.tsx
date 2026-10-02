@@ -274,12 +274,12 @@ export function EmbeddedVideoPlayer({
       {/* Embedded YouTube Player Layer */}
       {videoKey && !hasVideoError && (
         <div
-          className={`absolute inset-0 transition-opacity duration-1000 ease-out pointer-events-none ${
+          className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-out pointer-events-none overflow-hidden ${
             isVideoReady && !isPlayerActive && !isFinished ? "opacity-100" : "opacity-0"
           }`}
         >
-          <div className="w-full h-full relative overflow-hidden pointer-events-none flex items-center justify-center">
-            <div className="absolute inset-0 w-full h-full scale-[1.32] sm:scale-[1.25] md:scale-[1.2] lg:scale-[1.16] pointer-events-none origin-center">
+          <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none flex items-center justify-center">
+            <div className="w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] relative flex items-center justify-center pointer-events-none scale-[1.15] sm:scale-[1.12] origin-center">
               <YouTube
                 videoId={videoKey}
                 opts={playerOpts}

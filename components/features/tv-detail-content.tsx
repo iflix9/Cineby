@@ -133,8 +133,8 @@ export async function TVDetailContent({ slug, searchParams, isModal = false }: T
       />
       <BackButton isModal={isModal} />
       
-      {/* Hero Banner Backdrop */}
-      <div className="relative w-full overflow-hidden bg-transparent h-[75vh] min-h-[500px] md:h-[85vh] xl:h-[90vh] md:min-h-[600px] select-none">
+      {/* Hero Banner Backdrop - Full Screen Viewport */}
+      <div className="relative w-full overflow-hidden bg-transparent h-screen min-h-[650px] md:min-h-[750px] select-none">
         <EmbeddedVideoPlayer 
           videoKey={trailer?.key}
           fallbackImage={getImageUrl(show.backdrop_path, 'original')}

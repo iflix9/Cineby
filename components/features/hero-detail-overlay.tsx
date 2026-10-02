@@ -46,7 +46,7 @@ export function HeroDetailOverlay({
       />
 
       {/* Content wrapper aligned with 1440px container */}
-      <div className="absolute inset-0 z-30 flex flex-col justify-end px-4 sm:px-6 md:px-10 lg:px-[max(3rem,calc((100vw-1440px)/2+48px))] pb-8 sm:pb-12 md:pb-16 w-full md:w-3/4 lg:w-2/3 pointer-events-none">
+      <div className="absolute inset-0 z-30 flex flex-col justify-end px-4 sm:px-6 md:px-10 lg:px-[max(3rem,calc((100vw-1440px)/2+48px))] pb-10 sm:pb-14 md:pb-20 w-full md:w-3/4 lg:w-2/3 pointer-events-none">
         <div 
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
