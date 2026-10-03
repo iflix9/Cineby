@@ -237,18 +237,14 @@ export function EmbeddedVideoPlayer({
               <button
                 type="button"
                 onClick={toggleMute}
-                className={`w-11 h-11 rounded-full flex items-center justify-center backdrop-blur-xl ring-1 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),_0_2px_6px_rgba(0,0,0,0.4)] active:scale-95 transition-all duration-200 group/mute cursor-pointer ${
-                  !isMuted
-                    ? "bg-red-600/90 hover:bg-red-600 ring-red-500/40 text-white shadow-[0_0_16px_rgba(239,68,68,0.4)]"
-                    : "bg-gradient-to-b from-zinc-800/80 to-zinc-900/80 hover:ring-white/30 text-zinc-300 hover:text-white ring-white/10"
-                }`}
+                className="w-11 h-11 rounded-full flex items-center justify-center bg-gradient-to-b from-zinc-800/80 to-zinc-900/80 backdrop-blur-xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),_0_2px_6px_rgba(0,0,0,0.4)] text-zinc-300 hover:text-white hover:ring-white/30 active:scale-95 transition-all duration-200 group/mute cursor-pointer"
                 aria-label={isMuted ? "Unmute trailer" : "Mute trailer"}
                 title={isMuted ? "Unmute trailer" : "Mute trailer"}
               >
                 {isMuted ? (
-                  <VolumeX className="w-5 h-5 transition-colors" />
+                  <VolumeX className="w-5 h-5 text-zinc-300 group-hover/mute:text-white transition-colors" />
                 ) : (
-                  <Volume2 className="w-5 h-5 transition-colors animate-pulse text-white" />
+                  <Volume2 className="w-5 h-5 text-white transition-colors" />
                 )}
               </button>
             )

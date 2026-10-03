@@ -8,7 +8,6 @@ import { MediaCarousel } from '@/components/features/media-carousel';
 import { CastCarousel } from '@/components/features/cast-carousel';
 import { BackButton } from '@/components/features/back-button';
 import { PlayButton } from '@/components/features/play-button';
-import { TrailerButton } from '@/components/features/trailer-button';
 import { TrailersCarousel } from '@/components/features/trailers-carousel';
 import { EpisodesSection } from '@/components/features/episodes-section';
 import { WatchProviders } from '@/components/features/watch-providers';
@@ -207,18 +206,6 @@ export async function TVDetailContent({ slug, searchParams, isModal = false }: T
                   <Icons.play className="w-5 h-5 fill-black" />
                   <span>Play</span>
                 </PlayButton>
-                {trailer?.key && (
-                  <TrailerButton 
-                    trailerKey={trailer.key}
-                    title={show.name}
-                    mediaInfo={{ 
-                      type: 'tv', 
-                      mediaId: show.id.toString(), 
-                      season: Number(seasonNum), 
-                      episode: Number(episodeNum) || 1 
-                    }}
-                  />
-                )}
                 <WatchlistButton media={{ ...show, media_type: 'tv', genre_ids: show.genres?.map((g) => g.id) || [] }} className="shrink-0" iconOnly />
                 
                 <a href="#episodes" className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-2xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),_0_2px_6px_rgba(0,0,0,0.3)] text-white font-medium text-[14px] md:text-[15px] px-5 py-2.5 rounded-full flex items-center justify-center gap-2 hover:from-white/15 hover:to-white/10 active:scale-[0.97] active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-all duration-200 shrink-0 h-[46px]">
