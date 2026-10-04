@@ -3,7 +3,6 @@
 import * as React from 'react';
 import { useRef, useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
-import { Film } from 'lucide-react';
 import { Icons } from '@/components/ui/icons';
 import { Video } from '@/types/tmdb';
 import { playTrailer } from './player-overlay';
@@ -95,11 +94,11 @@ export function TrailersCarousel({ videos, mediaTitle, mediaInfo }: TrailersCaro
 
   return (
     <section className="relative w-full space-y-3">
-      {/* Section Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <Film className="w-5 h-5 text-red-500" />
-          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
+      {/* Section Header matching other carousels */}
+      <div className="flex items-center justify-between sm:justify-start gap-3 sm:gap-5 mb-5">
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <div className="w-1 h-5 md:h-6 bg-red-600 rounded-sm" />
+          <h2 className="text-xl md:text-2xl font-bold tracking-tight text-white drop-shadow-md">
             Trailers & Clips
           </h2>
           <span className="text-xs font-semibold text-zinc-400 bg-zinc-900 border border-zinc-800 px-2.5 py-0.5 rounded-full">
