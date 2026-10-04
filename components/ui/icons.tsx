@@ -36,6 +36,9 @@ import {
   X,
   LogIn,
   ExternalLink,
+  Bookmark,
+  Film,
+  Trophy,
   type LucideIcon,
   type LucideProps,
 } from 'lucide-react';
@@ -119,4 +122,7 @@ export const Icons = {
   x: withDefaults(X),
   logIn: withDefaults(LogIn),
   externalLink: withDefaults(ExternalLink),
+  film: withDefaults(Film),
+  bookmark: withDefaults(Bookmark),
+  trophy: withDefaults(Trophy),
 };

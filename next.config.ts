@@ -26,6 +26,25 @@ const nextConfig: NextConfig = {
       }
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/movies',
+        destination: '/browse/movie',
+        permanent: true,
+      },
+      {
+        source: '/shows',
+        destination: '/browse/tv',
+        permanent: true,
+      },
+      {
+        source: '/sports',
+        destination: '/browse/sports',
+        permanent: true,
+      },
+    ];
+  },
   output: 'standalone',
   webpack: (config, {dev}) => {
     // HMR is disabled in AI Studio via DISABLE_HMR env var.

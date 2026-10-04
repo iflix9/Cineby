@@ -11,7 +11,7 @@ export function Footer() {
   }
 
   return (
-    <footer className="w-full pb-8 md:pb-12 pt-6 md:pt-8 bg-black border-t border-white/5">
+    <footer className="w-full pb-28 md:pb-12 pt-6 md:pt-8 bg-black border-t border-white/5">
       <div className="container mx-auto px-4 sm:px-6 md:px-10 lg:px-12 max-w-[1440px]">
         <h2 className="text-xl font-bold text-white mb-2">Cineby</h2>
         <p className="text-xs sm:text-sm text-neutral-400 mb-4 max-w-none lg:max-w-4xl leading-relaxed">

@@ -132,7 +132,7 @@ export default function RootLayout({
   modal,
 }: {
   children: React.ReactNode;
-  modal?: React.ReactNode;
+  modal: React.ReactNode;
 }) {
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || process.env.NEXT_PUBLIC_GA_ID;
 

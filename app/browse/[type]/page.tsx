@@ -24,6 +24,10 @@ export async function generateMetadata({ params }: BrowsePageProps): Promise<Met
       title: 'Anime',
       desc: 'Explore popular Japanese anime series, movies, and animations with full metadata and episodes on Cineby.',
     },
+    sports: {
+      title: 'Sports & Entertainment',
+      desc: 'Explore top sports films, athletic documentaries, and sports entertainment on Cineby.',
+    },
   }[type] || {
     title: 'Browse',
     desc: 'Explore movies, TV shows, and entertainment on Cineby.',
@@ -53,7 +57,7 @@ export async function generateMetadata({ params }: BrowsePageProps): Promise<Met
 export default async function BrowsePage({ params }: BrowsePageProps) {
   const { type } = await params;
   
-  if (!['movie', 'tv', 'anime'].includes(type)) {
+  if (!['movie', 'tv', 'anime', 'sports'].includes(type)) {
     // notFound();
     return <div>Invalid type</div>;
   }
@@ -76,6 +80,10 @@ export default async function BrowsePage({ params }: BrowsePageProps) {
     queryParams.with_genres = '16';
     queryParams.with_original_language = 'ja';
     title = 'Anime';
+  } else if (type === 'sports') {
+    endpoint = '/discover/movie';
+    queryParams.with_keywords = '6075|180547|209265';
+    title = 'Sports';
   }
 
   let initialData: TMDBResponse<Media> = { page: 1, results: [], total_pages: 1, total_results: 0 };
@@ -92,7 +100,7 @@ export default async function BrowsePage({ params }: BrowsePageProps) {
   }
 
   return (
-    <div className="pt-24  px-4 sm:px-8 lg:px-12 w-full min-h-screen">
+    <div className="pt-24 px-4 sm:px-8 lg:px-12 w-full min-h-screen">
       <div className="flex items-center gap-3 mb-8">
         <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
       </div>
