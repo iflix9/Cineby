@@ -109,7 +109,7 @@ const brandSchema = {
       logo: `${siteUrl}/logo.png`,
       sameAs: [
         'https://twitter.com/cineby',
-        'https://discord.gg/cineby',
+        process.env.NEXT_PUBLIC_DISCORD_INVITE_URL || process.env.NEXT_PUBLIC_API_LINK || 'https://discord.gg/eWa72k3NUH',
       ],
       description: 'Cineby is the ultimate cinematic streaming guide and entertainment discovery platform.',
     },
