@@ -4,16 +4,13 @@ import { fetchTMDB, getImageUrl } from '@/lib/tmdb';
 import { TVShowDetails, Credits, TMDBResponse, TVShow, Video, TMDBImages } from '@/types/tmdb';
 import { Icons } from '@/components/ui/icons';
 import { WatchlistButton } from '@/components/features/watchlist-button';
-import { MediaCarousel } from '@/components/features/media-carousel';
-import { CastCarousel } from '@/components/features/cast-carousel';
 import { BackButton } from '@/components/features/back-button';
 import { PlayButton } from '@/components/features/play-button';
 import { TrailersCarousel } from '@/components/features/trailers-carousel';
-import { EpisodesSection } from '@/components/features/episodes-section';
-import { WatchProviders } from '@/components/features/watch-providers';
 import { HeroDetailOverlay } from '@/components/features/hero-detail-overlay';
 import { EmbeddedVideoPlayer } from '@/components/features/embedded-video-player';
 import { TrackHistory } from '@/components/features/track-history';
+import { WhereToWatchSection, TVEpisodesSection, CastAndCrewRow, MoreLikeThisSection } from '@/components/media/detail';
 
 interface TVDetailContentProps {
   slug: string[];
@@ -76,6 +73,7 @@ export async function TVDetailContent({ slug, searchParams, isModal = false }: T
   const trailer = videos.results.find((v) => v.type === 'Trailer' && v.site === 'YouTube') || videos.results[0];
   const mainCast = credits.cast.slice(0, 25);
   const logo = images.logos?.length > 0 ? images.logos[0] : null;
+  const backdropUrl = show.backdrop_path ? getImageUrl(show.backdrop_path, 'original') : null;
 
   const tvJsonLd = {
     '@context': 'https://schema.org',
@@ -116,7 +114,25 @@ export async function TVDetailContent({ slug, searchParams, isModal = false }: T
   };
 
   return (
-    <div className="relative w-full min-h-screen bg-zinc-950 pb-24 md:pb-32">
+    <div className="relative w-full min-h-screen bg-[#07070b] pb-24 md:pb-32 overflow-x-hidden">
+      {/* Dynamic Ambient Background: Multi-layer blurred backdrop wash synced with media into #07070b canvas */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#07070b]">
+        {backdropUrl && (
+          <>
+            <div 
+              className="absolute -top-[10%] -left-[10%] w-[120%] h-[75vh] opacity-25 blur-[100px] saturate-150 transform-gpu bg-cover bg-center"
+              style={{ backgroundImage: `url(${backdropUrl})` }}
+            />
+            <div 
+              className="absolute top-[20%] -right-[10%] w-[85%] h-[60vh] opacity-20 blur-[120px] saturate-200 transform-gpu bg-cover bg-center"
+              style={{ backgroundImage: `url(${backdropUrl})` }}
+            />
+          </>
+        )}
+        <div className="absolute inset-0 bg-[#07070b]/75 backdrop-blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#07070b]/60 to-[#07070b]" />
+      </div>
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(tvJsonLd) }}
@@ -132,8 +148,8 @@ export async function TVDetailContent({ slug, searchParams, isModal = false }: T
       />
       <BackButton isModal={isModal} />
       
-      {/* Hero Banner Backdrop - Styled like Homepage Hero Slider */}
-      <div className="relative w-full overflow-hidden bg-transparent h-[75vh] sm:h-[80vh] md:h-[85vh] min-h-[560px] max-h-[850px] select-none">
+      {/* Hero Banner Backdrop - Styled like Homepage Hero Slider with Crossfading Trailer */}
+      <div className="relative w-full overflow-hidden bg-transparent h-[75vh] sm:h-[80vh] md:h-[85vh] min-h-[560px] max-h-[850px] select-none z-10">
         <EmbeddedVideoPlayer 
           videoKey={trailer?.key}
           fallbackImage={getImageUrl(show.backdrop_path, 'original')}
@@ -233,42 +249,46 @@ export async function TVDetailContent({ slug, searchParams, isModal = false }: T
                   <span className="hidden sm:inline">Similars</span>
                 </a>
               </div>
-              <WatchProviders providers={watchProviders} />
             </div>
           }
         />
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 md:px-10 lg:px-12 max-w-[1440px] relative z-20 space-y-12 md:space-y-16 mt-6 sm:mt-8 md:mt-10">
-        <div className="w-full space-y-12">
-          {show.seasons && show.seasons.filter((s) => s.season_number > 0).length > 0 && (
-            <EpisodesSection 
-              show={show} 
-              allSeasonsData={allSeasonsData} 
-              seasonNum={seasonNum} 
-              episodeNum={episodeNum} 
-            />
-          )}
+      {/* Modular Detail Content Sections */}
+      <div className="container mx-auto px-4 sm:px-6 md:px-10 lg:px-12 max-w-[1440px] relative z-20 space-y-10 md:space-y-14 mt-8 sm:mt-10 md:mt-12">
+        {/* Where to Watch Section */}
+        <WhereToWatchSection providers={watchProviders} />
 
-          {videos.results?.length > 0 && (
-            <TrailersCarousel 
-              videos={videos.results} 
-              mediaTitle={show.name}
-              mediaInfo={{ type: 'tv', mediaId: show.id.toString() }}
-            />
-          )}
+        {/* TV Episodes Section */}
+        {show.seasons && show.seasons.filter((s: any) => s.season_number > 0).length > 0 && (
+          <TVEpisodesSection 
+            show={show} 
+            allSeasonsData={allSeasonsData} 
+            seasonNum={seasonNum} 
+            episodeNum={episodeNum} 
+          />
+        )}
 
-          {mainCast.length > 0 && (
-            <div className="pt-4">
-              <CastCarousel cast={mainCast} title="Top Cast" />
-            </div>
-          )}
-        </div>
+        {/* Video Trailers Carousel */}
+        {videos.results?.length > 0 && (
+          <TrailersCarousel 
+            videos={videos.results} 
+            mediaTitle={show.name}
+            mediaInfo={{ type: 'tv', mediaId: show.id.toString() }}
+          />
+        )}
+
+        {/* Cast and Crew Row */}
+        {mainCast.length > 0 && (
+          <CastAndCrewRow cast={mainCast} crew={credits.crew} title="Top Cast & Crew" />
+        )}
         
+        {/* More Like This Carousel */}
         {moreLikeThis.length > 0 && (
-          <div id="similar" className="relative scroll-mt-24">
-            <MediaCarousel title="Similars" items={moreLikeThis.map((m) => ({ ...m, media_type: 'tv' }))} />
-          </div>
+          <MoreLikeThisSection 
+            title="More Like This" 
+            items={moreLikeThis.map((m) => ({ ...m, media_type: 'tv' }))} 
+          />
         )}
       </div>
     </div>
