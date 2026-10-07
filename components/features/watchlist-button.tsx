@@ -18,7 +18,7 @@ export function WatchlistButton({ media, className, iconOnly }: { media: Media, 
   if (!mounted) return (
      <button className={cn(
        iconOnly 
-        ? "w-[46px] h-[46px] rounded-full bg-zinc-800/80 border border-zinc-700/50 flex items-center justify-center text-white opacity-50"
+        ? "w-11 h-11 sm:w-[46px] sm:h-[46px] rounded-full bg-zinc-800/80 border border-zinc-700/50 flex items-center justify-center text-white opacity-50"
         : "flex flex-col items-center gap-1 opacity-50", 
        className
      )}>
@@ -43,7 +43,7 @@ export function WatchlistButton({ media, className, iconOnly }: { media: Media, 
         onClick={toggleList}
         title={inList ? 'Remove from Watchlist' : 'Add to Watchlist'}
         className={cn(
-          "w-[46px] h-[46px] rounded-full bg-gradient-to-b from-zinc-800/80 to-zinc-900/80 backdrop-blur-xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),_0_2px_6px_rgba(0,0,0,0.4)] hover:ring-red-500/50 hover:from-zinc-800 hover:to-zinc-900 flex items-center justify-center text-zinc-300 hover:text-red-500 transition-all duration-200 active:scale-95 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] group/wl",
+          "w-11 h-11 sm:w-[46px] sm:h-[46px] rounded-full bg-gradient-to-b from-zinc-800/80 to-zinc-900/80 backdrop-blur-xl ring-1 ring-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),_0_2px_6px_rgba(0,0,0,0.4)] hover:ring-red-500/50 hover:from-zinc-800 hover:to-zinc-900 flex items-center justify-center text-zinc-300 hover:text-red-500 transition-all duration-200 active:scale-95 active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] group/wl shrink-0",
           inList && "bg-gradient-to-b from-white to-zinc-200 ring-black/10 shadow-[inset_0_1px_1px_rgba(255,255,255,1),_0_2px_6px_rgba(0,0,0,0.3)] text-black hover:from-white hover:to-zinc-100 hover:text-black",
           className
         )}

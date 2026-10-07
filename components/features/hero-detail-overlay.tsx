@@ -40,13 +40,16 @@ export function HeroDetailOverlay({
           shouldHideText ? "opacity-35" : "opacity-95"
         }`}
       />
+      {/* Subtle top shading matching hero slider */}
+      <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/55 to-transparent z-10 pointer-events-none" />
+
       {/* Ambient bottom scrim behind interactive buttons */}
       <div
-        className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-zinc-950/90 via-zinc-950/40 to-transparent z-10 pointer-events-none"
+        className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent z-10 pointer-events-none"
       />
 
-      {/* Content wrapper aligned with 1440px container */}
-      <div className="absolute inset-0 z-30 flex flex-col justify-end px-4 sm:px-6 md:px-10 lg:px-[max(3rem,calc((100vw-1440px)/2+48px))] pb-10 sm:pb-14 md:pb-20 w-full md:w-3/4 lg:w-2/3 pointer-events-none">
+      {/* Content wrapper aligned with hero slider setup */}
+      <div className="absolute inset-0 z-30 flex flex-col justify-end px-4 sm:px-6 md:px-10 lg:px-[max(3rem,calc((100vw-1440px)/2+48px))] pb-14 sm:pb-16 md:pb-20 w-full md:w-3/4 lg:w-2/3 pointer-events-none">
         <div 
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
