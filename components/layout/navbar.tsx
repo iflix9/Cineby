@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icons } from '@/components/ui/icons';
@@ -11,6 +11,46 @@ import { cn } from '@/lib/utils';
 export function Navbar() {
   const pathname = usePathname();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const lastScrollYRef = useRef(0);
+
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
+    setIsVisible(true);
+  }
+
+  // Professional app scroll-to-hide / scroll-to-reveal behavior
+  useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          const diff = currentScrollY - lastScrollYRef.current;
+
+          // Always show when close to page top
+          if (currentScrollY < 50) {
+            setIsVisible(true);
+          } else if (diff > 8) {
+            // Scrolling down -> hide navbar
+            setIsVisible(false);
+          } else if (diff < -8) {
+            // Scrolling up -> reveal navbar
+            setIsVisible(true);
+          }
+
+          lastScrollYRef.current = currentScrollY;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   
   // Detail pages have their own dedicated top controls
   const isDetailsPage = pathname?.startsWith('/movie/') || pathname?.startsWith('/tv/');
@@ -26,7 +66,10 @@ export function Navbar() {
   return (
     <>
       {/* Top Header Bar */}
-      <header className="fixed top-3.5 sm:top-5 md:top-6 left-0 w-full z-40 pointer-events-none px-3.5 sm:px-6 md:px-10">
+      <header className={cn(
+        "fixed top-3.5 sm:top-5 md:top-6 left-0 w-full z-40 pointer-events-none px-3.5 sm:px-6 md:px-10 transition-all duration-300 ease-out",
+        isVisible ? "translate-y-0 opacity-100" : "-translate-y-20 opacity-0"
+      )}>
         <div className="max-w-[1440px] mx-auto flex items-center justify-between">
           {/* Brand Logo on Top-Left */}
           <Link 
@@ -128,9 +171,14 @@ export function Navbar() {
         </div>
       </header>
 
-      {/* Mobile Floating Apple TV Liquid Glass Navigation Dock (Standard App Width & Proportional Responsive Scaling) */}
+      {/* Mobile Floating Apple TV Liquid Glass Navigation Dock (Standard App Width & Auto-Hide on Scroll) */}
       <nav
-        className="md:hidden fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-[420px] h-[58px] sm:h-[62px] flex items-center justify-between px-2 sm:px-3 py-1.5 bg-[#111215]/90 backdrop-blur-3xl saturate-150 border border-white/[0.16] rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.85),_inset_0_1px_1px_rgba(255,255,255,0.18)] select-none"
+        className={cn(
+          "md:hidden fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-[420px] h-[58px] sm:h-[62px] flex items-center justify-between px-2 sm:px-3 py-1.5 bg-[#111215]/90 backdrop-blur-3xl saturate-150 border border-white/[0.16] rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.85),_inset_0_1px_1px_rgba(255,255,255,0.18)] select-none transition-all duration-300 ease-out",
+          isVisible
+            ? "translate-y-0 opacity-100 pointer-events-auto"
+            : "translate-y-28 opacity-0 pointer-events-none"
+        )}
         aria-label="Mobile navigation"
       >
         {/* Home */}
