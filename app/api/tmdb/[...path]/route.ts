@@ -53,13 +53,27 @@ export async function GET(
     // We only warn here instead of blocking, because session cookie already protects the endpoint
   }
 
+  const isHtmlRequest = Boolean(
+    request.headers.get('accept')?.includes('text/html') && 
+    !request.headers.get('accept')?.includes('application/json')
+  );
+
   const apiKey = process.env.TMDB_API_KEY;
 
   if (!apiKey) {
-    return new NextResponse(getFallbackHtml(), {
-      status: 200,
-      headers: { 'Content-Type': 'text/html' }
-    });
+    if (isHtmlRequest) {
+      return new NextResponse(getFallbackHtml(), {
+        status: 200,
+        headers: { 'Content-Type': 'text/html' }
+      });
+    }
+    return NextResponse.json({
+      page: 1,
+      results: [],
+      total_pages: 0,
+      total_results: 0,
+      status_message: 'TMDB_API_KEY is not configured.',
+    }, { status: 503 });
   }
 
   try {
@@ -87,10 +101,19 @@ export async function GET(
     });
 
     if (!response.ok || response.status >= 500) {
-      return new NextResponse(getFallbackHtml(), {
-        status: 200,
-        headers: { 'Content-Type': 'text/html' }
-      });
+      if (isHtmlRequest) {
+        return new NextResponse(getFallbackHtml(), {
+          status: 200,
+          headers: { 'Content-Type': 'text/html' }
+        });
+      }
+      return NextResponse.json({
+        page: 1,
+        results: [],
+        total_pages: 0,
+        total_results: 0,
+        status_message: 'TMDB service temporarily unavailable.',
+      }, { status: response.status || 500 });
     }
 
     const data = await response.json();
@@ -111,9 +134,18 @@ export async function GET(
     });
   } catch (error) {
     console.error('TMDB Proxy Error:', error);
-    return new NextResponse(getFallbackHtml(), {
-      status: 200,
-      headers: { 'Content-Type': 'text/html' }
-    });
+    if (isHtmlRequest) {
+      return new NextResponse(getFallbackHtml(), {
+        status: 200,
+        headers: { 'Content-Type': 'text/html' }
+      });
+    }
+    return NextResponse.json({
+      page: 1,
+      results: [],
+      total_pages: 0,
+      total_results: 0,
+      status_message: 'Internal server error while fetching TMDB data.',
+    }, { status: 500 });
   }
 }
