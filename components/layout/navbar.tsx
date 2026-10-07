@@ -76,7 +76,7 @@ export function Navbar() {
                   : "text-zinc-300 hover:text-white px-2.5 sm:px-3.5 py-1.5 sm:py-2 hover:bg-gradient-to-b hover:from-white/15 hover:to-white/5 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.2),_0_2px_6px_rgba(0,0,0,0.25)] hover:ring-1 hover:ring-white/15 active:scale-95 font-medium"
               )}
             >
-              {isMoviesActive && <Icons.film className="w-4 h-4 stroke-[2.2]" />}
+              {isMoviesActive && <Icons.clapperboard className="w-4 h-4 stroke-[2.2]" />}
               <span>Movies</span>
             </Link>
 
@@ -128,9 +128,9 @@ export function Navbar() {
         </div>
       </header>
 
-      {/* Mobile Floating Apple TV Liquid Glass Navigation Dock (Icon Only, Pill Style) */}
+      {/* Mobile Floating Apple TV Liquid Glass Navigation Dock (Standard App Width & Proportional Responsive Scaling) */}
       <nav
-        className="md:hidden fixed bottom-5 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center bg-[#111215]/90 backdrop-blur-3xl border border-white/15 rounded-full p-1.5 shadow-[0_20px_50px_rgba(0,0,0,0.85),_inset_0_1px_1px_rgba(255,255,255,0.18)] gap-1 select-none"
+        className="md:hidden fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-[420px] h-[58px] sm:h-[62px] flex items-center justify-between px-2 sm:px-3 py-1.5 bg-[#111215]/90 backdrop-blur-3xl saturate-150 border border-white/[0.16] rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.85),_inset_0_1px_1px_rgba(255,255,255,0.18)] select-none"
         aria-label="Mobile navigation"
       >
         {/* Home */}
@@ -139,8 +139,8 @@ export function Navbar() {
           className={cn(
             "transition-all duration-300 cursor-pointer select-none flex items-center justify-center shrink-0",
             isHomeActive
-              ? "px-4 py-2 rounded-full bg-gradient-to-b from-white via-[#fcfcfd] to-[#e4e5eb] text-zinc-950 shadow-[inset_0_1.5px_0_rgba(255,255,255,1),_inset_0_-1.5px_1px_rgba(0,0,0,0.18),_0_2px_8px_rgba(0,0,0,0.35)] border border-white/90 active:scale-95"
-              : "w-10 h-10 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 active:scale-95"
+              ? "h-10 sm:h-11 px-4 sm:px-5 rounded-full bg-gradient-to-b from-white via-[#fcfcfd] to-[#e4e5eb] text-zinc-950 shadow-[inset_0_1.5px_0_rgba(255,255,255,1),_inset_0_-1.5px_1px_rgba(0,0,0,0.18),_0_2px_8px_rgba(0,0,0,0.35)] border border-white/90 active:scale-95"
+              : "w-10 h-10 sm:w-11 sm:h-11 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 active:scale-90"
           )}
           title="Home"
           aria-label="Home"
@@ -154,13 +154,13 @@ export function Navbar() {
           className={cn(
             "transition-all duration-300 cursor-pointer select-none flex items-center justify-center shrink-0",
             isMoviesActive
-              ? "px-4 py-2 rounded-full bg-gradient-to-b from-white via-[#fcfcfd] to-[#e4e5eb] text-zinc-950 shadow-[inset_0_1.5px_0_rgba(255,255,255,1),_inset_0_-1.5px_1px_rgba(0,0,0,0.18),_0_2px_8px_rgba(0,0,0,0.35)] border border-white/90 active:scale-95"
-              : "w-10 h-10 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 active:scale-95"
+              ? "h-10 sm:h-11 px-4 sm:px-5 rounded-full bg-gradient-to-b from-white via-[#fcfcfd] to-[#e4e5eb] text-zinc-950 shadow-[inset_0_1.5px_0_rgba(255,255,255,1),_inset_0_-1.5px_1px_rgba(0,0,0,0.18),_0_2px_8px_rgba(0,0,0,0.35)] border border-white/90 active:scale-95"
+              : "w-10 h-10 sm:w-11 sm:h-11 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 active:scale-90"
           )}
           title="Movies"
           aria-label="Movies"
         >
-          <Icons.film className={cn("transition-transform duration-200", isMoviesActive ? "w-5 h-5 text-zinc-950 stroke-[2.3]" : "w-5 h-5 stroke-[2]")} />
+          <Icons.clapperboard className={cn("transition-transform duration-200", isMoviesActive ? "w-5 h-5 text-zinc-950 stroke-[2.3]" : "w-5 h-5 stroke-[2]")} />
         </Link>
 
         {/* Shows */}
@@ -169,8 +169,8 @@ export function Navbar() {
           className={cn(
             "transition-all duration-300 cursor-pointer select-none flex items-center justify-center shrink-0",
             isShowsActive
-              ? "px-4 py-2 rounded-full bg-gradient-to-b from-white via-[#fcfcfd] to-[#e4e5eb] text-zinc-950 shadow-[inset_0_1.5px_0_rgba(255,255,255,1),_inset_0_-1.5px_1px_rgba(0,0,0,0.18),_0_2px_8px_rgba(0,0,0,0.35)] border border-white/90 active:scale-95"
-              : "w-10 h-10 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 active:scale-95"
+              ? "h-10 sm:h-11 px-4 sm:px-5 rounded-full bg-gradient-to-b from-white via-[#fcfcfd] to-[#e4e5eb] text-zinc-950 shadow-[inset_0_1.5px_0_rgba(255,255,255,1),_inset_0_-1.5px_1px_rgba(0,0,0,0.18),_0_2px_8px_rgba(0,0,0,0.35)] border border-white/90 active:scale-95"
+              : "w-10 h-10 sm:w-11 sm:h-11 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 active:scale-90"
           )}
           title="Shows"
           aria-label="Shows"
@@ -184,8 +184,8 @@ export function Navbar() {
           className={cn(
             "transition-all duration-300 cursor-pointer select-none flex items-center justify-center shrink-0",
             isMyListActive
-              ? "px-4 py-2 rounded-full bg-gradient-to-b from-white via-[#fcfcfd] to-[#e4e5eb] text-zinc-950 shadow-[inset_0_1.5px_0_rgba(255,255,255,1),_inset_0_-1.5px_1px_rgba(0,0,0,0.18),_0_2px_8px_rgba(0,0,0,0.35)] border border-white/90 active:scale-95"
-              : "w-10 h-10 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 active:scale-95"
+              ? "h-10 sm:h-11 px-4 sm:px-5 rounded-full bg-gradient-to-b from-white via-[#fcfcfd] to-[#e4e5eb] text-zinc-950 shadow-[inset_0_1.5px_0_rgba(255,255,255,1),_inset_0_-1.5px_1px_rgba(0,0,0,0.18),_0_2px_8px_rgba(0,0,0,0.35)] border border-white/90 active:scale-95"
+              : "w-10 h-10 sm:w-11 sm:h-11 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 active:scale-90"
           )}
           title="My List"
           aria-label="My List"
@@ -194,12 +194,12 @@ export function Navbar() {
         </Link>
 
         {/* Refractive Liquid Glass Divider */}
-        <div className="h-4 w-[1px] bg-white/20 mx-0.5 shrink-0" />
+        <div className="h-5 w-[1px] bg-gradient-to-b from-transparent via-white/25 to-transparent mx-0.5 shrink-0" />
 
         {/* Search */}
         <SearchBar 
           variant="pill" 
-          className="w-10 h-10 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 active:scale-95 flex items-center justify-center shrink-0" 
+          className="w-10 h-10 sm:w-11 sm:h-11 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 active:scale-90 flex items-center justify-center shrink-0" 
           iconClassName="w-5 h-5 stroke-[2]" 
         />
 
@@ -207,7 +207,7 @@ export function Navbar() {
         <button
           type="button"
           onClick={() => setIsSettingsOpen(true)}
-          className="w-10 h-10 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 active:scale-95 transition-all duration-200 cursor-pointer flex items-center justify-center shrink-0"
+          className="w-10 h-10 sm:w-11 sm:h-11 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 active:scale-90 transition-all duration-200 cursor-pointer flex items-center justify-center shrink-0"
           title="Settings"
           aria-label="Settings"
         >
