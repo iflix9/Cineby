@@ -307,7 +307,7 @@ export function Player({
             </div>
             
             <a 
-              href={process.env.NEXT_PUBLIC_DISCORD_INVITE_URL || process.env.NEXT_PUBLIC_API_LINK || 'https://discord.gg/eWa72k3NUH'} 
+              href={process.env.NEXT_PUBLIC_DISCORD_INVITE_URL || 'https://discord.gg/eWa72k3NUH'} 
               target="_blank" 
               rel="noopener noreferrer"
               className="flex items-center gap-2 bg-[#5865F2]/10 hover:bg-[#5865F2]/20 text-[#5865F2] border border-[#5865F2]/20 px-3 py-2 rounded-xl text-sm font-medium transition-colors shrink-0"
