@@ -9,12 +9,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const id = slug[0];
   try {
     const show = await fetchTMDB<TVShowDetails>(`/tv/${id}`);
-    const year = show.first_air_date ? new Date(show.first_air_date).getFullYear() : null;
-    const pageTitle = year ? `${show.name} (${year}) – Where to Stream, Episodes & Official Trailer` : `${show.name} – Where to Stream, Episodes & Official Trailer`;
-    const fullOgTitle = `${show.name} – TV Streaming Guide & Episodes | Cineby`;
-    const descText = show.overview
-      ? `${show.overview.slice(0, 140)}... Discover where to stream ${show.name} seasons, watch official trailers, and explore episode guides on Cineby.`
-      : `Find where to stream ${show.name} online. Watch official trailers, episode guides, seasons, and streaming guide on Cineby.`;
+    const pageTitle = show.name;
+    const fullOgTitle = `${show.name} | Cineby`;
+    const rawOverview = show.overview?.trim();
+    const descText = rawOverview
+      ? (rawOverview.length > 155 ? `${rawOverview.slice(0, 152)}...` : rawOverview)
+      : `Discover where to stream ${show.name}, watch official trailers, episode guides, and seasons on Cineby.`;
     const poster = getImageUrl(show.poster_path, 'original');
 
     return {
