@@ -196,9 +196,9 @@ export function HistoryClient() {
           </p>
           <Link
             href="/"
-            className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-full text-sm transition-all shadow-lg shadow-red-600/25 flex items-center gap-2 touch-manipulation"
+            className="px-6 py-2.5 bg-gradient-to-b from-white to-zinc-200 hover:from-white hover:to-zinc-100 text-black font-semibold rounded-full text-sm transition-all duration-200 ring-1 ring-black/10 shadow-[inset_0_1px_1px_rgba(255,255,255,1),_0_2px_8px_rgba(0,0,0,0.3)] active:scale-[0.97] flex items-center gap-2 touch-manipulation cursor-pointer"
           >
-            <Icons.play className="w-4 h-4 fill-white" />
+            <Icons.play className="w-4 h-4 fill-black text-black" />
             <span>Explore Content</span>
           </Link>
         </div>
