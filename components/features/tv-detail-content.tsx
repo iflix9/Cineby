@@ -9,8 +9,9 @@ import { PlayButton } from '@/components/features/play-button';
 import { TrailersCarousel } from '@/components/features/trailers-carousel';
 import { HeroDetailOverlay } from '@/components/features/hero-detail-overlay';
 import { EmbeddedVideoPlayer } from '@/components/features/embedded-video-player';
-import { TrackHistory } from '@/components/features/track-history';
 import { WhereToWatchSection, TVEpisodesSection, CastAndCrewRow, MoreLikeThisSection } from '@/components/media/detail';
+import { DocumentTitle } from '@/components/ui/document-title';
+import { TrackHistory } from '@/components/features/track-history';
 
 interface TVDetailContentProps {
   slug: string[];
@@ -137,6 +138,7 @@ export async function TVDetailContent({ slug, searchParams, isModal = false }: T
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(tvJsonLd) }}
       />
+      <DocumentTitle title={`${show.name} | Cineby`} />
       <TrackHistory 
         mediaId={show.id}
         type="tv"

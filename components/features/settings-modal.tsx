@@ -211,17 +211,17 @@ function SettingsModalContent({ onClose }: { onClose: () => void }) {
                 <button
                   type="button"
                   onClick={() => setActiveTab('movie')}
-                  className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+                  className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
                     activeTab === 'movie'
-                      ? 'bg-red-600 text-white shadow-md shadow-red-600/20'
-                      : 'bg-zinc-900/80 text-zinc-400 hover:text-white hover:bg-zinc-800'
+                      ? 'bg-white text-black shadow-md shadow-white/10'
+                      : 'bg-zinc-900/80 text-zinc-400 hover:text-white hover:bg-zinc-800 border border-zinc-800/80'
                   }`}
                 >
                   <Clapperboard className="w-4 h-4" />
                   <span>Movie Players</span>
                   <span
-                    className={`text-[11px] px-1.5 py-0.2 rounded-md ${
-                      activeTab === 'movie' ? 'bg-black/30 text-white' : 'bg-zinc-800 text-zinc-400'
+                    className={`text-[11px] px-1.5 py-0.5 rounded-md font-bold ${
+                      activeTab === 'movie' ? 'bg-black/15 text-black' : 'bg-zinc-800 text-zinc-400'
                     }`}
                   >
                     {moviePlayers.filter((p) => p.trim()).length || 1}
@@ -231,17 +231,17 @@ function SettingsModalContent({ onClose }: { onClose: () => void }) {
                 <button
                   type="button"
                   onClick={() => setActiveTab('tv')}
-                  className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+                  className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
                     activeTab === 'tv'
-                      ? 'bg-red-600 text-white shadow-md shadow-red-600/20'
-                      : 'bg-zinc-900/80 text-zinc-400 hover:text-white hover:bg-zinc-800'
+                      ? 'bg-white text-black shadow-md shadow-white/10'
+                      : 'bg-zinc-900/80 text-zinc-400 hover:text-white hover:bg-zinc-800 border border-zinc-800/80'
                   }`}
                 >
                   <Tv className="w-4 h-4" />
                   <span>TV Show Players</span>
                   <span
-                    className={`text-[11px] px-1.5 py-0.2 rounded-md ${
-                      activeTab === 'tv' ? 'bg-black/30 text-white' : 'bg-zinc-800 text-zinc-400'
+                    className={`text-[11px] px-1.5 py-0.5 rounded-md font-bold ${
+                      activeTab === 'tv' ? 'bg-black/15 text-black' : 'bg-zinc-800 text-zinc-400'
                     }`}
                   >
                     {tvPlayers.filter((p) => p.trim()).length || 1}

@@ -297,34 +297,31 @@ export function NetworkMediaCarousel({
     <section className={cn("w-full flex flex-col relative", className)}>
       {/* Header with Network Dropdown (Left) and Movies / Series Tabs (Right) */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-5 relative z-30">
-        {/* Left Side: Popular on [Logo] Network Dropdown */}
+        {/* Left Side: Popular on Network Dropdown */}
         <div className="flex items-center gap-2.5 sm:gap-3">
           <div className="w-1 h-5 md:h-6 bg-red-600 rounded-sm shrink-0" />
           <div className="relative inline-flex items-center">
-            <div className="flex items-center flex-wrap gap-2 select-none">
-              <h2 className="text-xl md:text-2xl font-bold tracking-tight text-white drop-shadow-md">
-                Popular on
-              </h2>
-              <button
-                ref={triggerRef}
-                type="button"
-                onClick={() => setIsDropdownOpen((prev) => !prev)}
-                className="inline-flex items-center gap-2 group/trigger focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 rounded-lg py-0.5 px-1 -ml-1 transition-all cursor-pointer"
-                aria-haspopup="listbox"
-                aria-expanded={isDropdownOpen}
-              >
-                <NetworkLogoBadge network={selectedNetwork} size="md" />
-                <span className="text-xl md:text-2xl font-bold tracking-tight text-white underline underline-offset-4 decoration-white/70 group-hover/trigger:decoration-white transition-colors">
+            <button
+              ref={triggerRef}
+              type="button"
+              onClick={() => setIsDropdownOpen((prev) => !prev)}
+              className="inline-flex items-center gap-2 group/trigger focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 rounded-lg py-0.5 px-1 -ml-1 transition-all cursor-pointer select-none"
+              aria-haspopup="listbox"
+              aria-expanded={isDropdownOpen}
+            >
+              <h2 className="text-xl md:text-2xl font-bold tracking-tight text-white drop-shadow-md flex items-center gap-1.5 sm:gap-2">
+                <span>Popular on</span>
+                <span className="underline underline-offset-4 decoration-white/70 group-hover/trigger:decoration-white transition-colors">
                   {selectedNetwork.name}
                 </span>
-                <Icons.chevronDown
-                  className={cn(
-                    "w-5 h-5 text-white/80 group-hover/trigger:text-white transition-transform duration-200",
-                    isDropdownOpen && "rotate-180"
-                  )}
-                />
-              </button>
-            </div>
+              </h2>
+              <Icons.chevronDown
+                className={cn(
+                  "w-5 h-5 text-white/80 group-hover/trigger:text-white transition-transform duration-200 mt-0.5",
+                  isDropdownOpen && "rotate-180"
+                )}
+              />
+            </button>
 
             {/* Dropdown Menu */}
             {isDropdownOpen && (

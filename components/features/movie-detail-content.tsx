@@ -9,8 +9,9 @@ import { PlayButton } from '@/components/features/play-button';
 import { TrailersCarousel } from '@/components/features/trailers-carousel';
 import { HeroDetailOverlay } from '@/components/features/hero-detail-overlay';
 import { EmbeddedVideoPlayer } from '@/components/features/embedded-video-player';
-import { TrackHistory } from '@/components/features/track-history';
 import { WhereToWatchSection, CastAndCrewRow, MoreLikeThisSection } from '@/components/media/detail';
+import { DocumentTitle } from '@/components/ui/document-title';
+import { TrackHistory } from '@/components/features/track-history';
 
 interface MovieDetailContentProps {
   id: string;
@@ -125,6 +126,7 @@ export async function MovieDetailContent({ id, isModal = false }: MovieDetailCon
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(movieJsonLd) }}
       />
+      <DocumentTitle title={`${movie.title} | Cineby`} />
       <TrackHistory 
         mediaId={movie.id}
         type="movie"

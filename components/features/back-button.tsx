@@ -31,12 +31,10 @@ export function BackButton({ isModal }: BackButtonProps = {}) {
   }
 
   const handleBack = () => {
-    if (isModal) {
+    if (typeof window !== 'undefined' && window.history.length > 1) {
       router.back();
-    } else if (pathname?.startsWith('/movie/') || pathname?.startsWith('/tv/')) {
-      router.push('/');
     } else {
-      router.back();
+      router.push('/');
     }
   };
 
