@@ -58,7 +58,6 @@ export default async function BrowsePage({ params }: BrowsePageProps) {
   const { type } = await params;
   
   if (!['movie', 'tv', 'anime', 'sports'].includes(type)) {
-    // notFound();
     return <div>Invalid type</div>;
   }
 
@@ -100,9 +99,9 @@ export default async function BrowsePage({ params }: BrowsePageProps) {
   }
 
   return (
-    <div className="pt-24 px-4 sm:px-8 lg:px-12 w-full min-h-screen">
+    <div className="container mx-auto px-4 sm:px-6 md:px-10 lg:px-12 max-w-[1440px] pt-24 sm:pt-28 md:pt-32 pb-16 w-full min-h-screen">
       <div className="flex items-center gap-3 mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-white">{title}</h1>
       </div>
       
       {errorMsg ? (

@@ -22,9 +22,24 @@ function MovieCardComponent({ media, className, priority = false }: MovieCardPro
   // Provide a safe media type for URLs since the API might not always return media_type in list views
   const linkPath = `/${isMovie ? 'movie' : 'tv'}/${media.id}`;
 
+  const handleCardClick = () => {
+    if (typeof window !== 'undefined') {
+      try {
+        sessionStorage.setItem('cineby_last_click_scroll_y', window.scrollY.toString());
+      } catch {
+        // ignore
+      }
+    }
+  };
+
   return (
     <div className={cn('group relative w-full flex flex-col', className)}>
-      <Link href={linkPath} prefetch={false} className="block relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-neutral-900 border border-transparent transition-colors group-hover:border-zinc-800">
+      <Link 
+        href={linkPath} 
+        prefetch={false} 
+        onClick={handleCardClick}
+        className="block relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-neutral-900 border border-transparent transition-colors group-hover:border-zinc-800"
+      >
         <Image
           src={getImageUrl(media.poster_path, 'w500')}
           alt={title}
@@ -41,7 +56,7 @@ function MovieCardComponent({ media, className, priority = false }: MovieCardPro
         </div>
       </Link>
       
-      <Link href={linkPath} prefetch={false} className="flex flex-col mt-3 px-1.5">
+      <Link href={linkPath} prefetch={false} onClick={handleCardClick} className="flex flex-col mt-3 px-1.5">
         <h3 className="font-semibold text-white text-[13px] sm:text-sm md:text-[15px] line-clamp-1 transition-colors duration-200 group-hover:text-red-500">
           {title}
         </h3>

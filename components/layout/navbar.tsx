@@ -61,7 +61,7 @@ export function Navbar() {
   const isHomeActive = pathname === '/';
   const isMoviesActive = pathname === '/browse/movie' || pathname === '/movies';
   const isShowsActive = pathname === '/browse/tv' || pathname === '/shows';
-  const isMyListActive = pathname === '/watchlist';
+  const isAnimeActive = pathname === '/browse/anime';
 
   return (
     <>
@@ -137,18 +137,18 @@ export function Navbar() {
               <span>Shows</span>
             </Link>
 
-            {/* My List */}
+            {/* Anime */}
             <Link
-              href="/watchlist"
+              href="/browse/anime"
               className={cn(
                 "rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 flex items-center gap-1.5 sm:gap-2",
-                isMyListActive
+                isAnimeActive
                   ? "bg-gradient-to-b from-white via-zinc-100 to-zinc-200 text-zinc-950 px-3.5 sm:px-4 py-1.5 sm:py-2 shadow-[inset_0_1.5px_1px_rgba(255,255,255,1),_inset_0_-1px_1px_rgba(0,0,0,0.15),_0_4px_16px_rgba(255,255,255,0.25),_0_2px_6px_rgba(0,0,0,0.3)] ring-1 ring-white/60 active:scale-95"
                   : "text-zinc-300 hover:text-white px-2.5 sm:px-3.5 py-1.5 sm:py-2 hover:bg-gradient-to-b hover:from-white/15 hover:to-white/5 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.2),_0_2px_6px_rgba(0,0,0,0.25)] hover:ring-1 hover:ring-white/15 active:scale-95 font-medium"
               )}
             >
-              {isMyListActive && <Icons.bookmark className="w-4 h-4 stroke-[2.2]" />}
-              <span>My List</span>
+              {isAnimeActive && <Icons.pinwheel className="w-4 h-4 stroke-[2.2]" />}
+              <span>Anime</span>
             </Link>
 
             {/* Refractive Liquid Glass Divider */}
@@ -226,19 +226,19 @@ export function Navbar() {
           <Icons.tv className={cn("transition-transform duration-200", isShowsActive ? "w-5 h-5 text-zinc-950 stroke-[2.3]" : "w-5 h-5 stroke-[2]")} />
         </Link>
 
-        {/* My List */}
+        {/* Anime */}
         <Link
-          href="/watchlist"
+          href="/browse/anime"
           className={cn(
             "transition-all duration-300 cursor-pointer select-none flex items-center justify-center shrink-0",
-            isMyListActive
+            isAnimeActive
               ? "h-10 sm:h-11 px-4 sm:px-5 rounded-full bg-gradient-to-b from-white via-[#fcfcfd] to-[#e4e5eb] text-zinc-950 shadow-[inset_0_1.5px_0_rgba(255,255,255,1),_inset_0_-1.5px_1px_rgba(0,0,0,0.18),_0_2px_8px_rgba(0,0,0,0.35)] border border-white/90 active:scale-95"
               : "w-10 h-10 sm:w-11 sm:h-11 rounded-full text-zinc-400 hover:text-white hover:bg-white/10 active:scale-90"
           )}
-          title="My List"
-          aria-label="My List"
+          title="Anime"
+          aria-label="Anime"
         >
-          <Icons.bookmark className={cn("transition-transform duration-200", isMyListActive ? "w-5 h-5 text-zinc-950 stroke-[2.3]" : "w-5 h-5 stroke-[2]")} />
+          <Icons.pinwheel className={cn("transition-transform duration-200", isAnimeActive ? "w-5 h-5 text-zinc-950 stroke-[2.3]" : "w-5 h-5 stroke-[2]")} />
         </Link>
 
         {/* Refractive Liquid Glass Divider */}

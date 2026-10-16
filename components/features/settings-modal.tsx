@@ -1,8 +1,9 @@
 'use client';
 
+import Link from 'next/link';
 import { useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
-import { Settings, X, Save, Info, Plus, Trash2, ArrowUp, ArrowDown, Clapperboard, Tv } from 'lucide-react';
+import { Settings, X, Save, Info, Plus, Trash2, ArrowUp, ArrowDown, Clapperboard, Tv, Bookmark } from 'lucide-react';
 import { useCustomSources } from '@/hooks/use-custom-sources';
 import { Icons } from '@/components/ui/icons';
 
@@ -113,8 +114,8 @@ function SettingsModalContent({ onClose }: { onClose: () => void }) {
               <Settings className="w-5 h-5 text-red-500" />
             </div>
             <div>
-              <h2 className="text-lg sm:text-xl font-bold text-white">Player Settings</h2>
-              <p className="text-xs text-zinc-400 hidden sm:block">Manage streaming mode and custom player sources</p>
+              <h2 className="text-lg sm:text-xl font-bold text-white">Settings</h2>
+              <p className="text-xs text-zinc-400 hidden sm:block">Manage your library, streaming mode, and player sources</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -140,6 +141,46 @@ function SettingsModalContent({ onClose }: { onClose: () => void }) {
 
         {/* Content Body */}
         <div className="p-5 sm:p-6 overflow-y-auto custom-scrollbar space-y-6">
+          {/* Quick Access: My List & History */}
+          <div className="space-y-2.5">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400">Library & Activity</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Link
+                href="/watchlist"
+                onClick={onClose}
+                className="group flex items-center gap-3.5 p-3.5 rounded-xl bg-gradient-to-b from-zinc-900/90 to-zinc-900/40 hover:from-zinc-800/90 hover:to-zinc-800/60 border border-zinc-800 hover:border-zinc-700/80 transition-all duration-200 active:scale-[0.98] shadow-sm cursor-pointer"
+              >
+                <div className="w-10 h-10 rounded-xl bg-red-500/10 group-hover:bg-red-500/20 text-red-500 flex items-center justify-center shrink-0 transition-colors border border-red-500/20">
+                  <Bookmark className="w-5 h-5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="font-semibold text-white text-sm group-hover:text-red-400 transition-colors flex items-center justify-between">
+                    <span>My List</span>
+                    <Icons.chevronRight className="w-4 h-4 text-zinc-500 group-hover:text-red-400 group-hover:translate-x-0.5 transition-all" />
+                  </div>
+                  <p className="text-xs text-zinc-400 truncate mt-0.5">Your saved titles</p>
+                </div>
+              </Link>
+
+              <Link
+                href="/history"
+                onClick={onClose}
+                className="group flex items-center gap-3.5 p-3.5 rounded-xl bg-gradient-to-b from-zinc-900/90 to-zinc-900/40 hover:from-zinc-800/90 hover:to-zinc-800/60 border border-zinc-800 hover:border-zinc-700/80 transition-all duration-200 active:scale-[0.98] shadow-sm cursor-pointer"
+              >
+                <div className="w-10 h-10 rounded-xl bg-amber-500/10 group-hover:bg-amber-500/20 text-amber-500 flex items-center justify-center shrink-0 transition-colors border border-amber-500/20">
+                  <Icons.clock className="w-5 h-5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="font-semibold text-white text-sm group-hover:text-amber-400 transition-colors flex items-center justify-between">
+                    <span>History</span>
+                    <Icons.chevronRight className="w-4 h-4 text-zinc-500 group-hover:text-amber-400 group-hover:translate-x-0.5 transition-all" />
+                  </div>
+                  <p className="text-xs text-zinc-400 truncate mt-0.5">Continue watching</p>
+                </div>
+              </Link>
+            </div>
+          </div>
+
           <form id="settings-form" onSubmit={handleSave} className="space-y-6">
             {/* Streaming Mode Toggle */}
             <div className="bg-gradient-to-b from-zinc-900/90 to-zinc-900/40 p-4 sm:p-5 rounded-xl border border-zinc-800 shadow-sm hover:border-zinc-700/70 transition-colors space-y-2.5">
