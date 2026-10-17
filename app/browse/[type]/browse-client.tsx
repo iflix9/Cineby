@@ -73,10 +73,20 @@ export function BrowseClient({ initialData, type, endpoint, queryParams }: Brows
   const [selectedCategory, setSelectedCategory] = useState('popular');
   
   const isInitialMount = useRef(true);
+  const skipFilterFetchRef = useRef(false);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   const isLoadingRef = useRef(isLoading);
   const hasMoreRef = useRef(hasMore);
+  const scrollYRef = useRef(0);
+
+  const itemsRef = useRef(items);
+  const pageRef = useRef(page);
+  const autoLoadMoreRef = useRef(autoLoadMore);
+  const selectedGenreRef = useRef(selectedGenre);
+  const selectedCountryRef = useRef(selectedCountry);
+  const selectedYearRef = useRef(selectedYear);
+  const selectedCategoryRef = useRef(selectedCategory);
 
   useEffect(() => {
     isLoadingRef.current = isLoading;
@@ -86,12 +96,151 @@ export function BrowseClient({ initialData, type, endpoint, queryParams }: Brows
     hasMoreRef.current = hasMore;
   }, [hasMore]);
 
+  useEffect(() => {
+    itemsRef.current = items;
+  }, [items]);
+
+  useEffect(() => {
+    pageRef.current = page;
+  }, [page]);
+
+  useEffect(() => {
+    autoLoadMoreRef.current = autoLoadMore;
+  }, [autoLoadMore]);
+
+  useEffect(() => {
+    selectedGenreRef.current = selectedGenre;
+  }, [selectedGenre]);
+
+  useEffect(() => {
+    selectedCountryRef.current = selectedCountry;
+  }, [selectedCountry]);
+
+  useEffect(() => {
+    selectedYearRef.current = selectedYear;
+  }, [selectedYear]);
+
+  useEffect(() => {
+    selectedCategoryRef.current = selectedCategory;
+  }, [selectedCategory]);
+
+  // Keep track of scroll position continuously
+  useEffect(() => {
+    const handleScroll = () => {
+      scrollYRef.current = window.scrollY;
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const saveCurrentState = useCallback(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const currentScrollY = window.scrollY || scrollYRef.current || 0;
+      const stateToSave = {
+        items: itemsRef.current,
+        page: pageRef.current,
+        hasMore: hasMoreRef.current,
+        autoLoadMore: autoLoadMoreRef.current,
+        selectedGenre: selectedGenreRef.current,
+        selectedCountry: selectedCountryRef.current,
+        selectedYear: selectedYearRef.current,
+        selectedCategory: selectedCategoryRef.current,
+        scrollY: currentScrollY,
+        timestamp: Date.now(),
+      };
+      sessionStorage.setItem(`cineby_browse_state_${type}`, JSON.stringify(stateToSave));
+    } catch {
+      // ignore quota or storage errors
+    }
+  }, [type]);
+
+  // Save state on unmount or pagehide
+  useEffect(() => {
+    const onPageHide = () => saveCurrentState();
+    window.addEventListener('pagehide', onPageHide);
+    return () => {
+      window.removeEventListener('pagehide', onPageHide);
+      saveCurrentState();
+    };
+  }, [saveCurrentState]);
+
+  // Restore state and scroll position when returning to browse page
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+
+    const frameId = requestAnimationFrame(() => {
+      try {
+        const saved = sessionStorage.getItem(`cineby_browse_state_${type}`);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (
+            parsed &&
+            Array.isArray(parsed.items) &&
+            parsed.items.length > 0 &&
+            Date.now() - (parsed.timestamp || 0) < 3 * 60 * 60 * 1000
+          ) {
+            skipFilterFetchRef.current = true;
+
+            setItems(parsed.items);
+            setPage(parsed.page || 1);
+            setHasMore(Boolean(parsed.hasMore));
+            setAutoLoadMore(Boolean(parsed.autoLoadMore));
+            if (parsed.selectedCategory) setSelectedCategory(parsed.selectedCategory);
+            if (parsed.selectedGenre) setSelectedGenre(parsed.selectedGenre);
+            if (parsed.selectedCountry) setSelectedCountry(parsed.selectedCountry);
+            if (parsed.selectedYear) setSelectedYear(parsed.selectedYear);
+
+            const targetY = parsed.scrollY || 0;
+            if (targetY > 0) {
+              const doScroll = () => {
+                window.scrollTo({
+                  top: targetY,
+                  behavior: 'instant' as ScrollBehavior,
+                });
+              };
+
+              // Restore scroll immediately and across successive frames to handle image layout stabilization
+              doScroll();
+              requestAnimationFrame(() => {
+                doScroll();
+                setTimeout(doScroll, 40);
+                setTimeout(doScroll, 120);
+              });
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('Failed to restore browse state:', e);
+      }
+    });
+
+    return () => cancelAnimationFrame(frameId);
+  }, [type]);
+
   const queryParamsStr = JSON.stringify(queryParams);
 
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false;
       return;
+    }
+
+    // Skip fetch if we are just restoring previous state from back navigation
+    if (skipFilterFetchRef.current) {
+      skipFilterFetchRef.current = false;
+      return;
+    }
+
+    // User explicitly changed a filter - reset saved cache
+    if (typeof window !== 'undefined') {
+      try {
+        sessionStorage.removeItem(`cineby_browse_state_${type}`);
+      } catch {}
     }
 
     const abortController = new AbortController();
@@ -272,7 +421,10 @@ export function BrowseClient({ initialData, type, endpoint, queryParams }: Brows
         />
       </div>
 
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(140px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(160px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4 md:gap-6">
+      <div 
+        onClickCapture={saveCurrentState}
+        className="grid grid-cols-[repeat(auto-fill,minmax(140px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(160px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4 md:gap-6"
+      >
         {items.map((media) => (
           <MovieCard key={media.id} media={media} />
         ))}

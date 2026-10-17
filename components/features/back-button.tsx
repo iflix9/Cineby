@@ -31,7 +31,9 @@ export function BackButton({ isModal }: BackButtonProps = {}) {
   }
 
   const handleBack = () => {
-    if (typeof window !== 'undefined' && window.history.length > 1) {
+    if (isModal) {
+      router.back();
+    } else if (typeof window !== 'undefined' && window.history.length > 1) {
       router.back();
     } else {
       router.push('/');
