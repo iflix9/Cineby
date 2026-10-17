@@ -129,10 +129,8 @@ const brandSchema = {
 
 export default function RootLayout({
   children,
-  modal,
 }: {
   children: React.ReactNode;
-  modal: React.ReactNode;
 }) {
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || process.env.NEXT_PUBLIC_GA_ID;
 
@@ -150,7 +148,6 @@ export default function RootLayout({
         <main>
           {children}
         </main>
-        {modal}
         <Footer />
       </body>
       {gaId && <GoogleAnalytics gaId={gaId} />}

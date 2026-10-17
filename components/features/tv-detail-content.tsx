@@ -115,7 +115,7 @@ export async function TVDetailContent({ slug, searchParams, isModal = false }: T
   };
 
   return (
-    <div className="relative w-full min-h-screen bg-[#07070b] pb-24 md:pb-32 overflow-x-hidden">
+    <div className="relative w-full min-h-screen bg-[#07070b] pb-24 md:pb-32 overflow-x-hidden animate-in fade-in duration-300">
       {/* Dynamic Ambient Background: Multi-layer blurred backdrop wash synced with media into #07070b canvas */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#07070b]">
         {backdropUrl && (
@@ -148,7 +148,7 @@ export async function TVDetailContent({ slug, searchParams, isModal = false }: T
         season={Number(seasonNum)}
         episode={Number(episodeNum)}
       />
-      <BackButton isModal={isModal} />
+      <BackButton />
       
       {/* Hero Banner Backdrop - Styled like Homepage Hero Slider with Crossfading Trailer */}
       <div className="relative w-full overflow-hidden bg-transparent h-[75vh] sm:h-[80vh] md:h-[85vh] min-h-[560px] max-h-[850px] select-none z-10">
